@@ -1,391 +1,340 @@
 /**
  * doc-gen.js
- * docx ライブラリ (v8) を使用して日本語の履歴書・職務経歴書 Word ファイルを生成する
+ * HTML形式でWordファイル(.doc)を生成してダウンロードする
+ * 外部ライブラリ不要・ブラウザ標準機能のみ使用
  */
 
-/* --------------------------------------------------
-   ユーティリティ
-   -------------------------------------------------- */
-function toWareki(date) {
-  const y = date.getFullYear(), m = date.getMonth() + 1, d = date.getDate();
+function getCurrentDateJPDoc() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
   if (y >= 2019) return `令和${y - 2018}年${m}月${d}日`;
   if (y >= 1989) return `平成${y - 1988}年${m}月${d}日`;
   return `${y}年${m}月${d}日`;
 }
-function getCurrentWareki() { return toWareki(new Date()); }
 
-function getD() {
-  if (typeof docx === 'undefined') {
-    throw new Error('Wordライブラリ(docx)が読み込まれていません。インターネット接続を確認して、ページを再読み込みしてください。');
+function escWord(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function downloadAsWord(htmlContent, filename) {
+  const fullHtml = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office"
+          xmlns:w="urn:schemas-microsoft-com:office:word"
+          xmlns="http://www.w3.org/TR/REC-html40">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="ProgId" content="Word.Document">
+      <meta name="Generator" content="Microsoft Word 15">
+      <!--[if gte mso 9]>
+      <xml>
+        <w:WordDocument>
+          <w:View>Print</w:View>
+          <w:Zoom>100</w:Zoom>
+          <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+      </xml>
+      <![endif]-->
+      <style>
+        @page {
+          size: A4;
+          margin: 18mm 15mm 18mm 20mm;
+          mso-page-orientation: portrait;
+        }
+        body {
+          font-family: "MS Gothic", "MS明朝", "游明朝", serif;
+          font-size: 10.5pt;
+          line-height: 1.6;
+          color: #000;
+        }
+        h1 {
+          font-size: 18pt;
+          font-weight: bold;
+          text-align: center;
+          letter-spacing: 0.5em;
+          margin: 0 0 4pt 0;
+          border: none;
+        }
+        h2 {
+          font-size: 11pt;
+          font-weight: bold;
+          border-bottom: 2px solid #2d6a4f;
+          padding-bottom: 3pt;
+          margin: 10pt 0 5pt 0;
+          color: #2d6a4f;
+        }
+        .date-right {
+          text-align: right;
+          font-size: 9pt;
+          color: #555;
+          margin-bottom: 8pt;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 8pt;
+          font-size: 10pt;
+        }
+        th {
+          background-color: #d8f3dc;
+          font-weight: bold;
+          padding: 5pt 8pt;
+          border: 1pt solid #aaa;
+          text-align: left;
+          white-space: nowrap;
+          vertical-align: top;
+          width: 18%;
+        }
+        td {
+          padding: 5pt 8pt;
+          border: 1pt solid #aaa;
+          vertical-align: top;
+        }
+        .history-table th { width: 8%; text-align: center; }
+        .history-label td {
+          text-align: center;
+          font-weight: bold;
+          background-color: #f0fdf4;
+          color: #2d6a4f;
+        }
+        .text-right { text-align: right; }
+        .text-box {
+          border: 1pt solid #aaa;
+          padding: 8pt;
+          min-height: 40pt;
+          width: 100%;
+          box-sizing: border-box;
+          font-size: 10pt;
+          line-height: 1.8;
+        }
+        .company-header {
+          font-size: 11pt;
+          font-weight: bold;
+          background-color: #f0fdf4;
+          border-left: 4pt solid #2d6a4f;
+          padding: 5pt 8pt;
+          margin: 8pt 0 3pt 0;
+          color: #1b4332;
+        }
+        .section-label {
+          font-weight: bold;
+          color: #2d6a4f;
+          font-size: 9.5pt;
+          margin: 5pt 0 2pt 0;
+        }
+        .photo-area {
+          float: right;
+          width: 90pt;
+          height: 120pt;
+          border: 1pt solid #aaa;
+          text-align: center;
+          vertical-align: middle;
+          padding: 5pt;
+          margin-left: 10pt;
+          margin-bottom: 5pt;
+          font-size: 8pt;
+          color: #888;
+        }
+        .clearfix::after { content: ""; display: table; clear: both; }
+        p { margin: 3pt 0; }
+        .ijo { text-align: right; margin-top: 10pt; font-size: 10pt; }
+      </style>
+    </head>
+    <body>
+      ${htmlContent}
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob(['\ufeff', fullHtml], {
+    type: 'application/msword;charset=utf-8'
+  });
+
+  // FileSaver.js があれば使用、なければネイティブ
+  if (typeof saveAs !== 'undefined') {
+    saveAs(blob, filename);
+  } else {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
   }
-  return docx;
 }
 
-/** テキストを改行で分割して Paragraph 配列に変換 */
-function textToParas(text, d, size, opts = {}) {
-  if (!text) return [new d.Paragraph({ children: [new d.TextRun({ text: '', size })] })];
-  return String(text).split(/\r?\n/).map(line =>
-    new d.Paragraph({
-      children: [new d.TextRun({ text: line, size, font: 'MS Gothic', ...opts })],
-      spacing: { after: 80, line: 340 },
-    })
-  );
-}
-
-/** セクション見出し Paragraph */
-function sectionTitle(text, d, color = '5B21B6') {
-  return new d.Paragraph({
-    children: [new d.TextRun({ text, bold: true, size: 24, font: 'MS Gothic', color })],
-    spacing: { before: 240, after: 120 },
-    border: { bottom: { style: d.BorderStyle.SINGLE, size: 8, color } },
-  });
-}
-
-/** ヘッダーセル（背景色付き） */
-function hCell(text, width, d) {
-  return new d.TableCell({
-    children: [new d.Paragraph({
-      children: [new d.TextRun({ text: text || '', bold: true, size: 19, font: 'MS Gothic' })],
-    })],
-    width: { size: width, type: d.WidthType.DXA },
-    shading: { fill: 'EDE9FE', type: d.ShadingType ? d.ShadingType.CLEAR : 'clear', color: 'auto' },
-    margins: { top: 60, bottom: 60, left: 80, right: 80 },
-  });
-}
-
-/** データセル */
-function dCell(text, width, d, bold = false) {
-  return new d.TableCell({
-    children: [new d.Paragraph({
-      children: [new d.TextRun({ text: text || '', size: 20, font: 'MS Gothic', bold })],
-    })],
-    width: { size: width, type: d.WidthType.DXA },
-    margins: { top: 60, bottom: 60, left: 80, right: 80 },
-  });
-}
-
-/** テキストブロック（枠付きセル1列） */
-function textBoxTable(text, d) {
-  const lines = String(text || '').split(/\r?\n/);
-  return new d.Table({
-    rows: [new d.TableRow({
-      children: [new d.TableCell({
-        children: lines.map(line => new d.Paragraph({
-          children: [new d.TextRun({ text: line, size: 20, font: 'MS Gothic' })],
-          spacing: { after: 80, line: 340 },
-        })),
-        width: { size: 9500, type: d.WidthType.DXA },
-        margins: { top: 100, bottom: 100, left: 120, right: 120 },
-      })],
-    })],
-    width: { size: 9500, type: d.WidthType.DXA },
-  });
-}
-
-/* --------------------------------------------------
-   履歴書 generateResumeDocx
-   -------------------------------------------------- */
+/* ============================================================
+   履歴書生成
+   ============================================================ */
 async function generateResumeDocx(resumeData, photoDataUrl) {
-  const d = getD();
-  const children = [];
-
-  /* タイトル */
-  children.push(new d.Paragraph({
-    children: [new d.TextRun({ text: '履　歴　書', bold: true, size: 40, font: 'MS Gothic' })],
-    alignment: d.AlignmentType.CENTER,
-    spacing: { after: 160 },
-  }));
-
-  /* 作成日 */
-  children.push(new d.Paragraph({
-    children: [new d.TextRun({ text: `${getCurrentWareki()}現在`, size: 18, font: 'MS Gothic' })],
-    alignment: d.AlignmentType.RIGHT,
-    spacing: { after: 200 },
-  }));
-
-  /* 基本情報テーブル */
-  const birthInfo = resumeData.birth_date
-    ? `${resumeData.birth_date}${resumeData.age ? `（${resumeData.age}歳）` : ''}`
+  const r = resumeData || {};
+  const birthInfo = r.birth_date
+    ? `${escWord(r.birth_date)}${r.age ? `（${escWord(r.age)}歳）` : ''}`
     : '';
 
-  children.push(new d.Table({
-    rows: [
-      new d.TableRow({ children: [
-        hCell('ふりがな', 1600, d),
-        new d.TableCell({
-          children: [new d.Paragraph({ children: [new d.TextRun({ text: resumeData.name_kana || '', size: 19, font: 'MS Gothic' })] })],
-          width: { size: 7900, type: d.WidthType.DXA },
-          margins: { top: 60, bottom: 60, left: 80, right: 80 },
-        }),
-      ]}),
-      new d.TableRow({ children: [
-        hCell('氏名', 1600, d),
-        new d.TableCell({
-          children: [new d.Paragraph({ children: [new d.TextRun({ text: resumeData.name || '', bold: true, size: 30, font: 'MS Gothic' })] })],
-          width: { size: 7900, type: d.WidthType.DXA },
-          margins: { top: 80, bottom: 80, left: 80, right: 80 },
-        }),
-      ]}),
-      new d.TableRow({ children: [
-        hCell('生年月日', 1600, d),
-        dCell(birthInfo, 4000, d),
-        hCell('性別', 900, d),
-        dCell(resumeData.gender || '', 3000, d),
-      ]}),
-      new d.TableRow({ children: [
-        hCell('住所', 1600, d),
-        new d.TableCell({
-          children: [new d.Paragraph({ children: [new d.TextRun({ text: resumeData.address || '', size: 20, font: 'MS Gothic' })] })],
-          columnSpan: 3,
-          margins: { top: 80, bottom: 80, left: 80, right: 80 },
-        }),
-      ]}),
-      new d.TableRow({ children: [
-        hCell('電話番号', 1600, d),
-        dCell(resumeData.phone || '', 3500, d),
-        hCell('メールアドレス', 1600, d),
-        dCell(resumeData.email || '', 2800, d),
-      ]}),
-    ],
-    width: { size: 9500, type: d.WidthType.DXA },
-  }));
+  const photoCell = photoDataUrl
+    ? `<img src="${photoDataUrl}" style="width:88pt;height:118pt;object-fit:cover;" alt="証明写真">`
+    : '<div style="width:88pt;height:118pt;border:1pt solid #aaa;display:flex;align-items:center;justify-content:center;font-size:8pt;color:#aaa;text-align:center;">写真<br>貼付欄</div>';
 
-  /* 証明写真の注記（DataURL がある場合） */
-  if (photoDataUrl) {
-    children.push(new d.Paragraph({
-      children: [new d.TextRun({ text: '※ 証明写真は別途印刷して右上欄に貼付してください。', size: 16, font: 'MS Gothic', color: '888888' })],
-      spacing: { before: 60, after: 60 },
-    }));
-  }
+  const eduRows = (r.education || []).map(e =>
+    `<tr><td style="text-align:center;">${escWord(e.year)}</td><td style="text-align:center;">${escWord(e.month)}</td><td>${escWord(e.content)}</td></tr>`
+  ).join('');
 
-  children.push(new d.Paragraph({ spacing: { after: 120 } }));
+  const careerRows = (r.career || []).map(e =>
+    `<tr><td style="text-align:center;">${escWord(e.year)}</td><td style="text-align:center;">${escWord(e.month)}</td><td>${escWord(e.content)}</td></tr>`
+  ).join('');
 
-  /* 学歴・職歴 */
-  children.push(sectionTitle('学歴・職歴', d));
+  const qualRows = (r.qualifications || []).map(e =>
+    `<tr><td style="text-align:center;">${escWord(e.year)}</td><td style="text-align:center;">${escWord(e.month)}</td><td>${escWord(e.content)}</td></tr>`
+  ).join('');
 
-  const historyRows = [
-    new d.TableRow({ children: [
-      hCell('年', 900, d), hCell('月', 700, d), hCell('内　　容', 7900, d),
-    ]}),
-    /* 学歴ラベル */
-    new d.TableRow({ children: [
-      dCell('', 900, d), dCell('', 700, d),
-      new d.TableCell({
-        children: [new d.Paragraph({ children: [new d.TextRun({ text: '学　　歴', bold: true, size: 20, font: 'MS Gothic' })], alignment: d.AlignmentType.CENTER })],
-        shading: { fill: 'F5F3FF', type: 'clear', color: 'auto' },
-        margins: { top: 60, bottom: 60, left: 80, right: 80 },
-      }),
-    ]}),
-  ];
+  const motivationText = escWord(r.motivation || '').replace(/\n/g, '<br>');
+  const selfPrText = escWord(r.self_pr || r.skills_hobbies || '').replace(/\n/g, '<br>');
 
-  (resumeData.education || []).forEach(e => {
-    historyRows.push(new d.TableRow({ children: [
-      dCell(e.year || '', 900, d), dCell(e.month || '', 700, d), dCell(e.content || '', 7900, d),
-    ]}));
-  });
+  const html = `
+    <h1>履　歴　書</h1>
+    <p class="date-right">${getCurrentDateJPDoc()}現在</p>
 
-  /* 職歴ラベル */
-  historyRows.push(new d.TableRow({ children: [
-    dCell('', 900, d), dCell('', 700, d),
-    new d.TableCell({
-      children: [new d.Paragraph({ children: [new d.TextRun({ text: '職　　歴', bold: true, size: 20, font: 'MS Gothic' })], alignment: d.AlignmentType.CENTER })],
-      shading: { fill: 'F5F3FF', type: 'clear', color: 'auto' },
-      margins: { top: 60, bottom: 60, left: 80, right: 80 },
-    }),
-  ]}));
+    <div class="clearfix">
+      <div class="photo-area">${photoCell}</div>
+      <table>
+        <tr><th>ふりがな</th><td colspan="3">${escWord(r.name_kana)}</td></tr>
+        <tr><th>氏名</th><td colspan="3" style="font-size:14pt;font-weight:bold;">${escWord(r.name)}</td></tr>
+        <tr><th>生年月日</th><td>${birthInfo}</td><th style="width:8%;">性別</th><td>${escWord(r.gender)}</td></tr>
+        <tr><th>住所</th><td colspan="3">${escWord(r.address)}</td></tr>
+        <tr><th>電話番号</th><td>${escWord(r.phone)}</td><th>メール</th><td>${escWord(r.email)}</td></tr>
+      </table>
+    </div>
 
-  (resumeData.career || []).forEach(e => {
-    historyRows.push(new d.TableRow({ children: [
-      dCell(e.year || '', 900, d), dCell(e.month || '', 700, d), dCell(e.content || '', 7900, d),
-    ]}));
-  });
+    <h2>学歴・職歴</h2>
+    <table class="history-table">
+      <tr><th>年</th><th>月</th><th>内　　容</th></tr>
+      <tr class="history-label"><td></td><td></td><td>学　歴</td></tr>
+      ${eduRows || '<tr><td></td><td></td><td></td></tr>'}
+      <tr class="history-label"><td></td><td></td><td>職　歴</td></tr>
+      ${careerRows || '<tr><td></td><td></td><td></td></tr>'}
+      <tr><td></td><td></td><td class="text-right">以上</td></tr>
+    </table>
 
-  historyRows.push(new d.TableRow({ children: [
-    dCell('', 900, d), dCell('', 700, d),
-    new d.TableCell({
-      children: [new d.Paragraph({ children: [new d.TextRun({ text: '以上', size: 20, font: 'MS Gothic' })], alignment: d.AlignmentType.RIGHT })],
-      margins: { top: 60, bottom: 60, left: 80, right: 80 },
-    }),
-  ]}));
+    ${(r.qualifications || []).length > 0 ? `
+    <h2>免許・資格</h2>
+    <table class="history-table">
+      <tr><th>年</th><th>月</th><th>免許・資格名</th></tr>
+      ${qualRows}
+    </table>` : ''}
 
-  children.push(new d.Table({ rows: historyRows, width: { size: 9500, type: d.WidthType.DXA } }));
-  children.push(new d.Paragraph({ spacing: { after: 120 } }));
+    ${r.motivation ? `
+    <h2>志望動機</h2>
+    <div class="text-box">${motivationText}</div>` : ''}
 
-  /* 免許・資格 */
-  children.push(sectionTitle('免許・資格', d));
+    ${selfPrText ? `
+    <h2>自己PR・特技</h2>
+    <div class="text-box">${selfPrText}</div>` : ''}
 
-  const qualRows = [
-    new d.TableRow({ children: [hCell('年', 900, d), hCell('月', 700, d), hCell('免許・資格名', 7900, d)] }),
-  ];
-  const quals = resumeData.qualifications || [];
-  if (quals.length === 0) {
-    qualRows.push(new d.TableRow({ children: [dCell('', 900, d), dCell('', 700, d), dCell('', 7900, d)] }));
-  } else {
-    quals.forEach(e => qualRows.push(new d.TableRow({ children: [dCell(e.year || '', 900, d), dCell(e.month || '', 700, d), dCell(e.content || '', 7900, d)] })));
-  }
-  children.push(new d.Table({ rows: qualRows, width: { size: 9500, type: d.WidthType.DXA } }));
-  children.push(new d.Paragraph({ spacing: { after: 120 } }));
+    <h2>本人希望欄</h2>
+    <div class="text-box">${escWord(r.note || '貴社規定に従います。')}</div>
+  `;
 
-  /* 特技・趣味 */
-  if (resumeData.skills_hobbies) {
-    children.push(sectionTitle('特技・趣味', d));
-    children.push(textBoxTable(resumeData.skills_hobbies, d));
-    children.push(new d.Paragraph({ spacing: { after: 120 } }));
-  }
+  // Blob を返す（app.js 側で downloadAsWord を呼ぶため、ここでは blob を返す）
+  const blob = new Blob(['\ufeff', `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+    <head><meta charset="UTF-8"><style>
+    @page{size:A4;margin:18mm 15mm 18mm 20mm;}
+    body{font-family:"MS Gothic",serif;font-size:10.5pt;line-height:1.6;color:#000;}
+    h1{font-size:18pt;font-weight:bold;text-align:center;letter-spacing:.5em;margin:0 0 4pt 0;}
+    h2{font-size:11pt;font-weight:bold;border-bottom:2px solid #2d6a4f;padding-bottom:3pt;margin:10pt 0 5pt 0;color:#2d6a4f;}
+    .date-right{text-align:right;font-size:9pt;color:#555;margin-bottom:8pt;}
+    table{width:100%;border-collapse:collapse;margin-bottom:8pt;font-size:10pt;}
+    th{background-color:#d8f3dc;font-weight:bold;padding:5pt 8pt;border:1pt solid #aaa;text-align:left;white-space:nowrap;vertical-align:top;width:18%;}
+    td{padding:5pt 8pt;border:1pt solid #aaa;vertical-align:top;}
+    .history-table th{width:8%;text-align:center;}
+    .history-label td{text-align:center;font-weight:bold;background-color:#f0fdf4;color:#2d6a4f;}
+    .text-right{text-align:right;}
+    .text-box{border:1pt solid #aaa;padding:8pt;min-height:40pt;width:100%;box-sizing:border-box;font-size:10pt;line-height:1.8;}
+    .clearfix::after{content:"";display:table;clear:both;}
+    </style></head><body>${html}</body></html>
+  `], { type: 'application/msword;charset=utf-8' });
 
-  /* 志望動機 */
-  if (resumeData.motivation) {
-    children.push(sectionTitle('志望動機', d));
-    children.push(textBoxTable(resumeData.motivation, d));
-    children.push(new d.Paragraph({ spacing: { after: 120 } }));
-  }
-
-  /* 本人希望欄 */
-  children.push(sectionTitle('本人希望欄', d));
-  children.push(new d.Table({
-    rows: [new d.TableRow({ children: [new d.TableCell({
-      children: [new d.Paragraph({ children: [new d.TextRun({ text: '貴社規定に従います。', size: 20, font: 'MS Gothic' })] })],
-      width: { size: 9500, type: d.WidthType.DXA },
-      margins: { top: 80, bottom: 80, left: 120, right: 120 },
-    })] })],
-    width: { size: 9500, type: d.WidthType.DXA },
-  }));
-
-  /* ドキュメント生成 */
-  const doc = new d.Document({
-    sections: [{
-      properties: {
-        page: { margin: { top: 720, right: 720, bottom: 720, left: 720 } },
-      },
-      children,
-    }],
-  });
-
-  return await d.Packer.toBlob(doc);
+  return blob;
 }
 
-/* --------------------------------------------------
-   職務経歴書 generateWorkHistoryDocx
-   -------------------------------------------------- */
-async function generateWorkHistoryDocx(workHistoryData) {
-  const d = getD();
-  const children = [];
+/* ============================================================
+   職務経歴書生成
+   ============================================================ */
+async function generateWorkHistoryDocx(workData) {
+  const w = workData || {};
+  const skills = w.skills || {};
 
-  /* タイトル */
-  children.push(new d.Paragraph({
-    children: [new d.TextRun({ text: '職　務　経　歴　書', bold: true, size: 40, font: 'MS Gothic' })],
-    alignment: d.AlignmentType.CENTER,
-    spacing: { after: 160 },
-  }));
+  const experiencesHtml = (w.experiences || []).map((exp, i) => {
+    const period = exp.period_start
+      ? `${escWord(exp.period_start)}${exp.period_end ? ` ～ ${escWord(exp.period_end)}` : ''}`
+      : '';
+    const dutiesText = escWord(exp.duties || '').replace(/\n/g, '<br>');
+    const achievementsText = escWord(exp.achievements || '').replace(/\n/g, '<br>');
+    return `
+      <div class="company-header">【${i + 1}】${escWord(exp.company_name)}　${period ? `（${period}）` : ''}</div>
+      <table>
+        ${exp.business_type ? `<tr><th>業種</th><td>${escWord(exp.business_type)}</td></tr>` : ''}
+        ${exp.overview ? `<tr><th>事業概要</th><td>${escWord(exp.overview)}</td></tr>` : ''}
+        ${exp.position ? `<tr><th>役職・職種</th><td>${escWord(exp.position)}</td></tr>` : ''}
+      </table>
+      ${exp.duties ? `<p class="section-label">【担当業務】</p><div class="text-box">${dutiesText}</div>` : ''}
+      ${exp.achievements ? `<p class="section-label">【主な実績・成果】</p><div class="text-box">${achievementsText}</div>` : ''}
+    `;
+  }).join('');
 
-  /* 作成日 */
-  children.push(new d.Paragraph({
-    children: [new d.TextRun({ text: `${getCurrentWareki()}現在`, size: 18, font: 'MS Gothic' })],
-    alignment: d.AlignmentType.RIGHT,
-    spacing: { after: 200 },
-  }));
+  const summaryText = escWord(w.summary || '').replace(/\n/g, '<br>');
+  const selfPrText = escWord(w.self_pr || '').replace(/\n/g, '<br>');
 
-  /* 氏名 */
-  children.push(new d.Table({
-    rows: [new d.TableRow({ children: [
-      hCell('氏名', 1500, d),
-      new d.TableCell({
-        children: [new d.Paragraph({ children: [new d.TextRun({ text: workHistoryData.name || '', bold: true, size: 28, font: 'MS Gothic' })] })],
-        width: { size: 8000, type: d.WidthType.DXA },
-        margins: { top: 80, bottom: 80, left: 80, right: 80 },
-      }),
-    ]})],
-    width: { size: 9500, type: d.WidthType.DXA },
-  }));
+  const html = `
+    <h1>職務経歴書</h1>
+    <p class="date-right">${getCurrentDateJPDoc()}現在</p>
 
-  children.push(new d.Paragraph({ spacing: { after: 120 } }));
+    <table>
+      <tr><th style="width:15%;">氏名</th><td style="font-size:13pt;font-weight:bold;">${escWord(w.name)}</td></tr>
+    </table>
 
-  /* 職務要約 */
-  children.push(sectionTitle('■ 職務要約', d));
-  if (workHistoryData.summary) {
-    children.push(textBoxTable(workHistoryData.summary, d));
-  }
-  children.push(new d.Paragraph({ spacing: { after: 120 } }));
+    ${w.summary ? `<h2>■ 職務要約</h2><div class="text-box">${summaryText}</div>` : ''}
 
-  /* 活かせる経験・資格・スキル */
-  children.push(sectionTitle('■ 活かせる経験・資格・スキル', d));
-  const skills = workHistoryData.skills || {};
-  const skillRows = [];
-  if (skills.experience)      skillRows.push(new d.TableRow({ children: [hCell('活かせる経験', 2000, d), dCell(skills.experience, 7500, d)] }));
-  if (skills.qualifications)  skillRows.push(new d.TableRow({ children: [hCell('保有資格', 2000, d), dCell(skills.qualifications, 7500, d)] }));
-  if (skills.pc_skills)       skillRows.push(new d.TableRow({ children: [hCell('PCスキル', 2000, d), dCell(skills.pc_skills, 7500, d)] }));
-  if (skillRows.length > 0) {
-    children.push(new d.Table({ rows: skillRows, width: { size: 9500, type: d.WidthType.DXA } }));
-  }
-  children.push(new d.Paragraph({ spacing: { after: 120 } }));
+    ${(skills.experience || skills.qualifications || skills.pc_skills) ? `
+    <h2>■ 活かせる経験・資格・スキル</h2>
+    <table>
+      ${skills.experience ? `<tr><th>活かせる経験</th><td>${escWord(skills.experience)}</td></tr>` : ''}
+      ${skills.qualifications ? `<tr><th>保有資格</th><td>${escWord(skills.qualifications)}</td></tr>` : ''}
+      ${skills.pc_skills ? `<tr><th>PCスキル</th><td>${escWord(skills.pc_skills)}</td></tr>` : ''}
+    </table>` : ''}
 
-  /* 職務経歴 */
-  children.push(sectionTitle('■ 職務経歴', d));
+    ${experiencesHtml ? `<h2>■ 職務経歴</h2>${experiencesHtml}` : ''}
 
-  (workHistoryData.experiences || []).forEach((exp, i) => {
-    const period = `${exp.period_start || ''}${exp.period_end ? ` 〜 ${exp.period_end}` : ''}`;
+    ${w.self_pr ? `<h2>■ 自己PR</h2><div class="text-box">${selfPrText}</div>` : ''}
 
-    /* 会社名ヘッダー */
-    children.push(new d.Paragraph({
-      children: [new d.TextRun({
-        text: `【${i + 1}】 ${exp.company_name || ''}  （${period}）`,
-        bold: true, size: 22, font: 'MS Gothic', color: '3B0764',
-      })],
-      spacing: { before: 200, after: 80 },
-    }));
+    <p class="ijo">以上</p>
+  `;
 
-    /* 会社概要テーブル */
-    const infoRows = [];
-    if (exp.business_type) infoRows.push(new d.TableRow({ children: [hCell('業種', 1800, d), dCell(exp.business_type, 7700, d)] }));
-    if (exp.overview)      infoRows.push(new d.TableRow({ children: [hCell('事業概要', 1800, d), dCell(exp.overview, 7700, d)] }));
-    if (exp.position)      infoRows.push(new d.TableRow({ children: [hCell('役職・職種', 1800, d), dCell(exp.position, 7700, d)] }));
-    if (infoRows.length > 0) {
-      children.push(new d.Table({ rows: infoRows, width: { size: 9500, type: d.WidthType.DXA } }));
-    }
+  const blob = new Blob(['\ufeff', `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+    <head><meta charset="UTF-8"><style>
+    @page{size:A4;margin:18mm 15mm 18mm 20mm;}
+    body{font-family:"MS Gothic",serif;font-size:10.5pt;line-height:1.6;color:#000;}
+    h1{font-size:18pt;font-weight:bold;text-align:center;letter-spacing:.5em;margin:0 0 4pt 0;}
+    h2{font-size:11pt;font-weight:bold;border-bottom:2px solid #2d6a4f;padding-bottom:3pt;margin:10pt 0 5pt 0;color:#2d6a4f;}
+    .date-right{text-align:right;font-size:9pt;color:#555;margin-bottom:8pt;}
+    table{width:100%;border-collapse:collapse;margin-bottom:8pt;font-size:10pt;}
+    th{background-color:#d8f3dc;font-weight:bold;padding:5pt 8pt;border:1pt solid #aaa;text-align:left;white-space:nowrap;vertical-align:top;width:18%;}
+    td{padding:5pt 8pt;border:1pt solid #aaa;vertical-align:top;}
+    .text-box{border:1pt solid #aaa;padding:8pt;min-height:40pt;width:100%;box-sizing:border-box;font-size:10pt;line-height:1.8;}
+    .company-header{font-size:11pt;font-weight:bold;background-color:#f0fdf4;border-left:4pt solid #2d6a4f;padding:5pt 8pt;margin:8pt 0 3pt 0;color:#1b4332;}
+    .section-label{font-weight:bold;color:#2d6a4f;font-size:9.5pt;margin:5pt 0 2pt 0;}
+    .ijo{text-align:right;margin-top:10pt;font-size:10pt;}
+    </style></head><body>${html}</body></html>
+  `], { type: 'application/msword;charset=utf-8' });
 
-    /* 担当業務 */
-    if (exp.duties) {
-      children.push(new d.Paragraph({
-        children: [new d.TextRun({ text: '【担当業務】', bold: true, size: 20, font: 'MS Gothic', color: '5B21B6' })],
-        spacing: { before: 120, after: 60 },
-      }));
-      children.push(textBoxTable(exp.duties, d));
-    }
-
-    /* 主な実績 */
-    if (exp.achievements) {
-      children.push(new d.Paragraph({
-        children: [new d.TextRun({ text: '【主な実績・成果】', bold: true, size: 20, font: 'MS Gothic', color: '5B21B6' })],
-        spacing: { before: 100, after: 60 },
-      }));
-      children.push(textBoxTable(exp.achievements, d));
-    }
-
-    children.push(new d.Paragraph({ spacing: { after: 120 } }));
-  });
-
-  /* 自己PR */
-  if (workHistoryData.self_pr) {
-    children.push(sectionTitle('■ 自己PR', d));
-    children.push(textBoxTable(workHistoryData.self_pr, d));
-    children.push(new d.Paragraph({ spacing: { after: 120 } }));
-  }
-
-  /* 以上 */
-  children.push(new d.Paragraph({
-    children: [new d.TextRun({ text: '以上', size: 20, font: 'MS Gothic' })],
-    alignment: d.AlignmentType.RIGHT,
-    spacing: { before: 200 },
-  }));
-
-  const doc = new d.Document({
-    sections: [{
-      properties: {
-        page: { margin: { top: 720, right: 720, bottom: 720, left: 720 } },
-      },
-      children,
-    }],
-  });
-
-  return await d.Packer.toBlob(doc);
+  return blob;
 }
