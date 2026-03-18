@@ -1057,7 +1057,7 @@ function downloadResume() {
 
   const name = state.generatedData?.resume?.name || '候補者';
   const date = formatDateForFilename(new Date());
-  const filename = `履歴書_${name}_${date}.docx`;
+  const filename = `履歴書_${name}_${date}.doc`;
 
   triggerDownload(state.resumeBlob, filename);
 }
@@ -1067,7 +1067,7 @@ function downloadCv() {
 
   const name = state.generatedData?.work_history?.name || '候補者';
   const date = formatDateForFilename(new Date());
-  const filename = `職務経歴書_${name}_${date}.docx`;
+  const filename = `職務経歴書_${name}_${date}.doc`;
 
   triggerDownload(state.cvBlob, filename);
 }
