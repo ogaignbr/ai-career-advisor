@@ -15,7 +15,9 @@ function toWareki(date) {
 function getCurrentWareki() { return toWareki(new Date()); }
 
 function getD() {
-  if (typeof docx === 'undefined') throw new Error('docxライブラリが読み込まれていません。');
+  if (typeof docx === 'undefined') {
+    throw new Error('Wordライブラリ(docx)が読み込まれていません。インターネット接続を確認して、ページを再読み込みしてください。');
+  }
   return docx;
 }
 

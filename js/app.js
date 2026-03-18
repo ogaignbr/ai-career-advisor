@@ -482,18 +482,25 @@ async function handleGenerate() {
     state.generatedData = generatedData;
 
     // Wordファイルを生成
+    let wordError = null;
     try {
       state.resumeBlob = await generateResumeDocx(generatedData.resume, state.photoDataUrl);
     } catch (err) {
-      console.warn('履歴書Word生成エラー:', err);
+      console.error('履歴書Word生成エラー:', err);
+      wordError = err.message || String(err);
       state.resumeBlob = null;
     }
 
     try {
       state.cvBlob = await generateWorkHistoryDocx(generatedData.work_history);
     } catch (err) {
-      console.warn('職務経歴書Word生成エラー:', err);
+      console.error('職務経歴書Word生成エラー:', err);
+      if (!wordError) wordError = err.message || String(err);
       state.cvBlob = null;
+    }
+
+    if (wordError) {
+      showError(`Word生成エラー: ${wordError}　※書類のプレビューは表示されます。`);
     }
 
     // ダウンロードボタンの有効化
@@ -1066,14 +1073,24 @@ function downloadCv() {
 }
 
 function triggerDownload(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  try {
+    // FileSaver.js が読み込まれていればそちらを優先（iOS/Edge対応）
+    if (typeof saveAs !== 'undefined') {
+      saveAs(blob, filename);
+      return;
+    }
+    // フォールバック: anchor要素によるダウンロード
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+  } catch (err) {
+    alert(`ダウンロードに失敗しました: ${err.message}\nブラウザの設定でポップアップをブロックしていないか確認してください。`);
+  }
 }
 
 function formatDateForFilename(date) {
