@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIキャリアアドバイザー | 書類作成・面談分析ツール</title>
+  <meta name="description" content="キャリアアドバイザー向け：面談内容から履歴書・職務経歴書を自動生成し、AIによるキャリア分析を提供します。">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- PDF.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+  <!-- docx CDN -->
+  <script src="https://unpkg.com/docx@8.5.0/build/index.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["'Noto Sans JP'", 'Meiryo', 'sans-serif'],
+            display: ["'Zen Maru Gothic'", "'Noto Sans JP'", 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="min-h-screen">
+
+  <!-- ============================================
+       ヘッダー
+       ============================================ -->
+  <header class="app-header no-print">
+    <div class="max-w-screen-xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="header-logo-icon">✨</div>
+        <div>
+          <h1 class="header-title font-display">AIキャリアアドバイザー</h1>
+          <p class="header-subtitle hidden sm:block">書類作成 & 面談分析ツール</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <div id="apiKeyStatusBadge" class="hidden sm:flex items-center gap-1.5 text-xs">
+          <span id="apiKeyStatusDot" class="w-2 h-2 rounded-full bg-gray-300"></span>
+          <span id="apiKeyStatusText" class="text-gray-500">API未設定</span>
+        </div>
+        <button id="settingsBtn" title="APIキーを設定する" class="settings-btn">
+          <span>⚙️</span>
+          <span class="hidden sm:inline">設定</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================
+       設定モーダル
+       ============================================ -->
+  <div id="modalOverlay" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <div class="flex items-center justify-between mb-5">
+        <h2 id="modalTitle" class="modal-title font-display">🔑 API設定</h2>
+        <button id="closeModalBtn" class="modal-close-btn" aria-label="閉じる">✕</button>
+      </div>
+
+      <div class="modal-info-banner mb-4">
+        <p class="font-semibold text-sm mb-1">OpenAI APIキーについて</p>
+        <p class="text-xs opacity-80">APIキーはブラウザのlocalStorageにのみ保存され、OpenAI以外には送信されません。</p>
+      </div>
+
+      <div class="mb-5">
+        <label class="block text-sm font-semibold mb-1.5 text-gray-700" for="apiKeyInput">OpenAI APIキー</label>
+        <div class="flex gap-2 items-center">
+          <div class="relative flex-1">
+            <input id="apiKeyInput" type="password" placeholder="sk-..." class="app-input font-mono pr-10" autocomplete="off" spellcheck="false">
+            <button id="toggleApiKeyBtn" type="button" title="パスワードを表示" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-purple-500 transition-colors">👁️</button>
+          </div>
+        </div>
+        <div id="apiKeyStatus" class="mt-1.5"></div>
+        <div id="modalError" class="hidden mt-2 text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg p-2"></div>
+      </div>
+
+      <div class="flex gap-3">
+        <button id="saveApiKeyBtn" class="btn-primary flex-1">💾 保存する</button>
+        <button id="closeModalBtn2" onclick="document.getElementById('modalOverlay').classList.add('hidden')" class="btn-ghost px-4 py-2.5">キャンセル</button>
+      </div>
+
+      <div class="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-400">
+        APIキーは <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer" class="text-purple-500 hover:underline">OpenAI Platform</a> から取得できます。GPT-4oの利用権限が必要です。
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       メインコンテンツ
+       ============================================ -->
+  <main class="max-w-screen-xl mx-auto px-4 py-6">
+
+    <!-- APIキー未設定警告 -->
+    <div id="apiKeyWarning" class="hidden mb-4 no-print">
+      <div class="api-warning-banner">
+        <span class="text-xl flex-shrink-0">💡</span>
+        <div class="flex-1">
+          <p class="text-sm font-semibold">OpenAI APIキーが設定されていません</p>
+          <p class="text-xs mt-0.5 opacity-80">右上の「設定」ボタンからAPIキーを入力してください。</p>
+        </div>
+        <button onclick="openSettingsModal()" class="warning-action-btn flex-shrink-0">今すぐ設定</button>
+      </div>
+    </div>
+
+    <!-- 2カラムレイアウト -->
+    <div class="flex flex-col lg:flex-row gap-5">
+
+      <!-- ============================================
+           左カラム: 入力エリア
+           ============================================ -->
+      <div class="w-full lg:w-[420px] xl:w-[460px] flex-shrink-0 space-y-4 no-print">
+
+        <!-- 応募情報 -->
+        <div class="app-card">
+          <h2 class="card-section-title font-display">🏢 応募情報 <span class="optional-badge">任意</span></h2>
+          <div class="space-y-3">
+            <div>
+              <label class="input-label" for="targetCompany">応募先企業名</label>
+              <input id="targetCompany" type="text" placeholder="例：株式会社〇〇" class="app-input">
+            </div>
+            <div>
+              <label class="input-label" for="targetPosition">応募職種</label>
+              <input id="targetPosition" type="text" placeholder="例：営業マネージャー、Webエンジニア" class="app-input">
+            </div>
+          </div>
+        </div>
+
+        <!-- 面談内容テキスト -->
+        <div class="app-card">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="card-section-title font-display mb-0">📝 面談テキスト</h2>
+            <span id="transcriptCount" class="char-count">0文字</span>
+          </div>
+          <textarea
+            id="transcriptInput"
+            placeholder="面談の文字起こし、メモ、会話ログを貼り付けてください。&#10;&#10;例：&#10;担当者：本日はよろしくお願いします。&#10;候補者：はい、田中と申します..."
+            class="app-textarea"
+            rows="10"
+            oninput="document.getElementById('transcriptCount').textContent = this.value.length + '文字'"
+          ></textarea>
+        </div>
+
+        <!-- 添付ファイル -->
+        <div class="app-card">
+          <h2 class="card-section-title font-display">📎 添付ファイル <span class="optional-badge">任意</span></h2>
+          <div class="space-y-4">
+
+            <!-- 証明写真 -->
+            <div>
+              <label class="input-label mb-2">🖼️ 証明写真（PNG/JPG）</label>
+              <div class="flex items-start gap-3">
+                <div
+                  id="photoUploadArea"
+                  class="photo-upload-area"
+                  title="クリックして写真を選択"
+                  role="button"
+                  tabindex="0"
+                  aria-label="証明写真をアップロード"
+                >
+                  <img id="photoPreview" src="" alt="証明写真プレビュー" class="hidden w-full h-full object-cover">
+                  <div id="photoPlaceholder" class="text-center pointer-events-none">
+                    <div class="text-2xl mb-1 opacity-40">🖼️</div>
+                    <div class="text-xs text-gray-400 leading-tight">タップして<br>アップロード</div>
+                  </div>
+                </div>
+                <div class="flex-1 text-xs text-gray-500 leading-relaxed pt-1">
+                  <p class="font-medium text-gray-600 mb-1">証明写真（任意）</p>
+                  <p>PNG・JPG形式に対応。</p>
+                  <p class="mt-1">履歴書Wordファイルに添付されます。</p>
+                </div>
+              </div>
+              <input id="photoFileInput" type="file" accept="image/png,image/jpeg,image/jpg" class="hidden" aria-hidden="true">
+            </div>
+
+            <!-- 既存の履歴書PDF -->
+            <div>
+              <label class="input-label mb-1.5">📄 既存の履歴書（PDF）</label>
+              <div id="resumePdfArea" class="upload-area" role="button" tabindex="0" aria-label="履歴書PDFをアップロード">
+                <div class="pdf-placeholder">
+                  <div class="text-2xl mb-1 opacity-40">📄</div>
+                  <p class="text-xs text-gray-500 font-medium">クリックまたはドラッグ＆ドロップ</p>
+                  <p class="text-xs text-gray-400 mt-0.5">PDFファイルを選択</p>
+                </div>
+                <div class="pdf-filename hidden text-sm font-medium"></div>
+              </div>
+              <input id="resumePdfInput" type="file" accept="application/pdf,.pdf" class="hidden" aria-hidden="true">
+            </div>
+
+            <!-- 既存の職務経歴書PDF -->
+            <div>
+              <label class="input-label mb-1.5">📑 既存の職務経歴書（PDF）</label>
+              <div id="cvPdfArea" class="upload-area" role="button" tabindex="0" aria-label="職務経歴書PDFをアップロード">
+                <div class="pdf-placeholder">
+                  <div class="text-2xl mb-1 opacity-40">📑</div>
+                  <p class="text-xs text-gray-500 font-medium">クリックまたはドラッグ＆ドロップ</p>
+                  <p class="text-xs text-gray-400 mt-0.5">PDFファイルを選択</p>
+                </div>
+                <div class="pdf-filename hidden text-sm font-medium"></div>
+              </div>
+              <input id="cvPdfInput" type="file" accept="application/pdf,.pdf" class="hidden" aria-hidden="true">
+            </div>
+
+          </div>
+        </div>
+
+        <!-- エラーメッセージ -->
+        <div id="errorMessage" class="hidden error-banner" role="alert">
+          <span class="flex-shrink-0">⚠️</span>
+          <span class="text-sm text-red-600"></span>
+        </div>
+
+        <!-- 生成ボタン -->
+        <button id="generateBtn" disabled class="btn-generate">
+          ✨ 書類を自動生成する
+        </button>
+        <p class="text-center text-xs text-gray-400 pb-2">生成には通常30〜60秒かかります</p>
+
+      </div>
+      <!-- /左カラム -->
+
+      <!-- ============================================
+           右カラム: 出力エリア
+           ============================================ -->
+      <div class="flex-1 min-w-0">
+        <div class="output-panel">
+
+          <!-- タブヘッダー -->
+          <div class="tab-strip no-print">
+            <button class="tab-pill active" data-tab="resume">📋 履歴書</button>
+            <button class="tab-pill" data-tab="work_history">📑 職務経歴書</button>
+            <button class="tab-pill" data-tab="career_advice">💡 アドバイス</button>
+          </div>
+
+          <!-- ダウンロードバー -->
+          <div class="download-bar no-print" id="downloadBar">
+            <button id="downloadResumeBtn" disabled class="btn-download">⬇️ 履歴書 (Word)</button>
+            <button id="downloadCvBtn" disabled class="btn-download">⬇️ 職務経歴書 (Word)</button>
+            <div class="flex-1"></div>
+            <span id="outputStatusText" class="text-xs text-gray-400"></span>
+          </div>
+
+          <!-- 出力コンテンツエリア -->
+          <div class="flex-1 overflow-auto custom-scroll p-4" style="max-height: calc(100vh - 220px);">
+
+            <!-- ローディング -->
+            <div id="outputLoading" class="hidden flex flex-col items-center justify-center py-16 text-center">
+              <div class="loading-orb mb-5"></div>
+              <p class="text-base font-display font-bold text-purple-700 mb-1">AIが書類を生成しています...</p>
+              <p class="text-sm text-gray-500">面談内容を分析中です。しばらくお待ちください。</p>
+              <p class="text-xs text-gray-400 mt-2">通常30〜60秒かかります</p>
+            </div>
+
+            <!-- 空状態 -->
+            <div id="outputEmpty" class="empty-state">
+              <div class="empty-state-illustration">
+                <div class="empty-state-circle">✨</div>
+              </div>
+              <p class="empty-state-title font-display">書類がまだ生成されていません</p>
+              <p class="empty-state-text">
+                左側のフォームに面談内容を入力し、<br>
+                「✨ 書類を自動生成する」を押してください。<br>
+                <span class="text-xs block mt-2">
+                  AIが面談テキスト・既存書類から情報を抽出し、<br>
+                  履歴書・職務経歴書・キャリアアドバイスを自動生成します。
+                </span>
+              </p>
+            </div>
+
+            <!-- 生成済みコンテンツ -->
+            <div id="outputContent" class="hidden">
+
+              <!-- 履歴書パネル -->
+              <div id="panel-resume">
+                <div id="resume-content" class="doc-preview"></div>
+              </div>
+
+              <!-- 職務経歴書パネル -->
+              <div id="panel-work_history" class="hidden">
+                <div id="work-history-content" class="doc-preview"></div>
+              </div>
+
+              <!-- キャリアアドバイスパネル -->
+              <div id="panel-career_advice" class="hidden">
+                <div id="career-advice-content"></div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+      <!-- /右カラム -->
+
+    </div>
+  </main>
+
+  <!-- フッター -->
+  <footer class="app-footer no-print">
+    <p class="text-xs text-center" style="color: #c4b5fd;">
+      ✨ AIキャリアアドバイザー &nbsp;|&nbsp; データはブラウザ内のみで処理されます
+    </p>
+  </footer>
+
+  <!-- JS (読み込み順序重要) -->
+  <script src="js/pdf-reader.js"></script>
+  <script src="js/openai.js"></script>
+  <script src="js/doc-gen.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const key = localStorage.getItem('career_advisor_api_key');
+      const dot = document.getElementById('apiKeyStatusDot');
+      const text = document.getElementById('apiKeyStatusText');
+      const badge = document.getElementById('apiKeyStatusBadge');
+
+      if (dot && text && badge) {
+        badge.classList.remove('hidden');
+        if (key) {
+          dot.className = 'w-2 h-2 rounded-full bg-green-400';
+          text.textContent = 'API設定済み';
+          text.className = 'text-xs text-green-500 font-medium';
+        } else {
+          dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+          text.textContent = 'API未設定';
+          text.className = 'text-xs text-amber-500';
+        }
+      }
+
+      const saveBtn = document.getElementById('saveApiKeyBtn');
+      if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+          setTimeout(() => {
+            const updatedKey = localStorage.getItem('career_advisor_api_key');
+            if (dot && text) {
+              if (updatedKey) {
+                dot.className = 'w-2 h-2 rounded-full bg-green-400';
+                text.textContent = 'API設定済み';
+                text.className = 'text-xs text-green-500 font-medium';
+              } else {
+                dot.className = 'w-2 h-2 rounded-full bg-amber-400';
+                text.textContent = 'API未設定';
+                text.className = 'text-xs text-amber-500';
+              }
+            }
+          }, 100);
+        });
+      }
+
+      document.querySelectorAll('[role="button"][tabindex="0"]').forEach(el => {
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            el.click();
+          }
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
