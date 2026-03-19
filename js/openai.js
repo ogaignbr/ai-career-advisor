@@ -463,3 +463,74 @@ function validateAndFillDefaults(data) {
 
   return data;
 }
+
+/* ============================================================
+   reviseDocument
+   書類の特定フィールドをAI指示で修正する
+   ============================================================ */
+async function reviseDocument({ apiKey, docType, currentData, instruction, targetCompany, targetPosition }) {
+  if (!apiKey) throw new Error('APIキーが設定されていません。');
+
+  const isResume = docType === 'resume';
+  const docLabel = isResume ? '履歴書' : '職務経歴書';
+
+  const sysPrompt = `あなたは日本の転職エージェントのキャリアアドバイザーAIです。
+ユーザーの修正指示に従い、${docLabel}データを修正してください。
+
+ルール：
+- 指示に関連する項目のみ修正し、その他のフィールドは元のデータをそのまま返す
+- 日本語・敬体（です・ます調）を維持する
+- 返却するJSONのキー名は元のデータと完全に同じにする
+- ${isResume ? '"resume" キーを持つJSONオブジェクトを返す' : '"work_history" キーを持つJSONオブジェクトを返す'}
+- コードブロックや前置きテキストは不要`;
+
+  const userMsg = [
+    `【現在の${docLabel}データ（JSON）】`,
+    JSON.stringify(currentData, null, 2),
+    '',
+    '【修正指示】',
+    instruction.trim(),
+    ...(targetCompany  ? [`【応募先企業】${targetCompany}`]  : []),
+    ...(targetPosition ? [`【応募職種】${targetPosition}`]   : []),
+  ].join('\n');
+
+  const res = await fetch(OPENAI_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: sysPrompt },
+        { role: 'user',   content: userMsg  },
+      ],
+      response_format: { type: 'json_object' },
+      temperature: 0.5,
+      max_tokens: 4000,
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    const msg = err?.error?.message || `HTTPエラー: ${res.status}`;
+    if (res.status === 401) throw new Error('APIキーが無効です。');
+    if (res.status === 429) throw new Error('APIの利用制限に達しました。しばらく待ってから再試行してください。');
+    throw new Error(`APIエラー: ${msg}`);
+  }
+
+  const apiData = await res.json();
+  let content = apiData.choices[0].message.content;
+  let parsed;
+  try {
+    parsed = JSON.parse(content);
+  } catch {
+    content = content.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+    parsed = JSON.parse(content);
+  }
+
+  return isResume
+    ? (parsed.resume        ?? parsed)
+    : (parsed.work_history  ?? parsed);
+}

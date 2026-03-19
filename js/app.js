@@ -47,6 +47,7 @@ function initApp() {
 
   // イベントリスナーをバインド
   bindEventListeners();
+  initChatPanels();
 
   // 生成ボタンの状態更新
   updateGenerateButton();
@@ -601,6 +602,8 @@ function renderResults(data) {
   renderResume(data.resume, state.photoDataUrl);
   renderWorkHistory(data.work_history);
   renderCareerAdvice(data.career_advice);
+  // チャットパネルを表示
+  showChatPanels();
 }
 
 /**
@@ -1166,4 +1169,128 @@ function getCurrentDateJP() {
     return `平成${y - 1988}年${m}月${d}日`;
   }
   return `${y}年${m}月${d}日`;
+}
+
+// ============================================
+// Chat Panel (AI修正機能)
+// ============================================
+function initChatPanels() {
+  // クイックアクションボタン
+  document.querySelectorAll('.quick-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.getAttribute('data-target');
+      const ta = document.getElementById(targetId);
+      if (ta) { ta.value = btn.textContent; ta.focus(); }
+    });
+  });
+
+  // Ctrl+Enter で送信
+  document.getElementById('resume-chat-input')?.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') handleRevision('resume');
+  });
+  document.getElementById('cv-chat-input')?.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') handleRevision('work_history');
+  });
+
+  // 送信ボタン
+  document.getElementById('resume-chat-submit')?.addEventListener('click', () => handleRevision('resume'));
+  document.getElementById('cv-chat-submit')?.addEventListener('click', () => handleRevision('work_history'));
+}
+
+function showChatPanels() {
+  document.getElementById('resume-chat-panel')?.classList.remove('hidden');
+  document.getElementById('cv-chat-panel')?.classList.remove('hidden');
+}
+
+async function handleRevision(docType) {
+  const isResume = docType === 'resume';
+  const inputId  = isResume ? 'resume-chat-input'   : 'cv-chat-input';
+  const submitId = isResume ? 'resume-chat-submit'   : 'cv-chat-submit';
+  const histId   = isResume ? 'resume-chat-history'  : 'cv-chat-history';
+
+  const textarea  = document.getElementById(inputId);
+  const submitBtn = document.getElementById(submitId);
+  if (!textarea || !submitBtn) return;
+
+  const instruction = textarea.value.trim();
+  if (!instruction) { textarea.focus(); return; }
+
+  if (!state.apiKey) {
+    showError('APIキーが設定されていません。設定ボタンからAPIキーを入力してください。');
+    return;
+  }
+  if (!state.generatedData) {
+    showError('書類が生成されていません。先に書類を生成してください。');
+    return;
+  }
+
+  // ローディング
+  submitBtn.disabled = true;
+  submitBtn.textContent = '🔄 修正中...';
+  clearError();
+
+  try {
+    const currentData = isResume
+      ? state.generatedData.resume
+      : state.generatedData.work_history;
+
+    const revised = await reviseDocument({
+      apiKey: state.apiKey,
+      docType,
+      currentData,
+      instruction,
+      targetCompany:  state.targetCompany,
+      targetPosition: state.targetPosition,
+    });
+
+    if (isResume) {
+      state.generatedData.resume = { ...state.generatedData.resume, ...revised };
+      try {
+        state.resumeBlob = await generateResumeDocx(state.generatedData.resume, state.photoDataUrl);
+        const btn = document.getElementById('downloadResumeBtn');
+        if (btn) btn.disabled = false;
+      } catch (e) { console.warn('Word再生成エラー:', e); }
+      renderResume(state.generatedData.resume, state.photoDataUrl);
+    } else {
+      state.generatedData.work_history = { ...state.generatedData.work_history, ...revised };
+      try {
+        state.cvBlob = await generateWorkHistoryDocx(state.generatedData.work_history);
+        const btn = document.getElementById('downloadCvBtn');
+        if (btn) btn.disabled = false;
+      } catch (e) { console.warn('Word再生成エラー:', e); }
+      renderWorkHistory(state.generatedData.work_history);
+    }
+
+    addRevisionHistoryItem(histId, instruction);
+    textarea.value = '';
+    showToast('✅ 修正が完了しました！', 'success');
+
+  } catch (err) {
+    console.error('修正エラー:', err);
+    showError(`修正エラー: ${err.message}`);
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = '🔄 AIに修正してもらう';
+  }
+}
+
+function addRevisionHistoryItem(histId, instruction) {
+  const container = document.getElementById(histId);
+  if (!container) return;
+
+  // 最大5件 (古いものを削除)
+  const existing = container.querySelectorAll('.history-item');
+  if (existing.length >= 5) existing[existing.length - 1].remove();
+
+  const now  = new Date();
+  const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+
+  const item = document.createElement('div');
+  item.className = 'history-item';
+  item.innerHTML = `
+    <span class="history-instruction">${escHtml(instruction)}</span>
+    <span class="history-status">✅ 修正完了</span>
+    <span class="history-time">${time}</span>
+  `;
+  container.insertBefore(item, container.firstChild);
 }

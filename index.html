@@ -37,6 +37,100 @@
       }
     }
   </script>
+  <style>
+    /* ===== AIチャット修正パネル ===== */
+    .chat-revision-panel {
+      margin-top: 20px;
+      background: #f0fdf4;
+      border: 1.5px solid #86efac;
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+    .chat-panel-header h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #166534;
+      margin-bottom: 3px;
+    }
+    .chat-panel-header p {
+      font-size: 0.78rem;
+      color: #4b5563;
+      margin-bottom: 14px;
+    }
+    .chat-quick-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 12px;
+    }
+    .quick-btn {
+      background: #fff;
+      border: 1.5px solid #86efac;
+      color: #166534;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, border-color .15s;
+      font-family: inherit;
+    }
+    .quick-btn:hover { background: #dcfce7; border-color: #4ade80; }
+    .chat-input-area { display: flex; flex-direction: column; gap: 8px; }
+    .chat-input-area textarea {
+      width: 100%;
+      border: 1.5px solid #86efac;
+      border-radius: 10px;
+      padding: 9px 12px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      resize: vertical;
+      background: #fff;
+      color: #1a1a1a;
+      outline: none;
+      transition: border-color .15s;
+      line-height: 1.6;
+    }
+    .chat-input-area textarea:focus { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.12); }
+    .chat-submit-btn {
+      align-self: flex-end;
+      background: linear-gradient(135deg, #166534, #15803d);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 9px 22px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: opacity .15s, transform .1s;
+    }
+    .chat-submit-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+    .chat-submit-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .chat-history { margin-top: 14px; display: flex; flex-direction: column; gap: 7px; }
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #fff;
+      border: 1px solid #d1fae5;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      flex-wrap: wrap;
+    }
+    .history-instruction {
+      flex: 1;
+      color: #374151;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .history-status { color: #16a34a; font-weight: 700; white-space: nowrap; }
+    .history-time   { color: #9ca3af; white-space: nowrap; font-size: 0.72rem; }
+    @media print { .chat-revision-panel { display: none !important; } }
+  </style>
 </head>
 <body class="min-h-screen">
 
@@ -295,11 +389,49 @@
               <!-- 履歴書パネル -->
               <div id="panel-resume">
                 <div id="resume-content" class="doc-preview"></div>
+        <!-- AIチャット修正パネル（履歴書） -->
+        <div id="resume-chat-panel" class="chat-revision-panel hidden no-print">
+          <div class="chat-panel-header">
+            <h3>✏️ AIに修正を依頼する</h3>
+            <p>面談後に気になった点や、もっとこうしてほしいという指示を入力してください</p>
+          </div>
+          <div class="chat-quick-actions">
+            <button class="quick-btn" data-target="resume-chat-input">志望動機をより詳しく書いて</button>
+            <button class="quick-btn" data-target="resume-chat-input">志望動機を簡潔にまとめて（200字以内）</button>
+            <button class="quick-btn" data-target="resume-chat-input">自己PRをもっと具体的に</button>
+            <button class="quick-btn" data-target="resume-chat-input">全体的に丁寧な言葉遣いにして</button>
+            <button class="quick-btn" data-target="resume-chat-input">アピールポイントをより強調して</button>
+          </div>
+          <div class="chat-input-area">
+            <textarea id="resume-chat-input" rows="3" placeholder="例：「志望動機の2段落目を、もっと熱意が伝わる表現にしてください」&#10;　　「自己PRに、前職で売上目標を120%達成したエピソードを追加してください」"></textarea>
+            <button id="resume-chat-submit" class="chat-submit-btn">🔄 AIに修正してもらう</button>
+          </div>
+          <div id="resume-chat-history" class="chat-history"></div>
+        </div>
               </div>
 
               <!-- 職務経歴書パネル -->
               <div id="panel-work_history" class="hidden">
                 <div id="work-history-content" class="doc-preview"></div>
+        <!-- AIチャット修正パネル（職務経歴書） -->
+        <div id="cv-chat-panel" class="chat-revision-panel hidden no-print">
+          <div class="chat-panel-header">
+            <h3>✏️ AIに修正を依頼する</h3>
+            <p>面談後に気になった点や、もっとこうしてほしいという指示を入力してください</p>
+          </div>
+          <div class="chat-quick-actions">
+            <button class="quick-btn" data-target="cv-chat-input">自己PRをもっと具体的に書いて</button>
+            <button class="quick-btn" data-target="cv-chat-input">職務要約を簡潔にまとめて</button>
+            <button class="quick-btn" data-target="cv-chat-input">担当業務の箇条書きをさらに詳しく</button>
+            <button class="quick-btn" data-target="cv-chat-input">実績に数値を加えて強調して</button>
+            <button class="quick-btn" data-target="cv-chat-input">全体的にアピール度を上げて</button>
+          </div>
+          <div class="chat-input-area">
+            <textarea id="cv-chat-input" rows="3" placeholder="例：「志望動機の2段落目を、もっと熱意が伝わる表現にしてください」&#10;　　「自己PRに、前職で売上目標を120%達成したエピソードを追加してください」"></textarea>
+            <button id="cv-chat-submit" class="chat-submit-btn">🔄 AIに修正してもらう</button>
+          </div>
+          <div id="cv-chat-history" class="chat-history"></div>
+        </div>
               </div>
 
               <!-- キャリアアドバイスパネル -->
