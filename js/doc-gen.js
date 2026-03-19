@@ -76,20 +76,23 @@ async function generateResumeDocx(resumeData, photoDataUrl) {
   const birth = escW(r.birth_date || '');
   const age = r.age ? `（満${escW(r.age)}歳）` : '';
   const birthStr = birth ? `${birth}生　${age}` : '';
+  const gender = escW(r.gender || '');
 
-  // 証明写真セル
+  // 証明写真セル（30×40mm = 85×113pt）
   const photoContent = photoDataUrl
-    ? `<img src="${photoDataUrl}" style="width:86pt;height:114pt;object-fit:cover;display:block;">`
-    : `<div style="width:86pt;height:114pt;border:1pt solid #999;display:flex;align-items:center;justify-content:center;font-size:7.5pt;color:#999;text-align:center;line-height:1.4;">写真を<br>貼る</div>`;
+    ? `<img src="${photoDataUrl}" style="width:85pt;height:113pt;object-fit:cover;display:block;">`
+    : `<div style="width:85pt;height:113pt;border:1pt solid #999;text-align:center;font-size:7pt;color:#999;padding-top:40pt;line-height:1.6;">写真を<br>貼る<br>（30×40mm）</div>`;
 
   // 学歴行
   const eduRows = (r.education || []).map(e =>
     `<tr>
-      <td style="text-align:center;width:30pt;">${escW(e.year)}</td>
-      <td style="text-align:center;width:22pt;">${escW(e.month)}</td>
+      <td style="text-align:center;">${escW(e.year)}</td>
+      <td style="text-align:center;">${escW(e.month)}</td>
       <td>${escW(e.content)}</td>
     </tr>`
-  ).join('');
+  ).join('') || `<tr><td style="height:18pt;"></td><td></td><td></td></tr>
+    <tr><td style="height:18pt;"></td><td></td><td></td></tr>
+    <tr><td style="height:18pt;"></td><td></td><td></td></tr>`;
 
   // 職歴行
   const careerRows = (r.career || []).map(e =>
@@ -98,7 +101,9 @@ async function generateResumeDocx(resumeData, photoDataUrl) {
       <td style="text-align:center;">${escW(e.month)}</td>
       <td>${escW(e.content)}</td>
     </tr>`
-  ).join('');
+  ).join('') || `<tr><td style="height:18pt;"></td><td></td><td></td></tr>
+    <tr><td style="height:18pt;"></td><td></td><td></td></tr>
+    <tr><td style="height:18pt;"></td><td></td><td></td></tr>`;
 
   // 資格行
   const qualRows = (r.qualifications || []).map(e =>
@@ -107,61 +112,67 @@ async function generateResumeDocx(resumeData, photoDataUrl) {
       <td style="text-align:center;">${escW(e.month)}</td>
       <td>${escW(e.content)}</td>
     </tr>`
-  ).join('') || `<tr><td></td><td></td><td></td></tr>`;
+  ).join('') || `<tr><td style="height:18pt;"></td><td></td><td></td></tr>
+    <tr><td style="height:18pt;"></td><td></td><td></td></tr>`;
 
-  const commute = escW(r.commute_time || '　　時間　　分');
-  const dependents = escW(r.dependents || '0人');
-  const spouse = escW(r.spouse || '無');
-  const spouseSupport = escW(r.spouse_support || '無');
+  const commute   = escW(r.commute_time   || '');
+  const dependents = escW(r.dependents    || '');
+  const spouse    = escW(r.spouse         || '有・無');
+  const spouseSupport = escW(r.spouse_support || '有・無');
 
-  const hobbies = nl2br(r.skills_hobbies || '');
-  const motivation = nl2br(r.motivation || '');
-  const note = nl2br(r.note || '貴社の規定に従います。');
+  const hobbies   = nl2br(r.skills_hobbies || '');
+  const motivation = nl2br(r.motivation   || '');
+  const note      = nl2br(r.note          || '貴社の規定に従います。');
+
+  /*
+   * 基本情報テーブルは6列構成で、行ごとに適切な幅を持たせる：
+   *   col1(ラベル:60pt) col2(左内容:140pt) col3(中間:45pt)
+   *   col4(副ラベル:55pt) col5(副内容:95pt) col6(写真:90pt)
+   *
+   * 行ごとのcolspan設計：
+   *   行1,2,4,5 : col1 | col2+3+4+5 colspan=4 | col6(photo rowspan=5)
+   *   行3       : col1 | col2+3 colspan=2(生年月日) | col4(性別ラベル) | col5(性別値) | col6(photo続き)
+   *   行6,7     : col1 | col2+3 colspan=2(ふりがな/連絡先) | col4(電話ラベル) | col5+6 colspan=2(電話番号)
+   *   行8       : col1+2+3 colspan=3 | col4(E-mailラベル) | col5+6 colspan=2(メール)
+   */
 
   const styles = `
     h1.resume-title {
       font-size:18pt; font-weight:bold; text-align:center;
       letter-spacing:2em; margin:0 0 4pt 0; border:none;
     }
-    .date-right { text-align:right; font-size:9pt; margin-bottom:6pt; }
-    table.resume-main {
-      width:100%; border-collapse:collapse; font-size:9.5pt;
-    }
-    table.resume-main td, table.resume-main th {
-      border:1pt solid #000; padding:3pt 5pt; vertical-align:top;
+    .date-right { text-align:right; font-size:9pt; margin-bottom:4pt; }
+    table.resume-main { border-collapse:collapse; font-size:9.5pt; width:100%; }
+    table.resume-main td {
+      border:1pt solid #000; padding:3pt 5pt; vertical-align:middle;
     }
     .th-label {
-      background:#f5f5f5; font-weight:bold; white-space:nowrap;
-      font-size:8.5pt; text-align:center; vertical-align:middle;
+      background:#f0f0f0; font-weight:bold; white-space:nowrap;
+      font-size:8pt; text-align:center; vertical-align:middle;
     }
-    .name-cell { font-size:16pt; font-weight:bold; vertical-align:middle; }
-    .photo-cell {
-      text-align:center; vertical-align:middle;
-      width:92pt;
-    }
-    table.history-table {
-      width:100%; border-collapse:collapse; font-size:9.5pt; margin-top:0;
-    }
+    .name-cell { font-size:15pt; font-weight:bold; vertical-align:middle; padding:4pt 6pt; }
+    .photo-cell { text-align:center; vertical-align:middle; padding:4pt; }
+    .kana-cell { font-size:8pt; color:#555; vertical-align:top; padding:2pt 5pt; }
+    table.history-table { border-collapse:collapse; font-size:9.5pt; width:100%; }
     table.history-table td, table.history-table th {
-      border:1pt solid #000; padding:3pt 5pt; vertical-align:top;
+      border:1pt solid #000; padding:3pt 5pt; vertical-align:middle;
+    }
+    table.history-table th {
+      background:#f0f0f0; font-weight:bold; text-align:center;
     }
     .section-label-row td {
-      text-align:center; font-weight:bold; background:#f0f0f0; padding:2pt;
+      text-align:center; font-weight:bold; background:#e8e8e8; padding:2pt 5pt;
     }
-    .ijou-row td { text-align:right; }
-    table.lower-table {
-      width:100%; border-collapse:collapse; font-size:9.5pt;
-    }
-    table.lower-table td, table.lower-table th {
-      border:1pt solid #000; padding:3pt 5pt; vertical-align:top;
-    }
+    .ijou-row td { text-align:right; border-left:none; border-right:none; border-top:none; padding:1pt 5pt; }
+    table.commute-table { border-collapse:collapse; font-size:9pt; width:100%; }
+    table.commute-table td { border:1pt solid #000; padding:3pt 5pt; vertical-align:middle; }
     .text-area-box {
-      border:1pt solid #000; padding:6pt 8pt; min-height:50pt;
-      font-size:9.5pt; line-height:1.7; width:100%; box-sizing:border-box;
+      border:1pt solid #000; padding:5pt 7pt; min-height:55pt;
+      font-size:9.5pt; line-height:1.8; width:100%; box-sizing:border-box;
     }
     .section-header {
-      font-size:9.5pt; font-weight:bold; border-bottom:1pt solid #000;
-      padding-bottom:1pt; margin:6pt 0 2pt 0;
+      font-size:9pt; font-weight:bold; margin:5pt 0 1pt 0;
+      border-bottom:1pt solid #000; padding-bottom:1pt;
     }
   `;
 
@@ -169,86 +180,121 @@ async function generateResumeDocx(resumeData, photoDataUrl) {
     <h1 class="resume-title">履　歴　書</h1>
     <p class="date-right">${getCurrentDateJPDoc()}現在</p>
 
-    <!-- 基本情報テーブル（証明写真付き） -->
+    <!--
+      基本情報テーブル（6列構成）
+      col1:60pt / col2:140pt / col3:45pt / col4:55pt / col5:95pt / col6:90pt
+    -->
     <table class="resume-main">
+      <!-- 列幅指定用の非表示行 -->
+      <tr style="height:0;line-height:0;font-size:0;border:none;">
+        <td style="width:60pt;padding:0;border:none;"></td>
+        <td style="width:140pt;padding:0;border:none;"></td>
+        <td style="width:45pt;padding:0;border:none;"></td>
+        <td style="width:55pt;padding:0;border:none;"></td>
+        <td style="width:95pt;padding:0;border:none;"></td>
+        <td style="width:90pt;padding:0;border:none;"></td>
+      </tr>
+
+      <!-- 行1: ふりがな（col1 | col2+3+4+5 | col6=写真 rowspan=5） -->
       <tr>
-        <td class="th-label" style="width:56pt;">ふりがな</td>
-        <td colspan="3">${escW(r.name_kana)}</td>
+        <td class="th-label">ふりがな</td>
+        <td colspan="4" class="kana-cell">${escW(r.name_kana)}</td>
         <td class="photo-cell" rowspan="5">${photoContent}</td>
       </tr>
+
+      <!-- 行2: 氏名 -->
       <tr>
         <td class="th-label">氏&emsp;名</td>
-        <td colspan="3" class="name-cell">${escW(r.name)}&emsp;印</td>
+        <td colspan="4" class="name-cell">${escW(r.name)}</td>
       </tr>
+
+      <!-- 行3: 生年月日 + 性別（col1 | col2+3=生年月日 | col4=性別ラベル | col5=性別値 | col6=写真続き） -->
       <tr>
         <td class="th-label">生年月日</td>
-        <td colspan="3">${birthStr}</td>
+        <td colspan="2">${birthStr}</td>
+        <td class="th-label">性別</td>
+        <td style="text-align:center;">${gender}</td>
       </tr>
+
+      <!-- 行4: ふりがな（住所） -->
       <tr>
         <td class="th-label">ふりがな</td>
-        <td colspan="3" style="font-size:8pt;color:#555;">${escW(r.address_kana || '')}</td>
+        <td colspan="4" class="kana-cell">${escW(r.address_kana || '')}</td>
       </tr>
+
+      <!-- 行5: 現住所（最後の写真rowspan行） -->
       <tr>
         <td class="th-label">現住所</td>
-        <td colspan="3">
-          〒${escW(r.postal_code || '')}　${escW(r.address || '')}
-        </td>
+        <td colspan="4">〒${escW(r.postal_code || '')}&nbsp;&nbsp;${escW(r.address || '')}</td>
       </tr>
+
+      <!--
+        以下、写真rowspan終了。col6が通常セルとして使える。
+        行6,7: col1(ラベル) | col2+3(ふりがな/連絡先, 185pt) | col4(電話ラベル, 55pt) | col5+6(電話番号, 185pt)
+      -->
+
+      <!-- 行6: ふりがな（連絡先）+ 自宅電話 -->
       <tr>
         <td class="th-label">ふりがな</td>
-        <td colspan="2">${escW(r.contact_address_kana || '')}</td>
-        <td class="th-label" style="width:80pt;">自宅電話</td>
-        <td>${escW(r.phone_home || '')}</td>
+        <td colspan="2" class="kana-cell">${escW(r.contact_address_kana || '')}</td>
+        <td class="th-label" style="font-size:7.5pt;text-align:center;">自宅<br>電話</td>
+        <td colspan="2">${escW(r.phone_home || '')}</td>
       </tr>
+
+      <!-- 行7: 連絡先 + 携帯電話 -->
       <tr>
-        <td class="th-label">連&nbsp;絡&nbsp;先</td>
-        <td colspan="2" style="font-size:8pt;color:#555;">〒${escW(r.contact_address || '')}（現住所以外に連絡を希望する場合のみ）</td>
-        <td class="th-label">携帯電話</td>
-        <td>${escW(r.phone || '')}</td>
+        <td class="th-label">連絡先</td>
+        <td colspan="2" style="font-size:8pt;color:#555;">
+          ${r.contact_address ? `〒${escW(r.contact_address)}` : '（現住所以外の場合のみ記入）'}
+        </td>
+        <td class="th-label" style="font-size:7.5pt;text-align:center;">携帯<br>電話</td>
+        <td colspan="2">${escW(r.phone || '')}</td>
       </tr>
+
+      <!-- 行8: E-mail（左3セル空白） -->
       <tr>
-        <td colspan="3"></td>
+        <td colspan="3" style="border-top:none;border-left:none;border-bottom:none;"></td>
         <td class="th-label">E-mail</td>
-        <td>${escW(r.email || '')}</td>
+        <td colspan="2">${escW(r.email || '')}</td>
       </tr>
     </table>
 
     <!-- 学歴・職歴 -->
     <table class="history-table">
       <tr>
-        <th style="width:30pt;text-align:center;">年</th>
-        <th style="width:22pt;text-align:center;">月</th>
+        <th style="width:32pt;">年</th>
+        <th style="width:24pt;">月</th>
         <th>学歴・職歴（各別にまとめて書く）</th>
       </tr>
-      <tr class="section-label-row"><td></td><td></td><td>学&emsp;歴</td></tr>
-      ${eduRows || '<tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr>'}
-      <tr class="section-label-row"><td></td><td></td><td>職&emsp;歴</td></tr>
-      ${careerRows || '<tr><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td></tr>'}
-      <tr class="ijou-row"><td></td><td></td><td>以上</td></tr>
+      <tr class="section-label-row"><td></td><td></td><td>学&emsp;&emsp;歴</td></tr>
+      ${eduRows}
+      <tr class="section-label-row"><td></td><td></td><td>職&emsp;&emsp;歴</td></tr>
+      ${careerRows}
+      <tr class="ijou-row"><td colspan="3" style="text-align:right;border:none;padding-right:2pt;">以上</td></tr>
     </table>
 
     <!-- 免許・資格 -->
-    <table class="history-table">
+    <table class="history-table" style="margin-top:0;">
       <tr>
-        <th style="width:30pt;text-align:center;">年</th>
-        <th style="width:22pt;text-align:center;">月</th>
+        <th style="width:32pt;">年</th>
+        <th style="width:24pt;">月</th>
         <th>免許・資格</th>
       </tr>
       ${qualRows}
-      <tr class="ijou-row"><td></td><td></td><td>以上</td></tr>
+      <tr class="ijou-row"><td colspan="3" style="text-align:right;border:none;padding-right:2pt;">以上</td></tr>
     </table>
 
-    <!-- 通勤・扶養 -->
-    <table class="lower-table">
+    <!-- 通勤時間・扶養家族・配偶者 -->
+    <table class="commute-table">
       <tr>
-        <td class="th-label" style="width:80pt;">通勤時間</td>
-        <td style="width:80pt;">約　${commute}</td>
-        <td class="th-label" style="width:80pt;">扶養家族数<br><span style="font-size:7.5pt;">（配偶者を除く）</span></td>
-        <td style="width:50pt;">${dependents}</td>
-        <td class="th-label" style="width:50pt;">配偶者</td>
-        <td style="width:40pt;">${spouse}</td>
-        <td class="th-label" style="width:80pt;">配偶者の<br>扶養義務</td>
-        <td>${spouseSupport}</td>
+        <td class="th-label" style="width:58pt;">通勤時間</td>
+        <td style="width:90pt;">約&nbsp;${commute || '　　時間　　分'}</td>
+        <td class="th-label" style="width:75pt;">扶養家族数<br><span style="font-size:7pt;">（配偶者を除く）</span></td>
+        <td style="width:55pt;">${dependents || '　　人'}</td>
+        <td class="th-label" style="width:40pt;">配偶者</td>
+        <td style="width:45pt;text-align:center;">${spouse}</td>
+        <td class="th-label" style="width:70pt;">配偶者の<br>扶養義務</td>
+        <td style="text-align:center;">${spouseSupport}</td>
       </tr>
     </table>
 
