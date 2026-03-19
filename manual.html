@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIキャリアアドバイザー 使い方マニュアル | (株)杜の都工房</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* ===== リセット & ベース ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Noto Sans JP', 'Meiryo', sans-serif;
+      background: #f8fffe;
+      color: #1a2e1e;
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    /* ===== カラー変数 ===== */
+    :root {
+      --green-dark:   #1b4332;
+      --green-main:   #2d6a4f;
+      --green-mid:    #40916c;
+      --green-light:  #74c69d;
+      --green-pale:   #d8f3dc;
+      --green-bg:     #f8fffe;
+      --white:        #ffffff;
+      --gray-100:     #f4f4f4;
+      --gray-300:     #d1d5db;
+      --gray-600:     #4b5563;
+      --warn-bg:      #fffbeb;
+      --warn-border:  #f59e0b;
+      --warn-text:    #92400e;
+    }
+
+    /* ===== ヘッダー ===== */
+    .site-header {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 100%);
+      color: var(--white);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(27,67,50,.35);
+    }
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      gap: 12px;
+    }
+    .header-logo {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+      white-space: nowrap;
+    }
+    .header-logo span { opacity: .75; font-weight: 400; font-size: .8rem; margin-left: 6px; }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(255,255,255,.15);
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,.3);
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: .82rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background .2s;
+    }
+    .btn-back:hover { background: rgba(255,255,255,.28); }
+    .btn-print {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      border: none;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: .82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .btn-print:hover { background: #95d5b2; }
+
+    /* ===== ナビゲーション ===== */
+    .toc-bar {
+      background: var(--white);
+      border-bottom: 2px solid var(--green-pale);
+      padding: 0 24px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .toc-bar::-webkit-scrollbar { height: 3px; }
+    .toc-bar::-webkit-scrollbar-thumb { background: var(--green-light); }
+    .toc-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      height: 44px;
+    }
+    .toc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--green-main);
+      text-decoration: none;
+      transition: background .15s, color .15s;
+      flex-shrink: 0;
+    }
+    .toc-link:hover, .toc-link:focus {
+      background: var(--green-pale);
+      color: var(--green-dark);
+    }
+    .toc-badge {
+      background: var(--green-main);
+      color: var(--white);
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .65rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ===== メインコンテンツ ===== */
+    .main { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ===== 表紙セクション ===== */
+    .cover-section {
+      text-align: center;
+      padding: 40px 0 32px;
+      border-bottom: 3px solid var(--green-pale);
+      margin-bottom: 40px;
+    }
+    .cover-title {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 900;
+      color: var(--green-dark);
+      letter-spacing: .05em;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    .cover-sub {
+      font-size: 1rem;
+      color: var(--green-mid);
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .cover-img {
+      width: 100%;
+      max-width: 800px;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(45,106,79,.18);
+      display: block;
+      margin: 0 auto;
+    }
+
+    /* ===== STEPセクション ===== */
+    .step-section {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px rgba(45,106,79,.09);
+      margin-bottom: 32px;
+      overflow: hidden;
+    }
+    .step-header {
+      background: linear-gradient(90deg, var(--green-main) 0%, var(--green-mid) 100%);
+      color: var(--white);
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .step-badge {
+      background: var(--white);
+      color: var(--green-main);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      font-weight: 900;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(0,0,0,.15);
+    }
+    .step-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: .03em;
+    }
+    .step-body { padding: 24px; }
+
+    /* ===== 画像スタイル ===== */
+    .step-img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(45,106,79,.14);
+      display: block;
+      margin-bottom: 20px;
+    }
+    .img-caption {
+      text-align: center;
+      font-size: .78rem;
+      color: var(--gray-600);
+      margin-top: -14px;
+      margin-bottom: 20px;
+    }
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 600px) {
+      .img-grid { grid-template-columns: 1fr; }
+    }
+    .img-grid-item { display: flex; flex-direction: column; gap: 6px; }
+    .img-grid-item img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 4px 16px rgba(45,106,79,.14);
+    }
+    .img-grid-caption {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--gray-600);
+      font-weight: 500;
+    }
+
+    /* ===== 説明テキスト ===== */
+    .step-desc {
+      font-size: .93rem;
+      color: #1a2e1e;
+      line-height: 1.85;
+    }
+    .step-desc p { margin-bottom: 10px; }
+    .step-desc ul, .step-desc ol {
+      padding-left: 1.4em;
+      margin-bottom: 10px;
+    }
+    .step-desc li { margin-bottom: 4px; }
+    .step-desc strong { color: var(--green-dark); }
+    .step-desc .note {
+      font-size: .82rem;
+      color: var(--gray-600);
+    }
+
+    /* ===== 注意ボックス ===== */
+    .warn-box {
+      background: var(--warn-bg);
+      border: 2px solid var(--warn-border);
+      border-radius: 10px;
+      padding: 18px 20px;
+      margin-top: 16px;
+    }
+    .warn-box .warn-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--warn-text);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .warn-box .warn-content {
+      font-size: .88rem;
+      color: var(--warn-text);
+      line-height: 1.8;
+    }
+    .warn-box .warn-content p { margin-bottom: 8px; }
+    .warn-box .warn-content ul { padding-left: 1.4em; }
+    .warn-box .warn-content li { margin-bottom: 3px; }
+    .warn-box .warn-content strong { font-weight: 700; }
+
+    /* ===== インフォボックス ===== */
+    .info-box {
+      background: var(--green-pale);
+      border-left: 4px solid var(--green-main);
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      font-size: .9rem;
+      color: var(--green-dark);
+    }
+
+    /* ===== ダウンロードセクション ===== */
+    .download-section {
+      background: linear-gradient(135deg, var(--green-dark) 0%, var(--green-main) 100%);
+      border-radius: 16px;
+      padding: 28px 24px;
+      margin-bottom: 32px;
+      text-align: center;
+      color: var(--white);
+    }
+    .download-section h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .download-section p {
+      font-size: .85rem;
+      opacity: .85;
+      margin-bottom: 20px;
+    }
+    .download-buttons {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--white);
+      color: var(--green-dark);
+      border-radius: 10px;
+      padding: 12px 22px;
+      font-size: .95rem;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(0,0,0,.18);
+      transition: transform .15s, box-shadow .15s;
+    }
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,.22);
+    }
+
+    /* ===== フッター ===== */
+    .site-footer {
+      background: var(--green-dark);
+      color: rgba(255,255,255,.8);
+      text-align: center;
+      padding: 24px;
+      font-size: .82rem;
+    }
+    .site-footer a {
+      color: var(--green-light);
+      text-decoration: none;
+      font-weight: 600;
+      margin-right: 20px;
+    }
+    .site-footer a:hover { text-decoration: underline; }
+    .footer-links { margin-bottom: 8px; }
+
+    /* ===== 印刷スタイル ===== */
+    @media print {
+      .site-header, .toc-bar, .btn-print { display: none !important; }
+      body { background: white; font-size: 12pt; }
+      .step-section { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
+      .cover-img, .step-img { box-shadow: none; }
+      .img-grid { grid-template-columns: repeat(2, 1fr); }
+      .download-section { background: #2d6a4f; -webkit-print-color-adjust: exact; }
+      .main { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-logo">
+        📖 使い方マニュアル
+        <span>AIキャリアアドバイザー</span>
+      </div>
+      <div class="header-actions">
+        <a href="index.html" class="btn-back">← アプリに戻る</a>
+        <button class="btn-print" onclick="window.print()">🖨️ 印刷</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ナビゲーション（TOC） -->
+  <nav class="toc-bar" aria-label="目次">
+    <div class="toc-inner">
+      <a href="#cover"    class="toc-link">🏠 表紙</a>
+      <a href="#step1"    class="toc-link"><span class="toc-badge">1</span>API設定</a>
+      <a href="#step2"    class="toc-link"><span class="toc-badge">2</span>情報入力</a>
+      <a href="#step3"    class="toc-link"><span class="toc-badge">3</span>AIアドバイス</a>
+      <a href="#step7"    class="toc-link"><span class="toc-badge">4</span>ダウンロード</a>
+      <a href="#step8"    class="toc-link"><span class="toc-badge">5</span>Word編集</a>
+      <a href="#templates" class="toc-link">📄 テンプレート</a>
+    </div>
+  </nav>
+
+  <!-- メインコンテンツ -->
+  <main class="main">
+
+    <!-- 表紙 -->
+    <section id="cover" class="cover-section">
+      <h1 class="cover-title">AIキャリアアドバイザー<br>使い方マニュアル</h1>
+      <p class="cover-sub">(株)杜の都工房 社内用</p>
+      <img
+        src="アプリ使い方/１表紙.png"
+        alt="AIキャリアアドバイザー アプリ表紙"
+        class="cover-img"
+      >
+    </section>
+
+    <!-- STEP 1: APIキーの設定 -->
+    <section id="step1" class="step-section">
+      <div class="step-header">
+        <div class="step-badge">STEP<br>1</div>
+        <h2 class="step-title">APIキーの設定</h2>
+      </div>
+      <div class="step-body">
+        <img
+          src="アプリ使い方/２API設定.png"
+          alt="API設定画面のスクリーンショット"
+          class="step-img"
+        >
+        <div class="step-desc">
+          <p>アプリを開いたら、最初に右上の <strong>「⚙️ 設定」ボタン</strong>をクリックします。</p>
+          <p>OpenAI APIキー（<code>sk-</code> から始まる文字列）を入力し、<strong>「保存する」</strong>をクリックしてください。</p>
+          <p>APIキーはブラウザに保存されるため、同じブラウザを使う限り再入力は不要です。</p>
+          <p class="note">※ APIキーをお持ちでない場合は管理者にお問い合わせください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 2: 情報の入力 -->
+    <section id="step2" class="step-section">
+      <div class="step-header">
+        <div class="step-badge">STEP<br>2</div>
+        <h2 class="step-title">情報の入力</h2>
+      </div>
+      <div class="step-body">
+        <img
+          src="アプリ使い方/３情報入力.png"
+          alt="情報入力画面のスクリーンショット"
+          class="step-img"
+        >
+        <div class="step-desc">
+          <p>左側の入力エリアに以下の情報を入力します。</p>
+          <ol>
+            <li><strong>【応募情報（任意）】</strong>応募先企業名・応募職種を入力</li>
+            <li><strong>【面談テキスト】</strong>面談の文字起こしデータをそのまま貼り付け</li>
+            <li>
+              <strong>【添付ファイル（任意）】</strong>
+              <ul>
+                <li>証明写真（PNG/JPG）：クリックしてアップロード</li>
+                <li>既存の履歴書PDF：クリックまたはドラッグ＆ドロップ</li>
+                <li>既存の職務経歴書PDF：クリックまたはドラッグ＆ドロップ</li>
+              </ul>
+            </li>
+          </ol>
+          <div class="info-box" style="margin-top:14px;">
+            入力が完了したら <strong>「✨ 書類を自動生成する」</strong> ボタンをクリックします。<br>
+            生成には通常 <strong>30〜60秒</strong> かかります。
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 3〜6: AIアドバイスの確認 -->
+    <section id="step3" class="step-section">
+      <div class="step-header">
+        <div class="step-badge">STEP<br>3〜6</div>
+        <h2 class="step-title">AIアドバイスの確認</h2>
+      </div>
+      <div class="step-body">
+        <div class="img-grid">
+          <div class="img-grid-item">
+            <img src="アプリ使い方/４アドバイス.png" alt="AIアドバイス画面①">
+            <div class="img-grid-caption">アドバイス画面①</div>
+          </div>
+          <div class="img-grid-item">
+            <img src="アプリ使い方/５アドバイス.png" alt="AIアドバイス画面②">
+            <div class="img-grid-caption">アドバイス画面②</div>
+          </div>
+          <div class="img-grid-item">
+            <img src="アプリ使い方/６アドバイス.png" alt="AIアドバイス画面③">
+            <div class="img-grid-caption">アドバイス画面③</div>
+          </div>
+          <div class="img-grid-item">
+            <img src="アプリ使い方/７アドバイス.png" alt="AIアドバイス画面④">
+            <div class="img-grid-caption">アドバイス画面④</div>
+          </div>
+        </div>
+        <div class="step-desc">
+          <p><strong>「💡 アドバイス」タブ</strong>をクリックすると、AIによるキャリア分析が表示されます。</p>
+          <p><strong>【表示される内容】</strong></p>
+          <ul>
+            <li>総合スコア・評価サマリー</li>
+            <li>スコア詳細・スキルレーダーチャート</li>
+            <li>🌟 おすすめ求人ピックアップ（マッチ度・年収・クロージングキーワード付き）</li>
+            <li>キャリアビジョン（3年後・5年後・年収予測）</li>
+            <li>面談での注目発言</li>
+            <li>強み・成長エリア</li>
+            <li>推奨アクションアイテム</li>
+          </ul>
+          <p style="margin-top:10px;">求人とのマッチ度、クロージングで使えるキーワード、面談トークポイントを参考にしてください。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 7: 履歴書・職務経歴書の確認とダウンロード -->
+    <section id="step7" class="step-section">
+      <div class="step-header">
+        <div class="step-badge">STEP<br>7</div>
+        <h2 class="step-title">履歴書・職務経歴書の確認とダウンロード</h2>
+      </div>
+      <div class="step-body">
+        <div class="step-desc">
+          <p>「📋 履歴書」「📑 職務経歴書」タブでAIが生成した書類の内容を確認してください。</p>
+          <p>確認後、上部の <strong>「⬇️ 履歴書 (Word)」「⬇️ 職務経歴書 (Word)」</strong> ボタンをクリックしてダウンロードできます。</p>
+        </div>
+
+        <div class="warn-box">
+          <div class="warn-title">⚠️ ダウンロード後は必ず内容を確認してください</div>
+          <div class="warn-content">
+            <p><strong>【履歴書】</strong></p>
+            <ul>
+              <li>証明写真のサイズ・位置がずれる場合があります。Wordで手動調整してください。</li>
+              <li>その他の項目（氏名・住所・学歴・職歴・志望動機・自己PRなど）も内容を必ずチェックしてください。</li>
+            </ul>
+            <p style="margin-top:10px;"><strong>【職務経歴書】</strong></p>
+            <ul>
+              <li>職務内容・実績・自己PRの内容を確認し、誤りがあれば修正してください。</li>
+              <li>フォントやレイアウトのずれがある場合は手動で調整してください。</li>
+            </ul>
+            <p style="margin-top:10px;">※ 生成された内容はAIによるものです。企業提出前に必ず内容をご確認ください。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEP 8: Wordでの編集方法 -->
+    <section id="step8" class="step-section">
+      <div class="step-header">
+        <div class="step-badge">STEP<br>8</div>
+        <h2 class="step-title">Wordでの編集方法</h2>
+      </div>
+      <div class="step-body">
+        <img
+          src="アプリ使い方/８編集.png"
+          alt="Wordでの編集画面のスクリーンショット"
+          class="step-img"
+        >
+        <div class="step-desc">
+          <p>ダウンロードしたWordファイルを開き、必要な箇所を編集します。</p>
+          <p><strong>【よくある編集箇所】</strong></p>
+          <ul>
+            <li>証明写真のサイズ調整（写真を右クリック → 「図の書式設定」で高さ・幅を指定）</li>
+            <li>文字のフォント・サイズ調整</li>
+            <li>表の列幅・行の高さ調整</li>
+            <li>内容の追記・修正</li>
+          </ul>
+          <div class="info-box" style="margin-top:16px;">
+            編集が完了したら、<strong>PDF形式に変換</strong>して企業へ提出してください。<br>
+            （ファイル → エクスポート → PDF/XPS形式で発行）
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- テンプレートPDFダウンロード -->
+    <section id="templates" class="download-section">
+      <h2>📄 テンプレートPDFダウンロード</h2>
+      <p>書類作成の参考にご利用ください</p>
+      <div class="download-buttons">
+        <a href="アプリ使い方/履歴書.pdf" download class="btn-download">
+          📄 履歴書テンプレート（PDF）
+        </a>
+        <a href="アプリ使い方/職務経歴書.pdf" download class="btn-download">
+          📋 職務経歴書テンプレート（PDF）
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- フッター -->
+  <footer class="site-footer">
+    <div class="footer-links">
+      <a href="index.html">← アプリに戻る</a>
+    </div>
+    <div>© 2025 (株)杜の都工房 AIキャリアアドバイザー</div>
+  </footer>
+
+</body>
+</html>
