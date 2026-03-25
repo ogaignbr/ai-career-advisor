@@ -124,21 +124,21 @@ async function generateResumeDocx(resumeData, photoDataUrl) {
   if (!ws) throw new Error('テンプレートにワークシートが見つかりません。');
 
   // ─── 基本情報（フォントサイズ早見表に準拠） ────────────────
-  writeCell(ws, 'E3',  getCurrentDateJPDoc() + '現在', 11);
-  writeCell(ws, 'D5',  r.name_kana || '', 11);
-  writeCell(ws, 'B7',  r.name || '', 11);
+  writeCell(ws, 'E3',  getCurrentDateJPDoc() + '現在', 11);  // 日付: 11
+  writeCell(ws, 'D5',  r.name_kana || '', 11);               // ふりがな: 11
+  writeCell(ws, 'B7',  r.name || '', 28);                    // 氏名: 28
 
   const birth = r.birth_date || '';
   const age = r.age ? `（満${r.age}歳）` : '';
-  if (birth) writeCell(ws, 'B10', `${birth}生　${age}`, 11);
+  if (birth) writeCell(ws, 'B10', `${birth}生　${age}`, 11); // 生年月日: 11
 
-  if (r.gender) writeCell(ws, 'H11', r.gender, 11);
+  if (r.gender) writeCell(ws, 'H11', r.gender, 11);          // 性別: 11
 
-  const address = r.address || '';
-  writeCell(ws, 'B15', address, 16);
+  if (r.postal_code) writeCell(ws, 'D13', `〒${r.postal_code}`, 11); // 郵便番号: 11
+  writeCell(ws, 'B15', r.address || '', 16);                  // 住所: 16
 
-  writeCell(ws, 'I12', r.phone || '', 21);
-  writeCell(ws, 'I13', r.email || '', 11);
+  writeCell(ws, 'I12', r.phone || '', 21);                    // 電話番号: 21
+  writeCell(ws, 'I13', r.email || '', 11);                    // E-mail: 11
 
   // ─── 連絡先（任意：値がある場合のみ上書き） ────────────────
   if (r.phone) writeCell(ws, 'I17', r.phone, 21);
