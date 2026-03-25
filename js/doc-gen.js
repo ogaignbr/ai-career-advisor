@@ -1,15 +1,7 @@
 /**
  * doc-gen.js
- * rirekisyo_a4.docx（JIS規格 様式第1号 A4縦）に準拠したWord出力を生成する
- * HTML形式でWordファイル(.doc)として出力
- *
- * テンプレート解析結果（rirekisyo_a4.docx）:
- * - ページ余白: 全辺13mm（720 twips）
- * - テーブル1（基本情報）: 4列 57pt|57pt|283pt|128pt = 525pt
- * - テーブル2（学歴・職歴）: 3列 64pt|43pt|418pt = 525pt
- * - テーブル3（免許・資格）: 3列 71pt|43pt|411pt = 525pt
- * - テーブル4（志望動機・自己PR）: 1列 525pt
- * - テーブル5（本人希望）: 1列 525pt
+ * 履歴書: rirekisyo.xlsx テンプレートに ExcelJS でデータを流し込み xlsx 出力
+ * 職務経歴書: Word HTML 形式で .doc 出力
  */
 
 /* ============================================================
@@ -58,203 +50,198 @@ ${styles || ''}
   return new Blob(['\ufeff', html], { type: 'application/msword;charset=utf-8' });
 }
 
-function triggerWordDownload(blob, filename) {
-  if (typeof saveAs !== 'undefined') {
-    saveAs(blob, filename);
-  } else {
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 5000);
-  }
-}
-
 /* ============================================================
    履歴書生成
-   rirekisyo.xlsx（JIS規格 A4横 様式第1号）テンプレートに
-   SheetJS でデータを流し込み、xlsx ファイルとして出力する
+   rirekisyo.xlsx（厚労省 JIS規格 A4横 様式第1号）テンプレートに
+   ExcelJS でデータを流し込み、xlsx ファイルとして出力する
+
+   ルール:
+   - テンプレートのセル結合・罫線・行高・列幅・印刷設定は一切変更しない
+   - 結合セルへの書き込みは必ず左上セルに対して行う
+   - フォントは ＭＳ Ｐゴシック + 指定サイズで明示設定する
    ============================================================ */
+
+const FONT_NAME = 'ＭＳ Ｐゴシック';
+
+const EDU_CELLS = [
+  ['B28','C28','D28'],
+  ['B30','C30','D30'],
+  ['B32','C32','D32'],
+  ['B34','C34','D34'],
+];
+
+const WORK_CELLS = [
+  ['B37','C37','D37'],
+  ['B39','C39','D39'],
+  ['B40','C40','D40'],
+  ['B42','C42','D42'],
+];
+
+const HIST_RIGHT_CELLS = [
+  ['L4','M4','N4'],
+  ['L6','M6','N6'],
+  ['L8','M8','N8'],
+  ['L9','M9','N9'],
+  ['L10','M10','N10'],
+  ['L12','M12','N12'],
+  ['L14','M14','N14'],
+];
+
+const LICENSE_CELLS = [
+  ['L18','M18','N18'],
+  ['L22','M22','N22'],
+  ['L25','M25','N25'],
+  ['L27','M27','N27'],
+  ['L29','M29','N29'],
+];
+
+function writeCell(ws, coord, value, fontSize) {
+  if (value === null || value === undefined) return;
+  const str = String(value);
+  const cell = ws.getCell(coord);
+  cell.value = str;
+  cell.font = { name: FONT_NAME, size: fontSize };
+}
+
 async function generateResumeDocx(resumeData, photoDataUrl) {
   const r = resumeData || {};
 
-  /*
-   * rirekisyo.xlsx（JIS規格 A4横 様式第1号）テンプレートに SheetJS でデータを流し込む
-   *
-   * セルマッピング（テンプレート解析結果より）:
-   *   E3  : 作成日
-   *   D5  : 氏名ふりがな          (merged D5:G5)
-   *   B7  : 氏名                  (merged B7:G9)
-   *   B10 : 生年月日              (merged B10:G11)
-   *   H11 : 性別                  (merged H11:I11)
-   *   D12 : 現住所ふりがな        (merged D12:H12)
-   *   I12 : 電話（自宅）          (現住所行の電話セル)
-   *   D13 : 郵便番号              (merged D13:H14 → 上部)
-   *   B15 : 現住所                (merged B15:H16)
-   *   I13 : E-mail                (merged I13:I16)
-   *   D17 : 連絡先ふりがな        (merged D17:H18)
-   *   I17 : 電話（携帯）          (連絡先行の電話セル)
-   *   B20 : 連絡先住所            (merged B20:H22)
-   *   I19 : E-mail（連絡先）      (merged I19:I22)
-   *
-   *   学歴・職歴（左面 15スロット）:
-   *     B26,C26,D26 / B28,C28,D28 / B30,C30,D30 / B32,C32,D32 / B34,C34,D34
-   *     B35,C35,D35 / B37,C37,D37 / B39,C39,D39 / B40,C40,D40 / B42,C42,D42
-   *     B44,C44,D44 / B46,C46,D46 / B47,C47,D47 / B48,C48,D48 / B49,C49,D49
-   *   学歴・職歴（右面続き 7スロット）:
-   *     L4,M4,N4 / L6,M6,N6 / L8,M8,N8 / L9,M9,N9 / L10,M10,N10 / L12,M12,N12 / L14,M14,N14
-   *
-   *   免許・資格（右面 5スロット）:
-   *     L18,M18,N18 / L22,M22,N22 / L25,M25,N25 / L27,M27,N27 / L29,M29,N29
-   *
-   *   志望動機・自己PR: L33  (merged L33:P42)
-   *   本人希望:         L46  (merged L46:P46) ～ L49
-   */
-
-  // SheetJS ライブラリチェック
-  if (typeof XLSX === 'undefined') {
-    throw new Error('SheetJS (xlsx.js) が読み込まれていません。index.html の CDN を確認してください。');
+  if (typeof ExcelJS === 'undefined') {
+    throw new Error('ExcelJS が読み込まれていません。ページを再読み込みしてください。');
   }
   if (typeof RIREKISYO_TEMPLATE_B64 === 'undefined') {
     throw new Error('履歴書テンプレート (resume-template.js) が読み込まれていません。');
   }
 
-  // テンプレート読み込み
-  const wb = XLSX.read(RIREKISYO_TEMPLATE_B64, { type: 'base64', cellStyles: true });
-  const ws = wb.Sheets[wb.SheetNames[0]];
+  const raw = atob(RIREKISYO_TEMPLATE_B64);
+  const buf = new Uint8Array(raw.length);
+  for (let i = 0; i < raw.length; i++) buf[i] = raw.charCodeAt(i);
 
-  /**
-   * セルに文字列値を書き込む（既存のセルスタイルを保持）
-   */
-  function wc(addr, value) {
-    if (value === null || value === undefined) return;
-    const str = String(value);
-    if (!str.trim()) return;
-    const existing = ws[addr];
-    const s = existing ? existing.s : undefined;
-    ws[addr] = { t: 's', v: str };
-    if (s !== undefined) ws[addr].s = s;
-  }
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(buf.buffer);
 
-  // ─── 作成日 ───────────────────────────────────────────────
-  wc('E3', getCurrentDateJPDoc() + '現在');
+  const ws = workbook.getWorksheet('A4サイズ') || workbook.worksheets[0];
+  if (!ws) throw new Error('テンプレートにワークシートが見つかりません。');
 
-  // ─── 氏名・ふりがな ───────────────────────────────────────
-  wc('D5', r.name_kana || '');
-  wc('B7', r.name || '');
+  // ─── 基本情報（フォントサイズ早見表に準拠） ────────────────
+  writeCell(ws, 'E3',  getCurrentDateJPDoc() + '現在', 11);
+  writeCell(ws, 'D5',  r.name_kana || '', 11);
+  writeCell(ws, 'B7',  r.name || '', 11);
 
-  // ─── 生年月日 ─────────────────────────────────────────────
   const birth = r.birth_date || '';
-  const age   = r.age ? `（満${r.age}歳）` : '';
-  if (birth) wc('B10', `${birth}生　${age}`);
+  const age = r.age ? `（満${r.age}歳）` : '';
+  if (birth) writeCell(ws, 'B10', `${birth}生　${age}`, 11);
 
-  // ─── 性別 ─────────────────────────────────────────────────
-  wc('H11', r.gender || '');
+  if (r.gender) writeCell(ws, 'H11', r.gender, 11);
 
-  // ─── 現住所 ───────────────────────────────────────────────
-  wc('D12', r.address_kana || '');           // 住所ふりがな
-  if (r.postal_code) wc('D13', `〒${r.postal_code}`);
-  const addrStr = [r.postal_code ? `〒${r.postal_code}` : '', r.address || '']
-    .filter(Boolean).join('　');
-  wc('B15', addrStr);
+  const address = r.address || '';
+  writeCell(ws, 'B15', address, 16);
 
-  // ─── 電話・E-mail（現住所） ──────────────────────────────
-  wc('I12', r.phone_home || r.phone || '');  // 電話セル（自宅/携帯どちらか）
-  wc('I13', r.email || '');                  // E-mail セル (I13:I16 merged)
+  writeCell(ws, 'I12', r.phone || '', 21);
+  writeCell(ws, 'I13', r.email || '', 11);
 
-  // ─── 連絡先 ───────────────────────────────────────────────
-  wc('D17', r.contact_address_kana || '');   // 連絡先ふりがな
-  wc('I17', r.phone || '');                  // 電話（携帯）
-  if (r.contact_address) wc('B20', r.contact_address);
-  wc('I19', r.email || '');                  // E-mail (I19:I22 merged)
+  // ─── 連絡先（任意：値がある場合のみ上書き） ────────────────
+  if (r.phone) writeCell(ws, 'I17', r.phone, 21);
+  if (r.email) writeCell(ws, 'I19', r.email, 11);
 
-  // ─── 学歴・職歴 ───────────────────────────────────────────
-  // 左面スロット（15行分）
-  const histLeft = [
-    ['B26','C26','D26'], ['B28','C28','D28'], ['B30','C30','D30'],
-    ['B32','C32','D32'], ['B34','C34','D34'], ['B35','C35','D35'],
-    ['B37','C37','D37'], ['B39','C39','D39'], ['B40','C40','D40'],
-    ['B42','C42','D42'], ['B44','C44','D44'], ['B46','C46','D46'],
-    ['B47','C47','D47'], ['B48','C48','D48'], ['B49','C49','D49'],
-  ];
-  // 右面続きスロット（7行分）
-  const histRight = [
-    ['L4','M4','N4'],   ['L6','M6','N6'],   ['L8','M8','N8'],
-    ['L9','M9','N9'],   ['L10','M10','N10'], ['L12','M12','N12'],
-    ['L14','M14','N14'],
-  ];
-  const allHist = [...histLeft, ...histRight];
-  let hi = 0;
-
-  const writeHist = (year, month, content) => {
-    if (hi >= allHist.length) return;
-    const [cy, cm, cc] = allHist[hi++];
-    wc(cy, year);
-    wc(cm, month);
-    wc(cc, content);
-  };
-
-  writeHist('', '', '学　　　歴');                  // 学歴セクションヘッダ
-  for (const e of (r.education || [])) {
-    writeHist(e.year || '', e.month || '', e.content || '');
+  // ─── 顔写真 ───────────────────────────────────────────────
+  if (photoDataUrl) {
+    try {
+      const imgId = workbook.addImage({
+        base64: photoDataUrl.replace(/^data:image\/\w+;base64,/, ''),
+        extension: 'jpeg',
+      });
+      ws.addImage(imgId, {
+        tl: { col: 7, row: 4 },
+        ext: { width: 91, height: 121 },
+      });
+    } catch (e) {
+      console.warn('顔写真の埋め込みに失敗:', e);
+    }
   }
-  writeHist('', '', '職　　　歴');                  // 職歴セクションヘッダ
-  for (const e of (r.career || [])) {
-    writeHist(e.year || '', e.month || '', e.content || '');
-  }
-  writeHist('', '', '以上');
 
-  // ─── 免許・資格 ───────────────────────────────────────────
-  const qualSlots = [
-    ['L18','M18','N18'], ['L22','M22','N22'], ['L25','M25','N25'],
-    ['L27','M27','N27'], ['L29','M29','N29'],
-  ];
-  let qi = 0;
-  for (const q of (r.qualifications || [])) {
-    if (qi >= qualSlots.length) break;
-    const [qy, qm, qc] = qualSlots[qi++];
-    wc(qy, q.year || '');
-    wc(qm, q.month || '');
-    wc(qc, q.content || '');
-  }
-  if (qi < qualSlots.length) wc(qualSlots[qi][2], '以上');
+  // ─── 学歴（フォントサイズ14） ─────────────────────────────
+  writeCell(ws, 'D26', '学　　　歴', 14);
 
-  // ─── 志望動機・特技・自己PR ──────────────────────────────
+  const education = r.education || [];
+  for (let i = 0; i < education.length && i < EDU_CELLS.length; i++) {
+    const [yc, mc, dc] = EDU_CELLS[i];
+    const e = education[i];
+    writeCell(ws, yc, e.year ? String(e.year) : '', 14);
+    writeCell(ws, mc, e.month ? String(e.month) : '', 14);
+    writeCell(ws, dc, e.content || '', 14);
+  }
+
+  // ─── 職歴（フォントサイズ14） ─────────────────────────────
+  writeCell(ws, 'D35', '職　　　歴', 14);
+
+  const career = r.career || [];
+  let careerIdx = 0;
+
+  for (let i = 0; i < career.length && i < WORK_CELLS.length; i++) {
+    const [yc, mc, dc] = WORK_CELLS[i];
+    const e = career[i];
+    writeCell(ws, yc, e.year ? String(e.year) : '', 14);
+    writeCell(ws, mc, e.month ? String(e.month) : '', 14);
+    writeCell(ws, dc, e.content || '', 14);
+    careerIdx = i + 1;
+  }
+
+  // 左側に収まらない職歴は右側テーブルに続き
+  if (career.length > WORK_CELLS.length) {
+    const overflow = career.slice(WORK_CELLS.length);
+    for (let i = 0; i < overflow.length && i < HIST_RIGHT_CELLS.length; i++) {
+      const [yc, mc, dc] = HIST_RIGHT_CELLS[i];
+      const e = overflow[i];
+      writeCell(ws, yc, e.year ? String(e.year) : '', 14);
+      writeCell(ws, mc, e.month ? String(e.month) : '', 14);
+      writeCell(ws, dc, e.content || '', 14);
+    }
+  }
+
+  writeCell(ws, 'D44', '以上', 14);
+
+  // ─── 免許・資格（フォントサイズ14） ───────────────────────
+  const quals = r.qualifications || [];
+  for (let i = 0; i < quals.length && i < LICENSE_CELLS.length; i++) {
+    const [yc, mc, dc] = LICENSE_CELLS[i];
+    const q = quals[i];
+    writeCell(ws, yc, q.year ? String(q.year) : '', 14);
+    writeCell(ws, mc, q.month ? String(q.month) : '', 14);
+    writeCell(ws, dc, q.content || '', 14);
+  }
+  if (quals.length < LICENSE_CELLS.length) {
+    const [, , ijouCell] = LICENSE_CELLS[quals.length];
+    writeCell(ws, ijouCell, '以上', 14);
+  }
+
+  // ─── 志望動機・特技・自己PR（フォントサイズ10） ────────────
   const motivParts = [];
-  if (r.motivation)    motivParts.push(r.motivation);
+  if (r.motivation) motivParts.push(r.motivation);
   if (r.skills_hobbies) motivParts.push(`【特技・趣味】\n${r.skills_hobbies}`);
   const motivText = motivParts.join('\n\n');
-  if (motivText) wc('L33', motivText);          // merged L33:P42
+  if (motivText) writeCell(ws, 'L33', motivText, 10);
 
-  // ─── 本人希望 ─────────────────────────────────────────────
+  // ─── 本人希望（フォントサイズ14） ─────────────────────────
   const noteText = r.note || '貴社の規定に従います。';
-  wc('L46', noteText);                          // merged L46:P46（1行目）
+  writeCell(ws, 'L46', noteText, 14);
 
-  // ─── xlsx バイナリ生成 → Blob 返却 ──────────────────────
-  const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
-  const buf = new ArrayBuffer(wbout.length);
-  const view = new Uint8Array(buf);
-  for (let i = 0; i < wbout.length; i++) {
-    view[i] = wbout.charCodeAt(i) & 0xff;
-  }
-  return new Blob([buf], {
+  // ─── xlsx Blob 生成 ───────────────────────────────────────
+  const xlsxBuf = await workbook.xlsx.writeBuffer();
+  return new Blob([xlsxBuf], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   });
 }
 
 /* ============================================================
    職務経歴書生成
-   実際のテンプレートに基づく形式（■セクション形式）
+   Word HTML 形式（■セクション形式）
    ============================================================ */
 async function generateWorkHistoryDocx(workData) {
   const w = workData || {};
   const skills = w.skills || {};
 
-  // 職務経験セクション
-  const experiencesHtml = (w.experiences || []).map((exp, i) => {
+  const experiencesHtml = (w.experiences || []).map((exp) => {
     const period = [exp.period_start, exp.period_end].filter(Boolean).join('　｜　');
     const duties = nl2br(exp.duties || '');
     const achievements = nl2br(exp.achievements || '');
@@ -284,7 +271,6 @@ async function generateWorkHistoryDocx(workData) {
     `;
   }).join('');
 
-  // スキルセクション
   const skillsRows = [
     skills.experience ? `<tr><td class="cv-label" style="width:100pt;">活かせる経験</td><td>${nl2br(skills.experience)}</td></tr>` : '',
     skills.qualifications ? `<tr><td class="cv-label">保有資格</td><td>${nl2br(skills.qualifications)}</td></tr>` : '',
