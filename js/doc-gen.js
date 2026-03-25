@@ -137,12 +137,14 @@ async function generateResumeDocx(resumeData, photoDataUrl) {
   if (r.postal_code) writeCell(ws, 'D13', `〒${r.postal_code}`, 11); // 郵便番号: 11
   writeCell(ws, 'B15', r.address || '', 16);                  // 住所: 16
 
-  writeCell(ws, 'I12', r.phone || '', 21);                    // 電話番号: 21
-  writeCell(ws, 'I13', r.email || '', 11);                    // E-mail: 11
+  const phoneStr = r.phone ? `電話：${r.phone}` : '電話';
+  const emailStr = r.email ? `E-mail：${r.email}` : 'E-mail';
+  writeCell(ws, 'I12', phoneStr, 11);                         // 電話: 11
+  writeCell(ws, 'I13', emailStr, 11);                         // E-mail: 11
 
   // ─── 連絡先（任意：値がある場合のみ上書き） ────────────────
-  if (r.phone) writeCell(ws, 'I17', r.phone, 21);
-  if (r.email) writeCell(ws, 'I19', r.email, 11);
+  if (r.phone) writeCell(ws, 'I17', `電話：${r.phone}`, 11);
+  if (r.email) writeCell(ws, 'I19', `E-mail：${r.email}`, 11);
 
   // ─── 顔写真 ───────────────────────────────────────────────
   if (photoDataUrl) {
