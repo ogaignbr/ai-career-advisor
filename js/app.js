@@ -869,6 +869,28 @@ function renderCareerAdvice(data) {
     const rankColors = ['linear-gradient(135deg,#8b5cf6,#ec4899)', 'linear-gradient(135deg,#06b6d4,#8b5cf6)', 'linear-gradient(135deg,#f59e0b,#ec4899)', 'linear-gradient(135deg,#10b981,#06b6d4)'];
     const rankBg = rankColors[idx % rankColors.length];
     const reasonsList = (job.match_reasons || []).map(r => `<li class="text-xs text-gray-600 mb-0.5">✓ ${escHtml(r)}</li>`).join('');
+    const appealPts = job.appeal_points || [];
+    const appealList = appealPts.length
+      ? `<div style="margin:0 0 .5rem;padding:.5rem .65rem;background:#faf5ff;border-radius:10px;border:1px solid #ede9fe;">
+          <div style="font-size:.68rem;font-weight:700;color:#6d28d9;margin-bottom:.35rem;">求人情報からのアピールポイント</div>
+          <ul style="margin:0;padding-left:1rem;list-style:disc;">${appealPts.map(a => `<li class="text-xs text-gray-700 mb-0.5">${escHtml(a)}</li>`).join('')}</ul>
+        </div>`
+      : '';
+    const box = (title, body, bg, border, titleColor) => body
+      ? `<div style="margin:0 0 .5rem;padding:.55rem .65rem;background:${bg};border-radius:10px;border:1px solid ${border};">
+          <div style="font-size:.68rem;font-weight:700;color:${titleColor};margin-bottom:.35rem;">${title}</div>
+          <p style="margin:0;font-size:.8125rem;color:#374151;line-height:1.65;">${escHtml(body)}</p>
+        </div>`
+      : '';
+    const whyFit = box('なぜあなたに向いているか（面談を踏まえて）', job.why_fit_for_candidate, '#f0fdf4', '#bbf7d0', '#15803d');
+    const whyRec = box('なぜこの求人をおすすめするか', job.why_recommend, '#eff6ff', '#bfdbfe', '#1d4ed8');
+    const closing = job.closing_to_candidate
+      ? `<div style="margin:.5rem 0;padding:.6rem .7rem;background:linear-gradient(135deg,#faf5ff,#fdf4ff);border-radius:12px;border:1.5px solid #ddd6fe;">
+          <div style="font-size:.68rem;font-weight:700;color:#7c3aed;margin-bottom:.4rem;">💬 求職者へのクロージング</div>
+          <p style="margin:0;font-size:.8125rem;color:#4c1d95;line-height:1.7;">${escHtml(job.closing_to_candidate)}</p>
+        </div>`
+      : '';
+    const skillCareer = box('手に職・スキルアップ・キャリアの広がり', job.skill_career_message, '#fffbeb', '#fde68a', '#b45309');
     return `
       <div style="border:1.5px solid #ede9fe;border-radius:16px;padding:1rem;margin-bottom:0.875rem;background:white;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(139,92,246,.14)'" onmouseout="this.style.boxShadow='none'">
         <div style="display:flex;align-items:flex-start;gap:0.875rem;">
@@ -885,7 +907,12 @@ function renderCareerAdvice(data) {
               <div style="font-size:.75rem;color:#374151;"><span style="color:#a78bfa;font-weight:600;">📅 </span>${escHtml(job.holiday || '')}</div>
               <div style="font-size:.75rem;color:#374151;"><span style="color:#a78bfa;font-weight:600;">⏰ </span>${escHtml(job.overtime || '')}</div>
             </div>
-            ${reasonsList ? `<ul style="margin:0 0 .5rem;padding-left:.25rem;list-style:none;">${reasonsList}</ul>` : ''}
+            ${whyFit}
+            ${whyRec}
+            ${appealList}
+            ${reasonsList ? `<div style="font-size:.68rem;font-weight:700;color:#5b21b6;margin:.25rem 0 .35rem;">おすすめの要点</div><ul style="margin:0 0 .5rem;padding-left:.25rem;list-style:none;">${reasonsList}</ul>` : ''}
+            ${skillCareer}
+            ${closing}
             <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
               ${job.skill_growth ? `<span style="font-size:.7rem;background:#f5f3ff;color:#5b21b6;border:1px solid #ede9fe;border-radius:50px;padding:.1rem .5rem;">📈 ${escHtml(job.skill_growth)}</span>` : ''}
               ${job.career_path ? `<span style="font-size:.7rem;background:#fdf4ff;color:#ec4899;border:1px solid #fce7f3;border-radius:50px;padding:.1rem .5rem;">🚀 ${escHtml(job.career_path)}</span>` : ''}
@@ -959,7 +986,7 @@ function renderCareerAdvice(data) {
           <h3 class="text-sm font-bold" style="color:#5b21b6;">おすすめ求人ピックアップ</h3>
           <span style="font-size:.65rem;background:#f3e8ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:50px;padding:.1rem .5rem;font-weight:700;">AIマッチング</span>
         </div>
-        <p style="font-size:.75rem;color:#94a3b8;margin-bottom:1rem;">候補者のスキル・経歴・キャリア志向をもとにAIが求人一覧から最適な求人を選定しました。</p>
+        <p style="font-size:.75rem;color:#94a3b8;margin-bottom:1rem;">求人情報（業種別まとめ）から<strong style="color:#7c3aed;">3件</strong>を選定。面談内容を踏まえ、向いている理由・おすすめ理由・クロージング・成長の観点も表示します。</p>
         ${jobSuggestionsHtml}
       </div>
     ` : ''}

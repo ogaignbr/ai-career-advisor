@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AIキャリアアドバイザー | 書類作成・面談分析ツール</title>
+  <title>CAサポートAPP</title>
   <meta name="description" content="キャリアアドバイザー向け：面談内容から履歴書・職務経歴書を自動生成し、AIによるキャリア分析を提供します。">
 
   <!-- Tailwind CSS CDN -->
@@ -23,116 +23,492 @@
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
       theme: {
         extend: {
           fontFamily: {
-            sans: ["'Noto Sans JP'", 'Meiryo', 'sans-serif'],
-            display: ["'Zen Maru Gothic'", "'Noto Sans JP'", 'sans-serif'],
+            sans: ["'Noto Sans JP'", 'sans-serif'],
+            display: ["'Plus Jakarta Sans'", "'Noto Sans JP'", 'sans-serif'],
           }
         }
       }
     }
   </script>
   <style>
-    /* ===== AIチャット修正パネル ===== */
-    .chat-revision-panel {
-      margin-top: 20px;
-      background: #f0fdf4;
-      border: 1.5px solid #86efac;
-      border-radius: 14px;
-      padding: 18px 20px;
-    }
-    .chat-panel-header h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #166534;
-      margin-bottom: 3px;
-    }
-    .chat-panel-header p {
-      font-size: 0.78rem;
-      color: #4b5563;
-      margin-bottom: 14px;
-    }
-    .chat-quick-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 7px;
-      margin-bottom: 12px;
-    }
-    .quick-btn {
-      background: #fff;
-      border: 1.5px solid #86efac;
-      color: #166534;
-      border-radius: 20px;
-      padding: 4px 12px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background .15s, border-color .15s;
-      font-family: inherit;
-    }
-    .quick-btn:hover { background: #dcfce7; border-color: #4ade80; }
-    .chat-input-area { display: flex; flex-direction: column; gap: 8px; }
-    .chat-input-area textarea {
-      width: 100%;
-      border: 1.5px solid #86efac;
-      border-radius: 10px;
-      padding: 9px 12px;
-      font-size: 0.85rem;
-      font-family: inherit;
-      resize: vertical;
-      background: #fff;
-      color: #1a1a1a;
-      outline: none;
-      transition: border-color .15s;
-      line-height: 1.6;
-    }
-    .chat-input-area textarea:focus { border-color: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,.12); }
-    .chat-submit-btn {
-      align-self: flex-end;
-      background: linear-gradient(135deg, #166534, #15803d);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      padding: 9px 22px;
-      font-size: 0.88rem;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      transition: opacity .15s, transform .1s;
-    }
-    .chat-submit-btn:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
-    .chat-submit-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
-    .chat-history { margin-top: 14px; display: flex; flex-direction: column; gap: 7px; }
-    .history-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #fff;
-      border: 1px solid #d1fae5;
-      border-radius: 8px;
-      padding: 7px 12px;
-      font-size: 0.78rem;
-      flex-wrap: wrap;
-    }
-    .history-instruction {
-      flex: 1;
-      color: #374151;
-      min-width: 0;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .history-status { color: #16a34a; font-weight: 700; white-space: nowrap; }
-    .history-time   { color: #9ca3af; white-space: nowrap; font-size: 0.72rem; }
-    @media print { .chat-revision-panel { display: none !important; } }
-  </style>
+  :root {
+    --c-bg: #f0f4f1;
+    --c-surface: #ffffff;
+    --c-primary: #14532d;
+    --c-primary-mid: #166534;
+    --c-primary-light: #16a34a;
+    --c-accent: #65a30d;
+    --c-accent-bright: #84cc16;
+    --c-text: #0f172a;
+    --c-text-muted: #475569;
+    --c-text-light: #94a3b8;
+    --c-border: #d1fae5;
+    --c-border-mid: #86efac;
+    --font-display: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
+    --font-body: 'Noto Sans JP', sans-serif;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+    --shadow-lg: 0 10px 30px rgba(0,0,0,.10), 0 4px 10px rgba(0,0,0,.06);
+  }
+
+  * { box-sizing: border-box; }
+  body { font-family: var(--font-body); background: var(--c-bg); color: var(--c-text); }
+  h1, h2, h3 { font-family: var(--font-display); }
+
+  /* ===== COVER SCREEN ===== */
+  #cover-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(ellipse at 15% 85%, rgba(101,163,13,0.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 20%, rgba(22,163,74,0.15) 0%, transparent 50%),
+      linear-gradient(150deg, #0d3320 0%, #14532d 45%, #166534 100%);
+    padding: 48px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  #cover-screen::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+  }
+  #cover-screen::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: -80px;
+    width: 360px; height: 360px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(132,204,22,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cover-logo-mark {
+    position: relative;
+    width: 64px; height: 64px;
+    background: rgba(255,255,255,0.10);
+    border: 1.5px solid rgba(255,255,255,0.20);
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 24px;
+    backdrop-filter: blur(8px);
+  }
+  .cover-logo-mark svg { width: 34px; height: 34px; }
+  .cover-app-name {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+    position: relative;
+  }
+  .cover-tagline {
+    font-size: 0.875rem;
+    color: rgba(255,255,255,0.62);
+    text-align: center;
+    margin-bottom: 52px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    position: relative;
+  }
+  .cover-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    max-width: 560px;
+    position: relative;
+  }
+  @media (max-width: 520px) {
+    .cover-cards { grid-template-columns: 1fr; max-width: 340px; }
+    .cover-app-name { font-size: 1.75rem; }
+  }
+  .cover-card {
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 28px 22px 24px;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.22s, border-color 0.22s, transform 0.2s, box-shadow 0.22s;
+    text-align: left;
+    width: 100%;
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+  }
+  .cover-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+    transition: transform 0.3s;
+  }
+  .cover-card:hover {
+    background: rgba(255,255,255,0.17);
+    border-color: rgba(255,255,255,0.45);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
+  }
+  .cover-card:hover::before { transform: scale(2); }
+  .cover-card-icon {
+    width: 44px; height: 44px;
+    background: rgba(132,204,22,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 16px;
+  }
+  .cover-card-icon svg { width: 22px; height: 22px; }
+  .cover-card-title {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+  .cover-card-sub {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.58);
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .cover-card-arrow {
+    position: absolute;
+    bottom: 20px; right: 20px;
+    opacity: 0.35;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .cover-card:hover .cover-card-arrow { opacity: 0.75; transform: translate(2px, -2px); }
+  .cover-footer {
+    margin-top: 44px;
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.35);
+    position: relative;
+    letter-spacing: 0.03em;
+  }
+
+  /* ===== COVER LOGO ===== */
+  .cover-logo {
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    position: relative;
+    filter: drop-shadow(0 4px 16px rgba(132,204,22,0.35));
+    animation: floatLogo 3s ease-in-out infinite;
+  }
+  @keyframes floatLogo {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  /* ===== COVER BUTTONS ===== */
+  .cover-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+  }
+  .cover-btn {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: rgba(255,255,255,0.09);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 18px;
+    padding: 20px 22px;
+    color: #fff;
+    cursor: pointer;
+    font-family: var(--font-display);
+    text-align: left;
+    width: 100%;
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.22s, border-color 0.22s, transform 0.2s, box-shadow 0.22s;
+  }
+  .cover-btn::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    transition: transform 0.3s;
+  }
+  .cover-btn:hover {
+    background: rgba(255,255,255,0.17);
+    border-color: rgba(255,255,255,0.45);
+    transform: translateY(-3px);
+    box-shadow: 0 14px 36px rgba(0,0,0,0.22);
+  }
+  .cover-btn:hover::before { transform: scale(2.2); }
+  .cover-btn-icon {
+    font-size: 1.75rem;
+    width: 48px; height: 48px;
+    background: rgba(132,204,22,0.2);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .cover-btn-label {
+    flex: 1;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .cover-btn-sub {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+  }
+  .cover-btn-arrow {
+    font-size: 1.5rem;
+    opacity: 0.4;
+    transition: opacity 0.2s, transform 0.2s;
+    flex-shrink: 0;
+  }
+  .cover-btn:hover .cover-btn-arrow { opacity: 0.9; transform: translateX(4px); }
+  @media (max-width: 520px) {
+    .cover-app-name { font-size: 1.75rem; }
+    .cover-buttons { max-width: 100%; }
+    .cover-btn { padding: 16px 18px; gap: 12px; }
+    .cover-btn-icon { width: 42px; height: 42px; font-size: 1.5rem; }
+    .cover-btn-label { font-size: 0.9rem; }
+  }
+
+  /* ===== TALK SCRIPT / JOB INFO OVERLAY ===== */
+  #ts-overlay, #jobs-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9000;
+    background: var(--c-bg);
+  }
+  #ts-overlay.active, #jobs-overlay.active { display: block; }
+  #ts-iframe, #jobs-iframe { width: 100%; height: 100%; border: none; }
+  #ts-back-btn, #jobs-back-btn {
+    position: fixed;
+    top: 12px; right: 12px;
+    z-index: 9999;
+    display: flex; align-items: center; gap: 6px;
+    background: var(--c-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-display);
+    box-shadow: var(--shadow-md);
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+  #ts-back-btn:hover, #jobs-back-btn:hover, #doc-back-btn:hover { background: #0d3320; transform: translateY(-1px); }
+  #ts-back-btn svg, #jobs-back-btn svg, #doc-back-btn svg { width: 14px; height: 14px; }
+  #doc-back-btn {
+    position: fixed;
+    top: 12px; left: 12px;
+    z-index: 9999;
+    display: none; align-items: center; gap: 6px;
+    background: var(--c-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--font-display);
+    box-shadow: var(--shadow-md);
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: 0.01em;
+  }
+  #doc-back-btn.visible { display: flex; }
+
+  /* ===== DOC CREATE HEADER ===== */
+  .home-back-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: var(--radius-sm);
+    color: rgba(255,255,255,0.9);
+    font-size: 11.5px; font-weight: 600;
+    padding: 5px 11px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .home-back-btn:hover { background: rgba(255,255,255,0.22); }
+  .home-back-btn svg { width: 13px; height: 13px; opacity: 0.8; }
+
+  /* ===== AIチャット修正パネル ===== */
+  .chat-revision-panel {
+    margin-top: 20px;
+    background: #f0fdf4;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    padding: 18px 20px;
+  }
+  .chat-panel-header h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--c-primary);
+    margin-bottom: 3px;
+    font-family: var(--font-display);
+  }
+  .chat-panel-header p {
+    font-size: 0.78rem;
+    color: var(--c-text-muted);
+    margin-bottom: 14px;
+  }
+  .chat-quick-actions { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 12px; }
+  .quick-btn {
+    background: #fff;
+    border: 1.5px solid var(--c-border);
+    color: var(--c-primary-mid);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    font-family: inherit;
+  }
+  .quick-btn:hover { background: #dcfce7; border-color: var(--c-border-mid); }
+  .chat-input-area { display: flex; flex-direction: column; gap: 8px; }
+  .chat-input-area textarea {
+    width: 100%;
+    border: 1.5px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: 9px 12px;
+    font-size: 0.85rem;
+    font-family: inherit;
+    resize: vertical;
+    background: #fff;
+    color: var(--c-text);
+    outline: none;
+    transition: border-color 0.15s;
+    line-height: 1.6;
+  }
+  .chat-input-area textarea:focus { border-color: var(--c-primary-light); box-shadow: 0 0 0 3px rgba(22,163,74,0.1); }
+  .chat-submit-btn {
+    align-self: flex-end;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: linear-gradient(135deg, var(--c-primary), var(--c-primary-mid));
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-md);
+    padding: 9px 22px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: var(--font-display);
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .chat-submit-btn:hover:not(:disabled) { opacity: 0.88; transform: translateY(-1px); }
+  .chat-submit-btn:disabled { opacity: 0.55; cursor: not-allowed; transform: none; }
+  .chat-submit-btn svg { width: 14px; height: 14px; }
+  .chat-history { margin-top: 14px; display: flex; flex-direction: column; gap: 7px; }
+  .history-item {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff;
+    border: 1px solid #d1fae5;
+    border-radius: 8px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    flex-wrap: wrap;
+  }
+  .history-instruction { flex: 1; color: #374151; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .history-status { color: var(--c-primary-light); font-weight: 700; white-space: nowrap; }
+  .history-time { color: var(--c-text-light); white-space: nowrap; font-size: 0.72rem; }
+  @media print { .chat-revision-panel { display: none !important; } }
+</style>
 </head>
 <body class="min-h-screen">
+
+  <!-- ============================================
+       表紙（CAサポートAPP）
+       ============================================ -->
+  <div id="cover-screen">
+    <div class="cover-logo">🌿</div>
+    <div class="cover-app-name">CAサポートAPP</div>
+    <div class="cover-tagline">キャリアアドバイザー専用 面談・書類作成ツール</div>
+    <div class="cover-buttons">
+      <button class="cover-btn" onclick="showTalkScript()">
+        <span class="cover-btn-icon">📋</span>
+        <span class="cover-btn-label">
+          面談トークスクリプト
+          <span class="cover-btn-sub">面談の進行チェックリスト・トーク例</span>
+        </span>
+        <span class="cover-btn-arrow">›</span>
+      </button>
+      <button class="cover-btn" onclick="showDocCreate()">
+        <span class="cover-btn-icon">✨</span>
+        <span class="cover-btn-label">
+          書類を作成する
+          <span class="cover-btn-sub">履歴書・職務経歴書をAIで自動生成</span>
+        </span>
+        <span class="cover-btn-arrow">›</span>
+      </button>
+      <button class="cover-btn" onclick="showJobInfo()">
+        <span class="cover-btn-icon">🏢</span>
+        <span class="cover-btn-label">
+          求人情報
+          <span class="cover-btn-sub">業種別の取り扱い求人・Circus詳細ページ</span>
+        </span>
+        <span class="cover-btn-arrow">›</span>
+      </button>
+    </div>
+    <div class="cover-footer">© 株式会社杜の都工房</div>
+  </div>
+
+  <!-- ============================================
+       面談トークスクリプト オーバーレイ
+       ============================================ -->
+  <div id="ts-overlay">
+    <button id="ts-back-btn" type="button" onclick="showCover()">← ホームに戻る</button>
+    <iframe id="ts-iframe" src="ca_talk_script.html" title="CA面談トークスクリプト"></iframe>
+  </div>
+
+  <!-- ============================================
+       求人情報（業種別）オーバーレイ
+       ============================================ -->
+  <div id="jobs-overlay">
+    <button id="jobs-back-btn" type="button" onclick="showCover()">← ホームに戻る</button>
+    <iframe id="jobs-iframe" src="about:blank" title="求人情報（業種別）"></iframe>
+  </div>
+
+  <!-- ============================================
+       書類作成セクション
+       ============================================ -->
+  <button id="doc-back-btn" type="button" onclick="showCover()">← ホームに戻る</button>
+  <div id="doc-create-section" style="display:none">
 
   <!-- ============================================
        ヘッダー
@@ -151,6 +527,10 @@
           <span id="apiKeyStatusDot" class="w-2 h-2 rounded-full bg-gray-300"></span>
           <span id="apiKeyStatusText" class="text-gray-500">API未設定</span>
         </div>
+        <button onclick="showCover()" class="home-back-btn" title="ホームに戻る">
+          <span>🏠</span>
+          <span class="hidden sm:inline">ホーム</span>
+        </button>
         <a href="manual.html" title="使い方マニュアルを開く" class="settings-btn" style="text-decoration:none;">
           <span>📖</span>
           <span class="hidden sm:inline">使い方</span>
@@ -453,16 +833,18 @@
   <!-- フッター -->
   <footer class="app-footer no-print">
     <p class="text-xs text-center" style="color: #c4b5fd;">
-      ✨ AIキャリアアドバイザー &nbsp;|&nbsp; データはブラウザ内のみで処理されます
+      ✨ CAサポートAPP &nbsp;|&nbsp; データはブラウザ内のみで処理されます
     </p>
   </footer>
 
+  </div><!-- /#doc-create-section -->
+
   <!-- JS (読み込み順序重要) -->
   <script src="js/pdf-reader.js?v=2"></script>
-  <script src="js/openai.js?v=2"></script>
+  <script src="js/openai.js?v=4"></script>
   <script src="js/doc-gen.js?v=2"></script>
   <script src="js/charts.js?v=2"></script>
-  <script src="js/app.js?v=2"></script>
+  <script src="js/app.js?v=4"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -513,6 +895,41 @@
         });
       });
     });
+  </script>
+
+  <!-- ===== 画面切り替えナビゲーション ===== -->
+  <script>
+    function showCover() {
+      document.getElementById('cover-screen').style.display = '';
+      document.getElementById('doc-create-section').style.display = 'none';
+      document.getElementById('ts-overlay').classList.remove('active');
+      document.getElementById('jobs-overlay').classList.remove('active');
+      document.getElementById('doc-back-btn').classList.remove('visible');
+      document.getElementById('ts-iframe').src = 'ca_talk_script.html';
+      document.getElementById('jobs-iframe').src = 'about:blank';
+    }
+    function showTalkScript() {
+      document.getElementById('cover-screen').style.display = 'none';
+      document.getElementById('doc-create-section').style.display = 'none';
+      document.getElementById('ts-overlay').classList.add('active');
+      document.getElementById('jobs-overlay').classList.remove('active');
+      document.getElementById('doc-back-btn').classList.remove('visible');
+    }
+    function showDocCreate() {
+      document.getElementById('cover-screen').style.display = 'none';
+      document.getElementById('doc-create-section').style.display = '';
+      document.getElementById('ts-overlay').classList.remove('active');
+      document.getElementById('jobs-overlay').classList.remove('active');
+      document.getElementById('doc-back-btn').classList.add('visible');
+    }
+    function showJobInfo() {
+      document.getElementById('cover-screen').style.display = 'none';
+      document.getElementById('doc-create-section').style.display = 'none';
+      document.getElementById('ts-overlay').classList.remove('active');
+      document.getElementById('jobs-overlay').classList.add('active');
+      document.getElementById('doc-back-btn').classList.remove('visible');
+      document.getElementById('jobs-iframe').src = 'job-info.html';
+    }
   </script>
 
 </body>

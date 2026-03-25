@@ -6,118 +6,56 @@
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 /* ============================================================
-   求人一覧データ（杜の都工房 取り扱い求人）
+   求人一覧：「求人情報_業種別まとめ.txt」を fetch で読み込み
+   （失敗時は js/_job_fallback.json＝同内容のバックアップ）
    ============================================================ */
-const JOB_LISTINGS = `
-【取り扱い求人一覧】
+const JOB_LISTINGS_FILENAME = '求人情報_業種別まとめ.txt';
+const JOB_LISTINGS_FALLBACK_JSON = 'js/_job_fallback.json';
 
-■ 事務・オフィスワーク系
+let jobListingsCache = null;
+let jobListingsLoadPromise = null;
 
-1. マンパワーグループ株式会社【事務職】
-   月給：16〜21万円 / 年収：200〜350万円
-   勤務地：全国（自宅60分圏内）
-   休日：土日祝休み / 年休120日
-   残業：月5時間程度
-   業務：データ入力・資料作成・電話対応・ファイリング
-   特徴：未経験から事務職デビュー可。配属先の約8割が大手企業。
+async function loadJobListingsText() {
+  if (jobListingsCache) return jobListingsCache;
+  if (jobListingsLoadPromise) return jobListingsLoadPromise;
 
-2. 株式会社リクルートスタッフィング【キャリアウィンク】事務職
-   月給：20〜32.8万円 / 年収：280〜400万円
-   勤務地：東京・神奈川・埼玉・千葉・愛知・大阪・兵庫・京都・宮城・福岡
-   休日：土日祝休み / 年休120日以上
-   残業：月20時間以内
-   業務：データ入力・集計・資料作成・電話/メール対応・受発注業務
-   特徴：リクルートグループ基盤。研修制度・キャリア支援あり。
+  jobListingsLoadPromise = (async () => {
+    const fetchOne = async (relPath, asJson) => {
+      const url = new URL(relPath, window.location.href).href;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(String(res.status));
+      return asJson ? res.json() : res.text();
+    };
+    try {
+      const t = await fetchOne(JOB_LISTINGS_FILENAME, false);
+      jobListingsCache = t;
+      return jobListingsCache;
+    } catch (e1) {
+      console.warn('[CA] 求人テキストの取得に失敗、JSONフォールバックを試行:', e1?.message || e1);
+      try {
+        const t = await fetchOne(JOB_LISTINGS_FALLBACK_JSON, true);
+        jobListingsCache = typeof t === 'string' ? t : String(t);
+        return jobListingsCache;
+      } catch (e2) {
+        console.warn('[CA] JSONフォールバックも失敗:', e2?.message || e2);
+        throw new Error(
+          '求人データ（求人情報_業種別まとめ.txt）を読み込めませんでした。index.html と同じフォルダにファイルを置き、ローカルサーバー（例: npx serve）で開いてください。'
+        );
+      }
+    }
+  })();
 
-3. アデコ株式会社【事務職（バックオフィス）】
-   月給：非公開（要確認）
-   勤務地：全国
-   業務：一般事務・バックオフィス業務全般
-   特徴：選考1回。未経験歓迎。個別研修＆初日有給あり。
+  return jobListingsLoadPromise;
+}
 
-■ 総合職・販売・接客系
-
-4. 株式会社GREEN RIBBON STAFFING【総合職】
-   月給：18.5〜30万円 / 年収：250〜400万円
-   勤務地：全国（希望エリア考慮）
-   休日：完全週休2日制 / 年休120日
-   残業：月10時間程度
-   業務：販売・事務・ホテルフロント・カスタマーサポートなど（適性に応じて選択）
-   特徴：未経験歓迎。ジョブチェンジ可。社宅制度（家具家電付き）あり。
-
-■ 施工管理系
-
-5. 株式会社BREXA Engineering（旧：共同エンジニアリング）【施工管理】
-   月給：22万円〜（想定月収28.5万円以上）/ 年収：350〜540万円
-   勤務地：全国
-   休日：土日祝休み / 年休120日
-   残業：月20〜40時間
-   業務：建設プロジェクトの進捗管理・現場写真・書類作成・CAD図面修正
-   特徴：未経験から施工管理スキルを習得。国家資格取得サポートあり。定着率91%。
-
-6. 日研トータルソーシング株式会社【施工管理】
-   月給：32〜40万円（未経験21万円〜）/ 年収：400〜850万円
-   勤務地：北海道・東北等の全国プロジェクト先
-   休日：土日休み / 年休120日
-   残業：現場による（残業手当100%支給）
-   業務：建設プロジェクト進行管理・書類作成・職人への指示・スケジュール調整
-   特徴：未経験可。大手ゼネコン案件（鹿島建設・大林組等）多数。研修施設・社宅あり。
-
-7. 株式会社アーキ・ジャパン【施工管理】
-   月給：21〜24万円 / 年収：350〜400万円
-   勤務地：全国のプロジェクト先
-   休日：土日休み / 年休120日
-   残業：月20時間程度
-   業務：建設プロジェクト進捗管理・スケジュール作成・CADサポート・打ち合わせ
-   特徴：東京タワー・大型商業施設等の実績あり。研修制度・資格取得支援。
-
-8. 株式会社オープンアップコンストラクション【施工管理】
-   月給：26〜36万円 / 年収：330〜550万円
-   勤務地：全国
-   休日：土日祝休み / 年休120日
-   残業：月20時間以内
-   業務：建設プロジェクト進行サポート・スケジュール管理・安全チェック・書類作成
-   特徴：ホワイト企業認定「GOLD」。大手上場グループで安定環境。
-
-9. 株式会社コプロコンストラクション【施工管理】
-   月給：26〜30万円 / 年収：350〜450万円
-   勤務地：全国（通勤圏内のプロジェクト）
-   休日：土日祝休み / 年休125日
-   残業：月10時間程度
-   業務：建設プロジェクトのスケジュール管理・現場スタッフ指示・品質・安全管理
-   特徴：大手ゼネコン案件多数。研修制度充実。
-
-■ 営業・販売系
-
-10. 株式会社IDOM（ガリバー）【中古車営業】
-    月給：30〜35万円 / 年収：360〜420万円
-    勤務地：全国のガリバー店舗
-    休日：シフト制 / 年休120日
-    残業：月20時間以内
-    業務：中古車提案（完全反響営業）・買取査定・自動車保険・保証サービス提案
-    特徴：飛び込み営業なし。インセンティブ制度あり。東証プライム上場。最短1年で正社員登用可。
-
-11. 株式会社はなまる【買取営業（法人）】
-    月給：27.5〜29.5万円 / 年収：330〜400万円
-    勤務地：東京・大阪・神奈川・埼玉・愛知・宮城・福岡ほか全国
-    休日：土日祝休み / 年休120日以上
-    残業：月20〜40時間
-    業務：自動車修理工場・ディーラーへの訪問営業・事故車・災害車の査定・買取
-    特徴：約1ヶ月研修あり。法人営業で営業しやすい環境。入社1年で月収50万円以上の可能性。
-
-12. 株式会社翔陽【買取営業（個人）】
-    月給：20〜100万円 / 年収：240〜2000万円
-    勤務地：東京・神奈川・愛知・福岡・宮城・広島・愛媛
-    休日：土日休み / 年休115日
-    残業：月20時間以内
-    業務：個人宅訪問・ブランド品・アクセサリー等の査定依頼受付・査定員としての査定業務
-    特徴：未経験90%以上。高インセンティブ（年間平均250万円）。入社2ヶ月で月収49万円の実績あり。
-`;
+function buildSystemPrompt(jobListingsText) {
+  return SYSTEM_PROMPT_HEAD + jobListingsText + SYSTEM_PROMPT_TAIL;
+}
 
 /* ============================================================
-   システムプロンプト
+   システムプロンプト（固定部＋求人テキストで動的結合）
    ============================================================ */
-const SYSTEM_PROMPT = `あなたは日本の転職エージェント「杜の都工房」の最上級キャリアアドバイザーAIです。
+const SYSTEM_PROMPT_HEAD = `あなたは日本の転職エージェント「杜の都工房」の最上級キャリアアドバイザーAIです。
 面談の文字起こしと既存書類から情報を精密に抽出し、実際に企業へ提出できるクオリティの転職書類と、
 数値・引用・視覚的要素を駆使した深いキャリアアドバイスを生成してください。
 
@@ -157,10 +95,28 @@ const SYSTEM_PROMPT = `あなたは日本の転職エージェント「杜の都
 ╚══════════════════════════════════════╝
 
 【求人マッチング分析】
-以下の求人一覧から候補者に最適な求人を2〜4件選んで job_suggestions に出力する。
+以下のテキストは「求人情報_業種別まとめ.txt」の内容に相当します。各求人ブロックには【会社概要】【求人内容】【求職者へのアピールポイント】【求人URL】が含まれます。
+この一覧から候補者に最適な求人を必ず3件選び、job_suggestions に出力してください（3件未満・超過は不可）。
 選定基準：スキル適合度・キャリアゴール・年収希望・勤務条件・ポテンシャル
 
-${JOB_LISTINGS}
+--- 求人データここから ---
+
+`;
+
+const SYSTEM_PROMPT_TAIL = `
+
+--- 求人データここまで ---
+
+【求人マッチング時の出力ルール】
+- job_suggestions は必ず3要素の配列とする（rank 1〜3）。
+- 面談テキスト・メモがある場合は、why_fit_for_candidate と closing_to_candidate に実際の発言や志向に触れる（捏造しない）。
+- why_fit_for_candidate：なぜこの会社・職種がこの候補者に向いているかを、面談の内容を踏まえて2〜4文で書く。
+- why_recommend：転職エージェントとして、なぜこの求人をおすすめするかを1〜3文で書く。
+- match_reasons：おすすめの要点を箇条書きで2〜4項目（各一言〜二言）。
+- appeal_points：同じ求人の【求職者へのアピールポイント】から候補者に刺さるものを2〜4個選び、原文を活かして短く整える（捏造しない）。
+- closing_to_candidate：候補者へのクロージングの言葉。共感・励まし・次の一歩（応募検討、説明会など）を丁寧語で2〜4文。
+- skill_career_message：手に職・スキルアップ・キャリアアップ・将来の選択肢など、この求人で得られる成長やキャリアの広がりを1〜3文で書く。
+- 年収・勤務地・休日・残業は【求人内容】の記載に合わせる。
 
 【key_quotes】
 面談テキストから候補者の実際の発言を3〜5件引用する（発言がない場合は空配列）。
@@ -284,7 +240,12 @@ ${JOB_LISTINGS}
         "holiday": "休日・休暇",
         "overtime": "残業時間",
         "career_path": "3〜5年後のキャリアパス（具体的に50〜80字）",
-        "match_reasons": ["マッチ理由1（候補者のスキル・経験との接点）", "マッチ理由2", "マッチ理由3"],
+        "why_fit_for_candidate": "面談の内容を踏まえ、なぜこの求人がこの候補者に向いているか（2〜4文）",
+        "why_recommend": "エージェントとしてなぜこの求人をおすすめするか（1〜3文）",
+        "match_reasons": ["おすすめ要点1", "おすすめ要点2", "おすすめ要点3"],
+        "appeal_points": ["求人情報の『求職者へのアピールポイント』から2〜4個", "…"],
+        "closing_to_candidate": "求職者へのクロージングの言葉（励まし・次の一歩。2〜4文）",
+        "skill_career_message": "手に職・スキルアップ・キャリアアップ等の成長観点（1〜3文）",
         "work_style": "勤務スタイル・働き方の特徴（30〜50字）",
         "skill_growth": "習得できるスキル・成長機会（30〜50字）",
         "caution": "注意点・ミスマッチリスク（あれば）"
@@ -312,6 +273,9 @@ async function generateCareerDocuments(params) {
   if (!apiKey) {
     throw new Error('OpenAI APIキーが設定されていません。設定ボタンからAPIキーを入力してください。');
   }
+
+  const jobListingsText = await loadJobListingsText();
+  const systemPrompt = buildSystemPrompt(jobListingsText);
 
   /* ユーザープロンプト組み立て */
   const parts = [];
@@ -348,7 +312,7 @@ async function generateCareerDocuments(params) {
   parts.push('- 志望動機は3部構成で400〜600字の詳細な文章にしてください。');
   parts.push('- 自己PRは4部構成で500〜700字、STAR形式のエピソードを含めてください。');
   parts.push('- 職務経歴の担当業務は箇条書き5〜8項目で詳細に記載してください。');
-  parts.push('- 求人提案（job_suggestions）は求人一覧から2〜4件選び、各求人の年収・勤務時間・キャリアパスを具体的に説明してください。');
+  parts.push('- 求人提案（job_suggestions）は「求人情報_業種別まとめ」から必ず3件選び、why_fit_for_candidate（向いている理由）・why_recommend（おすすめ理由）・closing_to_candidate（クロージング）・skill_career_message（手に職・スキルアップ・キャリアアップ）・appeal_points を出力し、年収・勤務時間・キャリアパスを具体的に説明してください。');
   parts.push('- 面談テキストがある場合は実際の発言を3〜5件 key_quotes に引用してください。');
   parts.push('- 必ず有効なJSONのみを返してください（マークダウンコードブロック不使用）。');
 
@@ -364,7 +328,7 @@ async function generateCareerDocuments(params) {
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
-          { role: 'system', content: SYSTEM_PROMPT },
+          { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt },
         ],
         response_format: { type: 'json_object' },
@@ -460,6 +424,17 @@ function validateAndFillDefaults(data) {
     career_vision: { short_term: '', mid_term: '', salary_potential: '' },
     ...data.career_advice,
   };
+
+  if (Array.isArray(data.career_advice.job_suggestions)) {
+    data.career_advice.job_suggestions = data.career_advice.job_suggestions.map((j) => ({
+      ...j,
+      appeal_points: Array.isArray(j.appeal_points) ? j.appeal_points : [],
+      why_fit_for_candidate: j.why_fit_for_candidate != null ? String(j.why_fit_for_candidate) : '',
+      why_recommend: j.why_recommend != null ? String(j.why_recommend) : '',
+      closing_to_candidate: j.closing_to_candidate != null ? String(j.closing_to_candidate) : '',
+      skill_career_message: j.skill_career_message != null ? String(j.skill_career_message) : '',
+    }));
+  }
 
   return data;
 }

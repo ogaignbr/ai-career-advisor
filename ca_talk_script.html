@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CA面談トークスクリプト</title>
+<style>
+/* =============================================
+   DESIGN TOKENS
+   ============================================= */
+:root {
+  --c-primary:      #16a34a;
+  --c-primary-dark: #15803d;
+  --c-primary-deep: #14532d;
+  --c-primary-mid:  #166534;
+  --c-accent:       #22c55e;
+  --c-surface-1:    #f0fdf4;
+  --c-surface-2:    #dcfce7;
+  --c-border:       #bbf7d0;
+  --c-border-mid:   #86efac;
+  --c-white:        #ffffff;
+  --c-text:         #111827;
+  --c-text-muted:   #4b5563;
+  --c-text-light:   #9ca3af;
+  --c-tag-int-bg:   #dbeafe;
+  --c-tag-int-tx:   #1e40af;
+  --c-tag-mat-bg:   #dcfce7;
+  --c-tag-mat-tx:   #166534;
+  --c-tag-ai-bg:    #ede9fe;
+  --c-tag-ai-tx:    #5b21b6;
+  --c-tag-sub-bg:   #f3f4f6;
+  --c-tag-sub-tx:   #6b7280;
+  --radius-sm:      6px;
+  --radius-md:      10px;
+  --radius-lg:      14px;
+  --shadow-card:    0 1px 3px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.05);
+  --shadow-tab:     0 2px 8px rgba(0,0,0,.18);
+}
+
+/* =============================================
+   RESET
+   ============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--c-text);
+  background: var(--c-surface-1);
+  min-height: 100vh;
+}
+strong { font-weight: 700; }
+
+/* =============================================
+   APP HEADER
+   ============================================= */
+.app-header {
+  background: linear-gradient(135deg, var(--c-primary-deep) 0%, var(--c-primary-mid) 100%);
+  color: var(--c-white);
+  padding: 16px 24px 14px;
+  position: sticky; top: 0; z-index: 200;
+  box-shadow: var(--shadow-tab);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.header-left h1 {
+  font-size: 17px; font-weight: 800; letter-spacing: .02em;
+  display: flex; align-items: center; gap: 8px;
+}
+.header-left h1::before {
+  content: "";
+  display: inline-block; width: 4px; height: 18px;
+  background: var(--c-accent); border-radius: 2px; flex-shrink: 0;
+}
+.header-sub { font-size: 11px; opacity: .75; margin-top: 3px; }
+.header-overall {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+  flex-shrink: 0;
+}
+.overall-pct { font-size: 20px; font-weight: 800; color: var(--c-accent); line-height: 1; }
+.overall-txt { font-size: 10px; opacity: .7; }
+.overall-bar-wrap { width: 100px; height: 5px; background: rgba(255,255,255,.2); border-radius: 3px; overflow: hidden; }
+.overall-bar-fill { height: 100%; background: var(--c-accent); border-radius: 3px; transition: width .4s; }
+
+/* =============================================
+   STEP TABS
+   ============================================= */
+.step-tabs {
+  background: var(--c-primary-deep);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.step-tabs::-webkit-scrollbar { display: none; }
+.step-tab {
+  flex: 0 0 auto;
+  display: flex; flex-direction: column; align-items: center;
+  gap: 1px;
+  padding: 9px 16px 8px;
+  cursor: pointer;
+  background: transparent; border: none;
+  color: rgba(255,255,255,.45);
+  font-family: inherit;
+  font-size: 11px;
+  transition: color .15s, background .15s;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap; position: relative;
+}
+.step-tab:hover { color: rgba(255,255,255,.8); background: rgba(255,255,255,.05); }
+.step-tab.active { color: var(--c-white); border-bottom-color: var(--c-accent); background: rgba(255,255,255,.07); }
+.step-tab.done { color: var(--c-accent); }
+.step-tab.done .tab-num::after { content: " ✓"; font-size: 9px; }
+.tab-num  { font-size: 9px; font-weight: 700; letter-spacing: .04em; opacity: .65; }
+.tab-name { font-size: 11px; font-weight: 700; }
+.tab-time { font-size: 9px; opacity: .55; }
+.step-tab.active .tab-num, .step-tab.active .tab-time { opacity: .8; }
+
+/* =============================================
+   LEGEND
+   ============================================= */
+.legend-bar {
+  background: var(--c-white);
+  border-bottom: 1px solid var(--c-border);
+  padding: 7px 20px;
+  display: flex; flex-wrap: wrap; gap: 12px;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--c-text-muted); }
+.legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* =============================================
+   PAGES
+   ============================================= */
+.pages { padding-bottom: 80px; }
+.step-page { display: none; }
+.step-page.active { display: block; animation: fadeUp .22s ease; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================
+   PAGE HEADER BAND
+   ============================================= */
+.page-band {
+  background: var(--c-white);
+  border-bottom: 1px solid var(--c-border);
+  padding: 18px 20px 14px;
+  display: flex; align-items: flex-start; gap: 14px;
+}
+.page-badge {
+  flex-shrink: 0;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  color: var(--c-white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; font-weight: 900;
+  box-shadow: 0 2px 8px rgba(22,163,74,.35);
+}
+.page-band-text .page-title { font-size: 16px; font-weight: 800; color: var(--c-primary-deep); }
+.page-band-text .page-meta  { font-size: 11px; color: var(--c-text-muted); margin-top: 2px; }
+
+/* Step progress inside band */
+.band-progress {
+  margin-left: auto; flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
+}
+.band-prog-count { font-size: 13px; font-weight: 700; color: var(--c-primary); }
+.band-prog-wrap  { width: 80px; height: 5px; background: var(--c-surface-2); border-radius: 3px; overflow: hidden; }
+.band-prog-fill  { height: 100%; background: var(--c-primary); border-radius: 3px; transition: width .3s; }
+
+/* =============================================
+   PAGE CONTENT
+   ============================================= */
+.page-content { max-width: 820px; margin: 0 auto; padding: 20px 16px 0; }
+
+/* =============================================
+   SECTION HEADING
+   ============================================= */
+.sec-heading {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 800; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--c-primary-mid);
+  margin: 22px 0 10px;
+}
+.sec-heading::before {
+  content: ""; flex-shrink: 0;
+  width: 3px; height: 14px;
+  background: var(--c-primary); border-radius: 2px;
+}
+.sec-heading:first-child { margin-top: 4px; }
+
+/* =============================================
+   TALK BLOCK
+   ============================================= */
+.talk-block {
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-left: 4px solid var(--c-primary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 13px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+}
+.talk-label {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--c-primary); margin-bottom: 5px;
+}
+.talk-body { font-size: 13.5px; color: var(--c-text); line-height: 1.75; }
+.talk-body em { font-style: normal; font-weight: 700; color: var(--c-primary-deep); }
+
+/* =============================================
+   FLOW BLOCK (numbered list)
+   ============================================= */
+.flow-block {
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+}
+.flow-block ol { padding-left: 20px; }
+.flow-block li { font-size: 13px; margin-bottom: 5px; }
+.flow-block li:last-child { margin-bottom: 0; }
+
+/* =============================================
+   CHECKLIST CARD
+   ============================================= */
+.checklist-card {
+  background: var(--c-white);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  margin-bottom: 10px;
+}
+
+/* Individual check item */
+.ci {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 11px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--c-surface-2);
+  background: var(--c-white);
+  transition: background .1s;
+  user-select: none;
+}
+.ci:last-child { border-bottom: none; }
+.ci:hover { background: var(--c-surface-1); }
+
+/* Checkbox */
+.ci-box {
+  flex-shrink: 0; margin-top: 2px;
+  width: 20px; height: 20px;
+  border: 2px solid var(--c-border-mid);
+  border-radius: 5px;
+  background: var(--c-white);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color .15s, background .15s;
+}
+.ci.checked .ci-box {
+  border-color: var(--c-primary);
+  background: var(--c-primary);
+}
+.ci-box svg { display: none; }
+.ci.checked .ci-box svg { display: block; }
+
+/* Text stays the same regardless of checked state */
+.ci-body { flex: 1; }
+.ci-q { font-size: 13.5px; color: var(--c-text); line-height: 1.55; }
+.ci-q small { font-size: 11px; color: var(--c-text-muted); display: block; margin-top: 2px; }
+.ci-tags { margin-top: 5px; display: flex; flex-wrap: wrap; gap: 4px; }
+
+/* Check-all button row */
+.check-all-row {
+  display: flex; justify-content: flex-end;
+  margin-bottom: 6px;
+}
+.btn-check-all {
+  font-size: 11px; font-weight: 600;
+  color: var(--c-primary-dark);
+  background: var(--c-white);
+  border: 1px solid var(--c-border-mid);
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  cursor: pointer; font-family: inherit;
+  transition: background .12s;
+}
+.btn-check-all:hover { background: var(--c-surface-2); }
+
+/* =============================================
+   TAGS
+   ============================================= */
+.tag {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.tag-i { background: var(--c-tag-int-bg); color: var(--c-tag-int-tx); }
+.tag-m { background: var(--c-tag-mat-bg); color: var(--c-tag-mat-tx); }
+.tag-a { background: var(--c-tag-ai-bg);  color: var(--c-tag-ai-tx);  }
+.tag-s { background: var(--c-tag-sub-bg); color: var(--c-tag-sub-tx); }
+
+/* =============================================
+   ANNOUNCE CARD
+   ============================================= */
+.announce {
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow-card);
+}
+.announce-head {
+  background: var(--c-primary-deep);
+  color: var(--c-white);
+  padding: 8px 16px;
+  font-size: 12px; font-weight: 800;
+  letter-spacing: .02em;
+}
+.announce-head.variant { background: var(--c-primary); }
+.announce-body {
+  background: var(--c-white);
+  padding: 14px 16px;
+  font-size: 13.5px; line-height: 1.8;
+  color: var(--c-text);
+}
+
+/* =============================================
+   NOTE / POINT BOXES
+   ============================================= */
+.note-box {
+  background: #fefce8;
+  border: 1px solid #fde68a;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 12.5px; color: #854d0e;
+  margin: 10px 0;
+}
+.point-box {
+  background: #fff7ed;
+  border-left: 4px solid #f97316;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 11px 14px;
+  font-size: 13px; color: #7c2d12;
+  margin: 10px 0;
+}
+
+/* =============================================
+   NAV BUTTONS (floating bar)
+   ============================================= */
+.nav-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--c-white);
+  border-top: 1px solid var(--c-border);
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 20px;
+  z-index: 100;
+  box-shadow: 0 -4px 16px rgba(0,0,0,.08);
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  font-size: 14px; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+  border: none;
+  transition: opacity .15s, transform .1s;
+}
+.btn:active { transform: scale(.97); }
+.btn-prev {
+  background: var(--c-surface-1);
+  color: var(--c-primary-dark);
+  border: 1.5px solid var(--c-border-mid);
+  flex-shrink: 0;
+}
+.btn-prev:hover { background: var(--c-surface-2); }
+.btn-next {
+  background: var(--c-primary);
+  color: var(--c-white);
+  margin-left: auto;
+  box-shadow: 0 2px 8px rgba(22,163,74,.3);
+  flex-shrink: 0;
+}
+.btn-next:hover { background: var(--c-primary-dark); }
+.btn-finish {
+  background: var(--c-primary-deep);
+  color: var(--c-white);
+  margin-left: auto;
+  box-shadow: 0 2px 8px rgba(20,83,45,.3);
+}
+.btn-finish:hover { background: var(--c-primary-mid); }
+.nav-remaining {
+  flex: 1; text-align: center;
+  font-size: 11px; color: var(--c-text-muted);
+}
+.nav-remaining.warn { color: #d97706; font-weight: 600; }
+
+/* =============================================
+   DONE SCREEN
+   ============================================= */
+.done-screen {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 60px 20px; text-align: center;
+}
+.done-icon { font-size: 64px; margin-bottom: 20px; }
+.done-title { font-size: 24px; font-weight: 900; color: var(--c-primary-deep); margin-bottom: 8px; }
+.done-sub { font-size: 14px; color: var(--c-text-muted); margin-bottom: 28px; }
+.btn-restart {
+  background: var(--c-primary); color: var(--c-white);
+  border: none; border-radius: var(--radius-md);
+  padding: 13px 32px; font-size: 15px; font-weight: 800;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 2px 8px rgba(22,163,74,.3);
+}
+.btn-restart:hover { background: var(--c-primary-dark); }
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 600px) {
+  .app-header { padding: 12px 14px 10px; }
+  .header-left h1 { font-size: 15px; }
+  .overall-bar-wrap { width: 70px; }
+  .page-content { padding: 14px 12px 0; }
+  .ci { padding: 10px 12px; gap: 10px; }
+  .nav-bar { padding: 10px 14px; }
+  .btn { padding: 9px 16px; font-size: 13px; }
+  .band-progress { display: none; }
+}
+
+/* =============================================
+   PRINT
+   ============================================= */
+@media print {
+  body { background: #fff; }
+  .app-header, .step-tabs, .legend-bar, .nav-bar, .check-all-row { display: none !important; }
+  .step-page { display: block !important; page-break-before: always; }
+  .step-page:first-child { page-break-before: avoid; }
+  .checklist-card, .talk-block, .flow-block { box-shadow: none; border-color: #ccc; }
+  .ci { border-bottom-color: #eee; }
+  .page-band { border: 1px solid #ccc; border-radius: 4px; margin-bottom: 12px; }
+  .announce-head { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .page-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .tag { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== APP HEADER ========== -->
+<header class="app-header">
+  <div class="header-left">
+    <h1>CA 面談トークスクリプト</h1>
+    <div class="header-sub">AI企業〇〇 正社員採用 一次面談　|　人材事業部（CAチーム）　|　計 30〜40分</div>
+  </div>
+  <div class="header-overall">
+    <div class="overall-pct" id="overallPct">0%</div>
+    <div class="overall-bar-wrap"><div class="overall-bar-fill" id="overallFill" style="width:0%"></div></div>
+    <div class="overall-txt" id="overallTxt">0 / 0 完了</div>
+  </div>
+</header>
+
+<!-- ========== STEP TABS ========== -->
+<nav class="step-tabs" id="stepTabs">
+  <button class="step-tab active" onclick="goTo(0)">
+    <span class="tab-num">STEP 1</span>
+    <span class="tab-name">オープニング</span>
+    <span class="tab-time">約 3 分</span>
+  </button>
+  <button class="step-tab" onclick="goTo(1)">
+    <span class="tab-num">STEP 2</span>
+    <span class="tab-name">現状確認</span>
+    <span class="tab-time">約 5 分</span>
+  </button>
+  <button class="step-tab" onclick="goTo(2)">
+    <span class="tab-num">STEP 3</span>
+    <span class="tab-name">転職軸ヒアリング</span>
+    <span class="tab-time">7〜8 分</span>
+  </button>
+  <button class="step-tab" onclick="goTo(3)">
+    <span class="tab-num">STEP 4</span>
+    <span class="tab-name">職歴・スキル</span>
+    <span class="tab-time">約 10 分</span>
+  </button>
+  <button class="step-tab" onclick="goTo(4)">
+    <span class="tab-num">STEP 5</span>
+    <span class="tab-name">弊社説明</span>
+    <span class="tab-time">約 5 分</span>
+  </button>
+  <button class="step-tab" onclick="goTo(5)">
+    <span class="tab-num">STEP 6</span>
+    <span class="tab-name">併願・クロージング</span>
+    <span class="tab-time">約 5 分</span>
+  </button>
+</nav>
+
+<!-- ========== LEGEND ========== -->
+<div class="legend-bar">
+  <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>面接質問</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>併願マッチング</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>AIスキル確認</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div>補足</div>
+</div>
+
+<!-- =============================================
+     PAGES
+     ============================================= -->
+<div class="pages">
+
+<!-- ========== STEP 1 ========== -->
+<div class="step-page active" id="page-0">
+  <div class="page-band">
+    <div class="page-badge">1</div>
+    <div class="page-band-text">
+      <div class="page-title">オープニング・基本情報確認</div>
+      <div class="page-meta">⏱ 約3分　｜　場の設定・信頼構築・基本属性の把握</div>
+    </div>
+    <div class="band-progress">
+      <div class="band-prog-count" id="bpc-0">0 / 5</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-0" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="sec-heading">トークスクリプト</div>
+
+    <div class="talk-block">
+      <div class="talk-label">自己紹介</div>
+      <div class="talk-body">「〇〇株式会社 人材事業部の〇〇と申します。本来は人事部担当ですが、内定戦略強化のため私が担当します。本日の内容は録画・文字起こしし人事部へ共有します。」</div>
+    </div>
+
+    <div class="talk-block">
+      <div class="talk-label">選考フロー説明</div>
+      <div class="talk-body">「本日の選考フローをご説明します。」</div>
+    </div>
+    <div class="flow-block">
+      <ol>
+        <li>本日が<strong>一次面談</strong></li>
+        <li><strong>7〜10日以内</strong>にIndeedより合否連絡</li>
+        <li>合格後<strong>7〜10日以内</strong>に二次面談日程調整（人事部役員担当）</li>
+        <li>二次面談後<strong>3〜5日</strong>で最終合否</li>
+      </ol>
+    </div>
+
+    <div class="talk-block">
+      <div class="talk-label">アイスブレイク</div>
+      <div class="talk-body">カジュアル面談である旨を伝え、場を和ませる</div>
+    </div>
+
+    <div class="talk-block">
+      <div class="talk-label">本日の構成説明</div>
+      <div class="talk-body">「本日は3ブロックで進めます。① 転職ヒアリング　② 職歴ヒアリング　③ 会社説明。お気軽にお話しいただければと思います。」</div>
+    </div>
+
+    <div class="sec-heading">確認チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(0)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-0">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">選考フロー（4ステップ）を説明した</div>
+          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">アイスブレイクで場を和ませた</div>
+          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">本日の3ブロック構成を説明した</div>
+          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">お名前・ご年齢・ご住所（市区町村まで）を確認した</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">運転免許の有無・通勤手段（電車 or 車）を確認した</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <span></span>
+    <span class="nav-remaining" id="nr-0"></span>
+    <button class="btn btn-next" onclick="goTo(1)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 2 ========== -->
+<div class="step-page" id="page-1">
+  <div class="page-band">
+    <div class="page-badge">2</div>
+    <div class="page-band-text">
+      <div class="page-title">現状確認</div>
+      <div class="page-meta">⏱ 約5分　｜　就業状況・転職意欲・他社CA活用状況の把握</div>
+    </div>
+    <div class="band-progress">
+      <div class="band-prog-count" id="bpc-1">0 / 3</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-1" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="sec-heading">質問チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(1)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-1">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">現在、在職中ですか？離職中ですか？<small>（離職中の場合、退職日も確認）</small></div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">転職の目標時期はいつ頃をお考えですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">他社のキャリアアドバイザー（CA）は活用されていますか？<small>活用中 → サポート内容を確認　／　未活用 → クロージングへの布石として記録</small></div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(0)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-1"></span>
+    <button class="btn btn-next" onclick="goTo(2)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 3 ========== -->
+<div class="step-page" id="page-2">
+  <div class="page-band">
+    <div class="page-badge">3</div>
+    <div class="page-band-text">
+      <div class="page-title">転職軸ヒアリング</div>
+      <div class="page-meta">⏱ 7〜8分　｜　希望職種・給与・キャリアの把握＋併願マッチング核心</div>
+    </div>
+    <div class="band-progress">
+      <div class="band-prog-count" id="bpc-2">0 / 13</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-2" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="point-box">
+      <strong>ポイント：</strong>このブロックが<strong>併願先マッチングの核心</strong>。面接の質問をしながら紹介求人の条件整理を同時に行う。
+    </div>
+
+    <div class="sec-heading">① 希望職種・業種</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s3a')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s3a">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">今回どのような職種・業種を中心に探していますか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">未経験の職種・業界への挑戦意欲はありますか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">前職の業種・職種を続けたいですか？変えたいですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">勤務時間は固定制・シフト制、どちらを希望しますか？</div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">転勤・勤務地・週休2日の曜日希望はありますか？</div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-heading">② 給与・待遇の条件</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s3b')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s3b">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">前職の年収はどのくらいでしたか？（月給・手当・ボーナス含む）</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">希望年収・月収の最低ラインはどのくらいですか？</div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">ボーナス・昇給・福利厚生で特に重視したい点は何ですか？</div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-heading">③ 価値観・キャリアの方向性</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s3c')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s3c">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">仕事を選ぶ上で<strong>絶対に譲れない条件を1つ</strong>教えてください</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">2番目・3番目に大事にしていることは何ですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">今後どんなキャリアを歩みたいですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">人と関わる仕事 vs 黙々と作業する仕事、どちらにやりがいを感じますか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">大人数チーム vs 少人数チーム、どちらが合っていますか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(1)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-2"></span>
+    <button class="btn btn-next" onclick="goTo(3)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 4 ========== -->
+<div class="step-page" id="page-3">
+  <div class="page-band">
+    <div class="page-badge">4</div>
+    <div class="page-band-text">
+      <div class="page-title">職歴・スキルヒアリング</div>
+      <div class="page-meta">⏱ 約10分　｜　経歴・PCスキル・AIスキルの把握＋求人マッチング精度向上</div>
+    </div>
+    <div class="band-progress">
+      <div class="band-prog-count" id="bpc-3">0 / 13</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-3" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="talk-block">
+      <div class="talk-label">導入トーク</div>
+      <div class="talk-body">「これまでのご経歴を、学校卒業から現在まで簡単な流れで教えてください。」</div>
+    </div>
+
+    <div class="sec-heading">業務内容・スキル</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s4a')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s4a">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">直近の職場での具体的な担当業務を教えてください</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">得意な業務はありますか？（接客・電話・データ入力・書類作成など）</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">保有資格・免許、勉強中のものはありますか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-heading">PCスキル・AIスキル確認　<span style="font-size:11px;font-weight:500;color:#5b21b6;">※重要</span></div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s4b')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s4b">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">PCスキルのレベルを教えてください（Excel・Word・PowerPoint・その他）</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-a">AIスキル確認</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">AIツール（ChatGPT・Copilot・Geminiなど）の使用経験はありますか？</div>
+          <div class="ci-tags"><span class="tag tag-a">AIスキル確認</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">AIを使う場合、主にどのような用途で使いますか？<small>（文章作成・調べもの・資料作成・業務効率化など）</small></div>
+          <div class="ci-tags"><span class="tag tag-a">AIスキル確認</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">AIツールを<strong>業務で活用した経験</strong>はありますか？具体的に教えてもらえますか？</div>
+          <div class="ci-tags"><span class="tag tag-a">AIスキル確認</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">今後AIやデジタルスキルを身につけていきたい意欲はありますか？</div>
+          <div class="ci-tags"><span class="tag tag-a">AIスキル確認</span><span class="tag tag-s">補足</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-heading">退職理由・モチベーション</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s4c')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s4c">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">前職の退職理由・きっかけを教えてください</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">前職で一番大変だったことと、どう乗り越えたかを教えてください</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">前職で身についた、自信を持って言えるスキル・経験は何ですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-heading">人柄・価値観（自然な会話の中で）</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s4d')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s4d">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">休日はどのようにお過ごしですか？趣味は何ですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">職場での自分を一言で表すと？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>空白期間がある場合：</strong>「その間はどう過ごしていましたか？」を確認。体調関連の場合は「今は万全ですか？」と確認。
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(2)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-3"></span>
+    <button class="btn btn-next" onclick="goTo(4)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 5 ========== -->
+<div class="step-page" id="page-4">
+  <div class="page-band">
+    <div class="page-badge">5</div>
+    <div class="page-band-text">
+      <div class="page-title">弊社説明</div>
+      <div class="page-meta">⏱ 約5分　｜　企業理解の促進・候補者軸に合わせた訴求</div>
+    </div>
+    <div class="band-progress">
+      <div class="band-prog-count" id="bpc-4">0 / 3</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-4" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="sec-heading">トーク構成</div>
+    <div class="flow-block">
+      <ol>
+        <li style="margin-bottom:8px"><strong>会社紹介</strong>：事業内容・特徴・強み・規模感・募集ポジション</li>
+        <li style="margin-bottom:8px"><strong>候補者の軸に合わせたアピール</strong>：STEP 3でヒアリングした希望条件を1〜2点ピックアップして具体的にリンクさせる</li>
+        <li><strong>質問受付</strong></li>
+      </ol>
+    </div>
+
+    <div class="talk-block">
+      <div class="talk-label">質問受付トーク</div>
+      <div class="talk-body">「ここまでのご説明で何かご不明点や気になることはありますか？」</div>
+    </div>
+
+    <div class="note-box">
+      <strong>ポイント：</strong> STEP 3の回答を参照しながら、候補者が「譲れない条件」として挙げた項目を中心に弊社のメリットを紐付けて訴求する。
+    </div>
+
+    <div class="sec-heading">完了チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(4)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-4">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">会社紹介（事業内容・強み・規模感）を説明した</div>
+          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">候補者の転職軸（STEP 3）に合わせてアピールした</div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">候補者からの質問を受け付けた</div>
+          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(3)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-4"></span>
+    <button class="btn btn-next" onclick="goTo(5)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 6 ========== -->
+<div class="step-page" id="page-5">
+  <div class="page-band">
+    <div class="page-badge" style="background:var(--c-primary-deep)">6</div>
+    <div class="page-band-text">
+      <div class="page-title">クロージング（2点アナウンス・併願提案・連絡先交換）</div>
+      <div class="page-meta">⏱ 約5分　｜　次のアクション確定・サポート関係の構築</div>
+    </div>
+    <div class="band-progress">
+      <div class="band-prog-count" id="bpc-5">0 / 3</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-5" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="announce">
+      <div class="announce-head">アナウンス① 選考結果について</div>
+      <div class="announce-body">「本日から<strong>7〜10日以内</strong>にIndeedよりご連絡が届きます。連絡がない場合は残念な結果となりますのでご了承ください。」</div>
+    </div>
+
+    <div class="announce">
+      <div class="announce-head variant">アナウンス② 併願提案（重要）</div>
+      <div class="announce-body">
+        「ありがたいことに弊社の求人が人気求人として取り上げられたこともあり、現在たくさんのご応募をいただいております。そのため、採用倍率がかなり高くなっています。また選考にも一定のお時間をいただく流れになっています。<br><br>
+        そこでご提案なのですが、<strong>第一志望は弊社にしていただきながら、並行して他社への併願</strong>もされてみませんか？弊社から推薦書を提出することで、書類選考や初回面談が優遇される企業もあります。ぜひサポートさせていただければと思うのですが、いかがでしょうか？」
+      </div>
+    </div>
+
+    <div class="talk-block">
+      <div class="talk-label">併願合意の確認</div>
+      <div class="talk-body">「もし求人情報をご覧になりたい場合は気軽にご相談ください。今すぐでなく、結果を待ちながら<strong>情報収集だけでも一緒に</strong>できます。」</div>
+    </div>
+
+    <div class="talk-block">
+      <div class="talk-label">連絡先交換</div>
+      <div class="talk-body">「私の連絡先をお伝えします。〇〇（LINE / 電話番号 / メール）です。〇〇さんの連絡先もお聞きしておいてもよいですか？」</div>
+    </div>
+
+    <div class="sec-heading">完了チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(5)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-5">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">選考結果の連絡時期（7〜10日以内）をアナウンスした</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">併願提案トークを実施した（合意 / 保留 を記録）</div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">連絡先（LINE / 電話番号 / メール）を交換した</div>
+          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(4)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-5"></span>
+    <button class="btn btn-finish" onclick="showDone()">面談完了 ✓</button>
+  </div>
+</div>
+
+<!-- ========== DONE ========== -->
+<div class="step-page" id="page-done">
+  <div class="done-screen">
+    <div class="done-icon">🎉</div>
+    <div class="done-title">面談お疲れ様でした！</div>
+    <div class="done-sub" id="doneSummary"></div>
+    <button class="btn-restart" onclick="restart()">最初からやり直す</button>
+  </div>
+</div>
+
+</div><!-- /.pages -->
+
+<script>
+// =============================================
+// DATA: page index → array of checklist card IDs
+// =============================================
+const PAGE_CARDS = [
+  ['cl-0'],
+  ['cl-1'],
+  ['s3a','s3b','s3c'],
+  ['s4a','s4b','s4c','s4d'],
+  ['cl-4'],
+  ['cl-5']
+];
+const TOTAL_STEPS = 6;
+
+// =============================================
+// TOGGLE single item
+// =============================================
+function toggleCheck(item) {
+  item.classList.toggle('checked');
+  updateProgress();
+}
+
+// =============================================
+// CHECK ALL items on a page
+// =============================================
+function checkAllPage(idx) {
+  PAGE_CARDS[idx].forEach(id => {
+    document.getElementById(id).querySelectorAll('.ci').forEach(ci => ci.classList.add('checked'));
+  });
+  updateProgress();
+}
+
+// =============================================
+// CHECK ALL items in a single card
+// =============================================
+function checkAllCard(cardId) {
+  document.getElementById(cardId).querySelectorAll('.ci').forEach(ci => ci.classList.add('checked'));
+  updateProgress();
+}
+
+// =============================================
+// GET items for a page
+// =============================================
+function getPageItems(idx) {
+  return PAGE_CARDS[idx].flatMap(id =>
+    Array.from(document.getElementById(id).querySelectorAll('.ci'))
+  );
+}
+
+// =============================================
+// UPDATE all progress displays
+// =============================================
+function updateProgress() {
+  let totalAll = 0, checkedAll = 0;
+
+  for (let s = 0; s < TOTAL_STEPS; s++) {
+    const items   = getPageItems(s);
+    const total   = items.length;
+    const checked = items.filter(ci => ci.classList.contains('checked')).length;
+    totalAll   += total;
+    checkedAll += checked;
+
+    // Band progress
+    const pct = total ? (checked / total * 100) : 0;
+    const fill = document.getElementById('bpf-' + s);
+    const cnt  = document.getElementById('bpc-' + s);
+    if (fill) fill.style.width = pct + '%';
+    if (cnt)  cnt.textContent  = checked + ' / ' + total;
+
+    // Nav remaining hint
+    const nr  = document.getElementById('nr-' + s);
+    const rem = total - checked;
+    if (nr) {
+      nr.textContent = rem > 0 ? `残り ${rem} 項目未確認` : '✓ このSTEP完了';
+      nr.className   = 'nav-remaining' + (rem > 0 ? ' warn' : '');
+    }
+
+    // Tab done state
+    const tab = document.querySelectorAll('.step-tab')[s];
+    if (tab) tab.classList.toggle('done', checked === total && total > 0);
+  }
+
+  // Overall header
+  const pct = totalAll ? Math.round(checkedAll / totalAll * 100) : 0;
+  document.getElementById('overallPct').textContent  = pct + '%';
+  document.getElementById('overallFill').style.width = pct + '%';
+  document.getElementById('overallTxt').textContent  = checkedAll + ' / ' + totalAll + ' 完了';
+}
+
+// =============================================
+// NAVIGATE to step
+// =============================================
+function goTo(idx) {
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.getElementById('page-' + idx).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// =============================================
+// DONE SCREEN
+// =============================================
+function showDone() {
+  let totalAll = 0, checkedAll = 0;
+  for (let s = 0; s < TOTAL_STEPS; s++) {
+    const items = getPageItems(s);
+    totalAll   += items.length;
+    checkedAll += items.filter(ci => ci.classList.contains('checked')).length;
+  }
+  const pct = totalAll ? Math.round(checkedAll / totalAll * 100) : 0;
+  document.getElementById('doneSummary').textContent =
+    `全 ${totalAll} 項目中 ${checkedAll} 項目を確認しました（達成率 ${pct}%）`;
+  document.querySelectorAll('.step-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-done').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// =============================================
+// RESTART
+// =============================================
+function restart() {
+  document.querySelectorAll('.ci').forEach(ci => ci.classList.remove('checked'));
+  goTo(0);
+  updateProgress();
+}
+
+// =============================================
+// INIT
+// =============================================
+updateProgress();
+</script>
+</body>
+</html>
