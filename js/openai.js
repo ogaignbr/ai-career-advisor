@@ -6,11 +6,12 @@
 const OPENAI_API_URL = 'https://api.openai.com/v1/chat/completions';
 
 /* ============================================================
-   求人一覧：「求人情報_業種別まとめ.txt」を fetch で読み込み
-   （失敗時は js/_job_fallback.json＝同内容のバックアップ）
+   求人一覧データの読み込み
+   1) js/job-data.json（確実に動作する ASCII ファイル名）
+   2) 求人情報_業種別まとめ.txt（日本語ファイル名、ローカル用）
    ============================================================ */
-const JOB_LISTINGS_FILENAME = '求人情報_業種別まとめ.txt';
-const JOB_LISTINGS_FALLBACK_JSON = 'js/_job_fallback.json';
+const JOB_DATA_JSON = 'js/job-data.json';
+const JOB_LISTINGS_TXT = '求人情報_業種別まとめ.txt';
 
 let jobListingsCache = null;
 let jobListingsLoadPromise = null;
@@ -20,29 +21,34 @@ async function loadJobListingsText() {
   if (jobListingsLoadPromise) return jobListingsLoadPromise;
 
   jobListingsLoadPromise = (async () => {
-    const fetchOne = async (relPath, asJson) => {
-      const url = new URL(relPath, window.location.href).href;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(String(res.status));
-      return asJson ? res.json() : res.text();
-    };
+    const base = window.location.href;
+
+    // 1) まず ASCII ファイル名の JSON を試す（GitHub Pages で確実に動作）
     try {
-      const t = await fetchOne(JOB_LISTINGS_FILENAME, false);
-      jobListingsCache = t;
+      const url1 = new URL(JOB_DATA_JSON, base).href;
+      const res1 = await fetch(url1);
+      if (!res1.ok) throw new Error(String(res1.status));
+      const data = await res1.json();
+      jobListingsCache = typeof data === 'string' ? data : JSON.stringify(data);
       return jobListingsCache;
     } catch (e1) {
-      console.warn('[CA] 求人テキストの取得に失敗、JSONフォールバックを試行:', e1?.message || e1);
-      try {
-        const t = await fetchOne(JOB_LISTINGS_FALLBACK_JSON, true);
-        jobListingsCache = typeof t === 'string' ? t : String(t);
-        return jobListingsCache;
-      } catch (e2) {
-        console.warn('[CA] JSONフォールバックも失敗:', e2?.message || e2);
-        throw new Error(
-          '求人データ（求人情報_業種別まとめ.txt）を読み込めませんでした。index.html と同じフォルダにファイルを置き、ローカルサーバー（例: npx serve）で開いてください。'
-        );
-      }
+      console.warn('[CA] job-data.json 取得失敗:', e1?.message || e1);
     }
+
+    // 2) テキストファイルを試す（ローカルサーバー向け）
+    try {
+      const url2 = new URL(encodeURIComponent(JOB_LISTINGS_TXT), base).href;
+      const res2 = await fetch(url2);
+      if (!res2.ok) throw new Error(String(res2.status));
+      jobListingsCache = await res2.text();
+      return jobListingsCache;
+    } catch (e2) {
+      console.warn('[CA] テキスト取得も失敗:', e2?.message || e2);
+    }
+
+    throw new Error(
+      '求人データを読み込めませんでした。ページを再読み込みしてください。'
+    );
   })();
 
   return jobListingsLoadPromise;

@@ -1087,7 +1087,7 @@ function downloadResume() {
 
   const name = state.generatedData?.resume?.name || '候補者';
   const date = formatDateForFilename(new Date());
-  const filename = `履歴書_${name}_${date}.doc`;
+  const filename = `履歴書_${name}_${date}.xlsx`;
 
   triggerDownload(state.resumeBlob, filename);
 }

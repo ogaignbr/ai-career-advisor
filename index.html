@@ -18,6 +18,9 @@
   <!-- FileSaver.js (Blob download helper) -->
   <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
 
+  <!-- SheetJS (Excel read/write) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
 
@@ -671,7 +674,7 @@
                 <div class="flex-1 text-xs text-gray-500 leading-relaxed pt-1">
                   <p class="font-medium text-gray-600 mb-1">証明写真（任意）</p>
                   <p>PNG・JPG形式に対応。</p>
-                  <p class="mt-1">履歴書Wordファイルに添付されます。</p>
+                  <p class="mt-1">Excelテンプレートの写真欄に手動で貼り付けてください。</p>
                 </div>
               </div>
               <input id="photoFileInput" type="file" accept="image/png,image/jpeg,image/jpg" class="hidden" aria-hidden="true">
@@ -738,7 +741,7 @@
 
           <!-- ダウンロードバー -->
           <div class="download-bar no-print" id="downloadBar">
-            <button id="downloadResumeBtn" disabled class="btn-download">⬇️ 履歴書 (Word)</button>
+            <button id="downloadResumeBtn" disabled class="btn-download">⬇️ 履歴書 (Excel)</button>
             <button id="downloadCvBtn" disabled class="btn-download">⬇️ 職務経歴書 (Word)</button>
             <div class="flex-1"></div>
             <span id="outputStatusText" class="text-xs text-gray-400"></span>
@@ -848,6 +851,7 @@
   </div><!-- /#doc-create-section -->
 
   <!-- JS (読み込み順序重要) -->
+  <script src="js/resume-template.js"></script>
   <script src="js/pdf-reader.js?v=2"></script>
   <script src="js/openai.js?v=4"></script>
   <script src="js/doc-gen.js?v=2"></script>
