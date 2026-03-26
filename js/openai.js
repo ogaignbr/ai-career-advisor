@@ -63,10 +63,11 @@ function detectOniMode(targetCompany) {
   return { isOni, cleanCompany };
 }
 
-function buildSystemPrompt(jobListingsText, isOniMode = false) {
+async function buildSystemPrompt(jobListingsText, isOniMode = false) {
   const base = SYSTEM_PROMPT_HEAD + jobListingsText + SYSTEM_PROMPT_TAIL;
   if (isOniMode) {
-    return base + ONI_MODE_INJECTION;
+    const oniPrompt = await loadOniPrompt();
+    return base + '\n\n' + oniPrompt;
   }
   return base;
 }
@@ -284,37 +285,25 @@ const SYSTEM_PROMPT_TAIL = `
 }`;
 
 /* ============================================================
-   鬼CAモード — 追加プロンプト（通常プロンプトをベースに上書き）
+   鬼CAモード — 外部ファイルから読み込み（キャッシュ付き）
    ============================================================ */
-const ONI_MODE_INJECTION = `
+const ONI_PROMPT_FILE = 'js/oni-ca-prompt.txt';
+let oniPromptCache = null;
 
-=== 【鬼CAモード ON】 ===
-通常のキャリアアドバイザーではなく【鬼キャリアアドバイザー】として回答してください。
-書類（resume, work_history）は通常通り高品質に生成しますが、career_advice パートは以下のルールで辛口に書いてください。
-
-■ 基本姿勢：求職者の「理想」ではなく「人生」を守る
-- やりたい仕事だけで選ぶリスクを率直に指摘する
-- 年収アップ・手に職・スキルアップ・市場価値向上を最優先に提案する
-- 面談での希望職種と違っても、人生設計として正しい選択肢を提案する
-- 甘い考えには遠慮なく厳しいフィードバック。ただし愛のある提案を必ず含める
-
-■ 口調：敬語だがストレート
-- 例：「正直に申し上げます。今の年収250万円のまま事務職を続けた場合、老後資金は圧倒的に足りません。」
-
-■ 老後資金シミュレーション（career_advice.financial_reality を必ず出力）
-- 65歳定年、人生100年時代で退職後35年間の生活を想定
-- 単身世帯の月間支出約16万円、夫婦世帯約27万円
-- 年金（国民年金約6.5万円/月、厚生年金約14.5万円/月）を差し引いた不足額を計算
-- 候補者の年齢から65歳までの残り年数で毎月の必要貯金額を算出
-- financial_reality の構造：
-  {"current_age":"年齢","years_to_retirement":"残り年数","retirement_years":"35","monthly_expense":"月間支出","pension_estimate":"年金月額","monthly_shortfall":"月間不足額","total_shortfall":"総不足額","required_monthly_saving":"毎月必要な貯金額","reality_check":"厳しい評価3-5文"}
-
-■ 求人提案の選定基準（人生設計優先）
-  年収の高さ > スキル習得 > キャリアアップ > 次の転職に有利か > 将来の市場価値
-
-■ summary は辛口で老後資金にも触れる。growth_areas は本質的な課題を遠慮なく指摘。recommendations は年収アップ・資産形成を最優先。
-=== 鬼CAモード指示ここまで ===
-`;
+async function loadOniPrompt() {
+  if (oniPromptCache) return oniPromptCache;
+  try {
+    const base = window.location.href;
+    const url = new URL(ONI_PROMPT_FILE, base).href;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(String(res.status));
+    oniPromptCache = await res.text();
+    return oniPromptCache;
+  } catch (e) {
+    console.warn('[CA] 鬼CAプロンプト読み込み失敗:', e?.message || e);
+    return '';
+  }
+}
 
 /* ============================================================
    generateCareerDocuments
@@ -329,7 +318,7 @@ async function generateCareerDocuments(params) {
   const { isOni, cleanCompany } = detectOniMode(targetCompany);
 
   const jobListingsText = await loadJobListingsText();
-  const systemPrompt = buildSystemPrompt(jobListingsText, isOni);
+  const systemPrompt = await buildSystemPrompt(jobListingsText, isOni);
 
   /* ユーザープロンプト組み立て */
   const parts = [];

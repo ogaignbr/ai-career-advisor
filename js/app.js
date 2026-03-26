@@ -975,6 +975,12 @@ function renderCareerAdvice(data) {
         ${fr.total_shortfall ? `<div class="oni-metric"><div class="oni-metric-label">退職後の総不足額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.total_shortfall)}</div></div>` : ''}
         ${fr.required_monthly_saving ? `<div class="oni-metric"><div class="oni-metric-label">毎月必要な貯金額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.required_monthly_saving)}</div></div>` : ''}
       </div>
+      ${fr.pension_risk ? `
+      <div style="background:rgba(180,69,9,.08);border-radius:10px;padding:.75rem;border-left:4px solid #f59e0b;margin-bottom:.5rem;">
+        <div style="font-size:.7rem;font-weight:700;color:#b45309;margin-bottom:.35rem;">⚠️ 年金リスク（少子高齢化）</div>
+        <p style="margin:0;font-size:.8125rem;color:#78350f;line-height:1.7;">${escHtml(fr.pension_risk)}</p>
+      </div>
+      ` : ''}
       <div style="background:rgba(127,29,29,.08);border-radius:10px;padding:.75rem;border-left:4px solid #dc2626;">
         <div style="font-size:.7rem;font-weight:700;color:#991b1b;margin-bottom:.35rem;">💀 現実チェック</div>
         <p style="margin:0;font-size:.8125rem;color:#7f1d1d;line-height:1.7;">${escHtml(fr.reality_check)}</p>
