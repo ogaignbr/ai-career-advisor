@@ -791,6 +791,133 @@ main { position: relative; z-index: 1; }
 }
 
 /* ============================================
+   鬼CAモード
+   ============================================ */
+.oni-mode {
+  background: linear-gradient(135deg, #1a0000 0%, #2d0a0a 30%, #1c0505 100%) !important;
+  border: 2px solid #dc2626 !important;
+  position: relative;
+  overflow: hidden;
+}
+.oni-mode::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(220,38,38,.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(220,38,38,.08) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+.oni-mode > * { position: relative; z-index: 1; }
+
+.oni-mode .advice-inner-card {
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(220,38,38,.3) !important;
+}
+.oni-mode .advice-inner-card h3 {
+  color: #fca5a5 !important;
+}
+.oni-mode .summary-section {
+  background: rgba(220,38,38,.1);
+  border: 1px solid rgba(220,38,38,.25);
+  border-radius: 14px;
+  padding: 1rem;
+}
+.oni-mode .overall-score-badge {
+  background: linear-gradient(135deg, #dc2626, #b91c1c) !important;
+  box-shadow: 0 4px 15px rgba(220,38,38,.4) !important;
+}
+.oni-mode .text-gray-700,
+.oni-mode .text-gray-600,
+.oni-mode .text-gray-500,
+.oni-mode .text-sm {
+  color: #e5e7eb !important;
+}
+.oni-mode .text-gray-800 {
+  color: #f3f4f6 !important;
+}
+.oni-mode .font-bold,
+.oni-mode .font-semibold {
+  color: #fecaca;
+}
+.oni-mode .strength-card {
+  background: rgba(34,197,94,.08);
+  border: 1px solid rgba(34,197,94,.2);
+}
+.oni-mode .growth-card {
+  background: rgba(220,38,38,.08);
+  border: 1px solid rgba(220,38,38,.2);
+}
+.oni-mode .rec-card {
+  background: rgba(255,255,255,.05);
+  border-color: rgba(220,38,38,.2);
+}
+.oni-mode .quote-card {
+  background: rgba(255,255,255,.05);
+  border-color: rgba(220,38,38,.2);
+}
+.oni-mode .quote-text {
+  color: #fca5a5 !important;
+}
+
+.oni-banner {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  background: linear-gradient(135deg, #991b1b, #dc2626);
+  color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(220,38,38,.3);
+  animation: oni-pulse 2s ease-in-out infinite alternate;
+}
+@keyframes oni-pulse {
+  0% { box-shadow: 0 4px 16px rgba(220,38,38,.3); }
+  100% { box-shadow: 0 4px 24px rgba(220,38,38,.5); }
+}
+
+.oni-financial-card {
+  background: linear-gradient(135deg, rgba(220,38,38,.06), rgba(153,27,27,.04));
+  border: 1.5px solid rgba(220,38,38,.3);
+  border-radius: 16px;
+  padding: 1rem;
+}
+.oni-mode .oni-financial-card {
+  background: linear-gradient(135deg, rgba(220,38,38,.12), rgba(153,27,27,.08));
+  border-color: rgba(220,38,38,.4);
+}
+.oni-metric {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(220,38,38,.15);
+  border-radius: 10px;
+  padding: .5rem .625rem;
+  text-align: center;
+}
+.oni-metric-label {
+  font-size: .65rem;
+  font-weight: 600;
+  color: #991b1b;
+  margin-bottom: .2rem;
+}
+.oni-mode .oni-metric-label {
+  color: #fca5a5;
+}
+.oni-metric-value {
+  font-size: .875rem;
+  font-weight: 800;
+  color: #1c1917;
+}
+.oni-mode .oni-metric-value {
+  color: #fef2f2;
+}
+.oni-metric-danger {
+  color: #dc2626 !important;
+}
+.oni-mode .oni-metric-danger {
+  color: #f87171 !important;
+}
+
+/* ============================================
    Print
    ============================================ */
 @media print {

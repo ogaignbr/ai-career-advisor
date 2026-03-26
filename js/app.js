@@ -21,6 +21,7 @@ const state = {
   activeTab: 'resume',
   resumeBlob: null,
   cvBlob: null,
+  isOniMode: false,
 };
 
 const API_KEY_STORAGE = 'career_advisor_api_key';
@@ -481,6 +482,7 @@ async function handleGenerate() {
     });
 
     state.generatedData = generatedData;
+    state.isOniMode = !!generatedData._isOniMode;
 
     // Wordファイルを生成
     let wordError = null;
@@ -813,6 +815,12 @@ function renderCareerAdvice(data) {
   const container = document.getElementById('career-advice-content');
   if (!container) return;
 
+  const isOni = state.isOniMode || false;
+  const panel = document.getElementById('panel-career_advice');
+  if (panel) {
+    panel.classList.toggle('oni-mode', isOni);
+  }
+
   const score = data.overall_score || 0;
 
   // 強みカード
@@ -949,15 +957,56 @@ function renderCareerAdvice(data) {
     </div>
   ` : '';
 
-  container.innerHTML = `
-    <!-- サマリーセクション -->
-    <div class="summary-section flex items-start gap-4 mb-5">
-      <div class="overall-score-badge">${score}</div>
-      <div class="flex-1">
-        <div class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:#8b5cf6;">総合スコア</div>
-        <p class="text-sm text-gray-700 leading-relaxed">${escHtml(data.summary)}</p>
+  // 鬼CAモード：老後資金シミュレーション
+  const fr = data.financial_reality || {};
+  const financialHtml = (isOni && fr.reality_check) ? `
+    <div class="oni-financial-card mb-5">
+      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
+        <span style="font-size:1.5rem;">🔥</span>
+        <h3 style="font-size:.95rem;font-weight:800;color:#991b1b;margin:0;">老後資金リアルシミュレーション</h3>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin-bottom:.75rem;">
+        ${fr.current_age ? `<div class="oni-metric"><div class="oni-metric-label">現在の年齢</div><div class="oni-metric-value">${escHtml(fr.current_age)}歳</div></div>` : ''}
+        ${fr.years_to_retirement ? `<div class="oni-metric"><div class="oni-metric-label">定年まで</div><div class="oni-metric-value">${escHtml(fr.years_to_retirement)}年</div></div>` : ''}
+        ${fr.retirement_years ? `<div class="oni-metric"><div class="oni-metric-label">退職後の生活</div><div class="oni-metric-value">${escHtml(fr.retirement_years)}年</div></div>` : ''}
+        ${fr.monthly_expense ? `<div class="oni-metric"><div class="oni-metric-label">月間想定支出</div><div class="oni-metric-value">${escHtml(fr.monthly_expense)}</div></div>` : ''}
+        ${fr.pension_estimate ? `<div class="oni-metric"><div class="oni-metric-label">想定年金月額</div><div class="oni-metric-value">${escHtml(fr.pension_estimate)}</div></div>` : ''}
+        ${fr.monthly_shortfall ? `<div class="oni-metric"><div class="oni-metric-label">月間不足額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.monthly_shortfall)}</div></div>` : ''}
+        ${fr.total_shortfall ? `<div class="oni-metric"><div class="oni-metric-label">退職後の総不足額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.total_shortfall)}</div></div>` : ''}
+        ${fr.required_monthly_saving ? `<div class="oni-metric"><div class="oni-metric-label">毎月必要な貯金額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.required_monthly_saving)}</div></div>` : ''}
+      </div>
+      <div style="background:rgba(127,29,29,.08);border-radius:10px;padding:.75rem;border-left:4px solid #dc2626;">
+        <div style="font-size:.7rem;font-weight:700;color:#991b1b;margin-bottom:.35rem;">💀 現実チェック</div>
+        <p style="margin:0;font-size:.8125rem;color:#7f1d1d;line-height:1.7;">${escHtml(fr.reality_check)}</p>
       </div>
     </div>
+  ` : '';
+
+  // 鬼CAモードバナー
+  const oniBannerHtml = isOni ? `
+    <div class="oni-banner mb-5">
+      <span style="font-size:1.25rem;">👹</span>
+      <div>
+        <div style="font-weight:800;font-size:.875rem;">鬼CAモード ON</div>
+        <div style="font-size:.75rem;opacity:.9;">あなたの人生を本気で守るための辛口キャリアアドバイスです</div>
+      </div>
+    </div>
+  ` : '';
+
+  container.innerHTML = `
+    ${oniBannerHtml}
+
+    <!-- サマリーセクション -->
+    <div class="summary-section flex items-start gap-4 mb-5${isOni ? ' oni-summary' : ''}">
+      <div class="overall-score-badge${isOni ? ' oni-score' : ''}">${score}</div>
+      <div class="flex-1">
+        <div class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:${isOni ? '#dc2626' : '#8b5cf6'};">${isOni ? '🔥 鬼CA総合スコア' : '総合スコア'}</div>
+        <p class="text-sm leading-relaxed" style="color:${isOni ? '#1c1917' : '#374151'};">${escHtml(data.summary)}</p>
+      </div>
+    </div>
+
+    <!-- 老後資金シミュレーション（鬼CAモード時のみ） -->
+    ${financialHtml}
 
     <!-- キーメトリクス -->
     ${(data.key_metrics || []).length > 0 ? `
