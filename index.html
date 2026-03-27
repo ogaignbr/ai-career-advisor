@@ -487,6 +487,14 @@
         </span>
         <span class="cover-btn-arrow">›</span>
       </button>
+      <button class="cover-btn" onclick="openTenshokuSupport()">
+        <span class="cover-btn-icon">🎯</span>
+        <span class="cover-btn-label">
+          転職サポート
+          <span class="cover-btn-sub">転職サポートLPを表示</span>
+        </span>
+        <span class="cover-btn-arrow">›</span>
+      </button>
     </div>
     <div class="cover-footer">© 株式会社杜の都工房</div>
   </div>
@@ -955,6 +963,9 @@
       document.getElementById('manual-overlay').classList.add('active');
       document.getElementById('doc-back-btn').classList.remove('visible');
       document.getElementById('manual-iframe').src = 'manual.html';
+    }
+    function openTenshokuSupport() {
+      window.location.href = '../転職サポート/index.html';
     }
   </script>
 
