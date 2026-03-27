@@ -233,13 +233,11 @@ body {
   .hero-nav--next { right: 0.8rem; }
   .hero-indicators { bottom: 1.5rem; right: 50%; transform: translateX(50%); }
 
-  /* モバイルでは横長画像を左右にパンして全体を見せる */
+  /* モバイルでは画像全体が見えるようにcontainで表示 */
   .hero-slide-img {
-    animation: hero-pan 10s ease-in-out infinite alternate;
-    animation-play-state: paused;
-  }
-  .hero-slide.active .hero-slide-img {
-    animation-play-state: running;
+    object-fit: contain;
+    object-position: center center;
+    animation: none;
   }
 }
 
