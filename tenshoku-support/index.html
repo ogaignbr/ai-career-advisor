@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>キャリアサポート | あなたの"これから"を、一緒に描く。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #0CBABA;
+  --primary-dark: #0F9B8E;
+  --navy: #1a1a2e;
+  --bg-white: #ffffff;
+  --bg-gray: #f8f9fa;
+  --text-dark: #222222;
+  --text-gray: #666666;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 400;
+  color: var(--text-dark);
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+/* =====================
+   HERO SLIDER
+   ===================== */
+.hero {
+  position: relative;
+  width: 100%;
+  height: 85vh;
+  min-height: 500px;
+  max-height: 800px;
+  overflow: hidden;
+  background: var(--navy);
+}
+
+.hero-slider {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: scale(1.04);
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1);
+  z-index: 2;
+}
+
+.hero-slide.leaving {
+  opacity: 0;
+  transform: scale(0.97);
+  z-index: 1;
+}
+
+.hero-slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+}
+
+.hero-slide-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 15, 30, 0.45) 0%,
+    rgba(10, 15, 30, 0.20) 40%,
+    rgba(10, 15, 30, 0.25) 60%,
+    rgba(10, 15, 30, 0.70) 100%
+  );
+  z-index: 1;
+}
+
+.hero-content {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-start;
+  padding: 0 6% 8%;
+}
+
+.hero-label {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #5ffbf1;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: rgba(12, 186, 186, 0.18);
+  border: 1px solid rgba(95, 251, 241, 0.35);
+  border-radius: 4px;
+  padding: 0.35rem 1rem;
+  margin-bottom: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.hero-main-copy {
+  font-size: clamp(2rem, 5.5vw, 3.6rem);
+  font-weight: 900;
+  color: #fff;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
+}
+
+.hero-main-copy span {
+  color: #5ffbf1;
+  text-shadow: 0 0 30px rgba(95,251,241,0.3);
+}
+
+.hero-sub-copy {
+  font-size: clamp(0.88rem, 1.8vw, 1.1rem);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.8;
+  max-width: 520px;
+  text-shadow: 0 1px 8px rgba(0,0,0,0.4);
+}
+
+/* Slide indicators */
+.hero-indicators {
+  position: absolute;
+  bottom: 2.5rem;
+  right: 6%;
+  z-index: 12;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.hero-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.6);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.hero-indicator.active {
+  background: #5ffbf1;
+  border-color: #5ffbf1;
+  box-shadow: 0 0 12px rgba(95,251,241,0.5);
+  transform: scale(1.15);
+}
+
+.hero-indicator:hover {
+  border-color: #fff;
+}
+
+/* Nav arrows */
+.hero-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 12;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  padding: 0;
+}
+
+.hero-nav:hover {
+  background: rgba(12,186,186,0.4);
+  border-color: rgba(95,251,241,0.6);
+}
+
+.hero-nav--prev { left: 1.5rem; }
+.hero-nav--next { right: 1.5rem; }
+
+.hero-nav svg {
+  width: 20px;
+  height: 20px;
+  stroke: #fff;
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Progress bar */
+.hero-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #5ffbf1, #0CBABA);
+  z-index: 12;
+  transition: width 0.3s linear;
+}
+
+@media (max-width: 768px) {
+  .hero { height: 75vh; min-height: 420px; }
+  .hero-content { padding: 0 5% 18%; }
+  .hero-nav { width: 40px; height: 40px; }
+  .hero-nav--prev { left: 0.8rem; }
+  .hero-nav--next { right: 0.8rem; }
+  .hero-indicators { bottom: 1.5rem; right: 50%; transform: translateX(50%); }
+}
+
+/* =====================
+   INTRO
+   ===================== */
+.intro {
+  background: var(--bg-white);
+  padding: 80px 1.5rem;
+  text-align: center;
+}
+
+.intro-heading {
+  font-size: clamp(1.2rem, 3vw, 1.7rem);
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1.8rem;
+  line-height: 1.5;
+}
+
+.intro-heading::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  border-radius: 2px;
+  margin: 0 auto 1.2rem;
+}
+
+.intro-body {
+  font-size: 1.05rem;
+  color: var(--text-gray);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 2;
+}
+
+/* =====================
+   CAREERS
+   ===================== */
+.careers {
+  background: #eef9f9;
+  padding: 80px 1.5rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-heading {
+  font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+  font-weight: 900;
+  color: var(--text-dark);
+  margin-bottom: 0.6rem;
+  line-height: 1.35;
+}
+
+.section-heading::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  border-radius: 2px;
+  margin: 0.8rem auto 0;
+}
+
+.section-subheading {
+  font-size: 1rem;
+  color: var(--text-gray);
+  margin-top: 1rem;
+}
+
+.careers-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .careers-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 1024px) {
+  .careers-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.career-card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.career-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease, box-shadow 0.3s ease;
+}
+
+.career-card:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 36px rgba(12,186,186,0.18);
+}
+
+.career-card-img-wrap {
+  overflow: hidden;
+  height: 200px;
+}
+
+.career-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.career-card:hover .career-card-img-wrap img {
+  transform: scale(1.06);
+}
+
+.career-card-body {
+  padding: 1.2rem 1.4rem 1.5rem;
+}
+
+.career-card-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.5rem;
+}
+
+.career-card-title::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.career-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-gray);
+  line-height: 1.75;
+}
+
+/* =====================
+   REASONS
+   ===================== */
+.reasons {
+  background: var(--bg-white);
+  padding: 80px 1.5rem;
+}
+
+.reasons-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .reasons-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.reason-item {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  background: var(--bg-gray);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reason-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reason-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.2rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.reason-icon svg {
+  width: 32px;
+  height: 32px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.reason-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 0.7rem;
+  line-height: 1.4;
+}
+
+.reason-desc {
+  font-size: 0.92rem;
+  color: var(--text-gray);
+  line-height: 1.8;
+}
+
+/* =====================
+   CTA
+   ===================== */
+.cta {
+  background: linear-gradient(135deg, #0CBABA 0%, #0a7a7a 50%, #1a1a2e 100%);
+  padding: 90px 1.5rem;
+  text-align: center;
+}
+
+.cta-heading {
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  font-weight: 900;
+  color: #fff;
+  margin-bottom: 1rem;
+  line-height: 1.35;
+}
+
+.cta-desc {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.85);
+  max-width: 480px;
+  margin: 0 auto 2.5rem;
+  line-height: 1.9;
+}
+
+.cta-btn {
+  display: inline-block;
+  background: #fff;
+  color: var(--primary-dark);
+  font-family: 'Noto Sans JP', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 1.1rem 3rem;
+  border-radius: 50px;
+  text-decoration: none;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.cta-btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+}
+
+.cta-notes {
+  margin-top: 1.4rem;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.03em;
+}
+
+/* =====================
+   FOOTER
+   ===================== */
+footer {
+  background: var(--navy);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  padding: 2rem 1.5rem;
+  font-size: 0.85rem;
+}
+
+footer .footer-name {
+  color: rgba(255,255,255,0.85);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+/* =====================
+   FADE-IN (scroll)
+   ===================== */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =====================
+   REDUCED MOTION
+   ===================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .hero-slide { opacity: 0; transform: none !important; }
+  .hero-slide.active { opacity: 1; }
+  .fade-in, .career-card, .reason-item { opacity: 1 !important; transform: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" aria-label="ヒーローセクション">
+  <div class="hero-slider">
+    <div class="hero-slide active" data-index="0">
+      <img class="hero-slide-img" src="LP画像/表紙 (1).png" alt="一般事務から施工管理へ ― 輝く未来へのキャリアチェンジ">
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide" data-index="1">
+      <img class="hero-slide-img" src="LP画像/表紙 (2).png" alt="工場勤務からビジネスコンサルタントへのキャリアチェンジ">
+      <div class="hero-slide-overlay"></div>
+    </div>
+    <div class="hero-slide" data-index="2">
+      <img class="hero-slide-img" src="LP画像/表紙⑶.png" alt="コンビニ店員からIT事務へのキャリアチェンジ">
+      <div class="hero-slide-overlay"></div>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <span class="hero-label">Career Change Support</span>
+    <h1 class="hero-main-copy">あなたの <span>"これから"</span> を、<br>一緒に描く。</h1>
+    <p class="hero-sub-copy">今の自分では想像もできなかった未来が、ここから始まります。</p>
+  </div>
+
+  <button class="hero-nav hero-nav--prev" aria-label="前のスライド">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="hero-nav hero-nav--next" aria-label="次のスライド">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+  </button>
+
+  <div class="hero-indicators">
+    <button class="hero-indicator active" data-slide="0" aria-label="スライド1"></button>
+    <button class="hero-indicator" data-slide="1" aria-label="スライド2"></button>
+    <button class="hero-indicator" data-slide="2" aria-label="スライド3"></button>
+  </div>
+
+  <div class="hero-progress" style="width: 0%"></div>
+</section>
+
+<!-- ===================== INTRO ===================== -->
+<section class="intro" aria-label="導入メッセージ">
+  <div class="fade-in">
+    <h2 class="intro-heading">"今の仕事、このままでいいのかな…"<br>そう感じたあなたへ</h2>
+    <p class="intro-body">
+      転職を考えたとき、不安や迷いがあるのは当然です。<br>
+      でも、あなたが一歩踏み出そうとしている今この瞬間が、<br>
+      人生を変える最大のチャンスです。<br>
+      私たちはあなたの可能性を最大限に引き出すお手伝いをします。
+    </p>
+  </div>
+</section>
+
+<!-- ===================== CAREERS ===================== -->
+<section class="careers" aria-label="職種紹介">
+  <div class="section-header fade-in">
+    <h2 class="section-heading">あなただけの、逆転キャリアシナリオ</h2>
+    <p class="section-subheading">未経験からでも、こんな仕事に挑戦できます</p>
+  </div>
+  <div class="careers-grid">
+    <article class="career-card">
+      <div class="career-card-img-wrap">
+        <img src="LP画像/提案営業.png" alt="カーディーラーで商談する提案営業の場面" loading="lazy">
+      </div>
+      <div class="career-card-body">
+        <h3 class="career-card-title">提案営業</h3>
+        <p class="career-card-desc">お客様の課題を解決する提案型の営業スタイル。未経験でも丁寧な研修で成長できます。</p>
+      </div>
+    </article>
+    <article class="career-card">
+      <div class="career-card-img-wrap">
+        <img src="LP画像/接客営業.png" alt="店舗でお客様に提案する接客・販売の場面" loading="lazy">
+      </div>
+      <div class="career-card-body">
+        <h3 class="career-card-title">接客・販売</h3>
+        <p class="career-card-desc">人と接することが好きな方にピッタリ。コミュニケーション力が活きる仕事です。</p>
+      </div>
+    </article>
+    <article class="career-card">
+      <div class="career-card-img-wrap">
+        <img src="LP画像/施工管理.png" alt="建設現場で図面を確認する施工管理の場面" loading="lazy">
+      </div>
+      <div class="career-card-body">
+        <h3 class="career-card-title">施工管理</h3>
+        <p class="career-card-desc">建設現場のまとめ役。手に職をつけて安定したキャリアを築けます。</p>
+      </div>
+    </article>
+    <article class="career-card">
+      <div class="career-card-img-wrap">
+        <img src="LP画像/飲食事業.png" alt="居酒屋で調理する飲食・サービス業の場面" loading="lazy">
+      </div>
+      <div class="career-card-body">
+        <h3 class="career-card-title">飲食・サービス業</h3>
+        <p class="career-card-desc">飲食業界での経験を活かしてステップアップ。店長候補や独立も目指せます。</p>
+      </div>
+    </article>
+    <article class="career-card">
+      <div class="career-card-img-wrap">
+        <img src="LP画像/美容関連.png" alt="エステサロンで施術する美容・エステの場面" loading="lazy">
+      </div>
+      <div class="career-card-body">
+        <h3 class="career-card-title">美容・エステ</h3>
+        <p class="career-card-desc">美容業界で"人をキレイにする"やりがいのある仕事。資格取得もサポートします。</p>
+      </div>
+    </article>
+    <article class="career-card">
+      <div class="career-card-img-wrap">
+        <img src="LP画像/サポート職.png" alt="オフィスで相談・サポートする事務・サポート職の場面" loading="lazy">
+      </div>
+      <div class="career-card-body">
+        <h3 class="career-card-title">事務・サポート職</h3>
+        <p class="career-card-desc">縁の下の力持ちとして会社を支える。ワークライフバランスも取りやすい職種です。</p>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ===================== REASONS ===================== -->
+<section class="reasons" aria-label="選ばれる3つの理由">
+  <div class="section-header fade-in">
+    <h2 class="section-heading">あなたの未来が変わる<br>3つの理由</h2>
+  </div>
+  <div class="reasons-grid">
+    <div class="reason-item">
+      <div class="reason-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+      </div>
+      <h3 class="reason-title">あなた専任の<br>アドバイザー</h3>
+      <p class="reason-desc">一人ひとりに寄り添い、あなたの強みや本当にやりたいことを一緒に見つけます。</p>
+    </div>
+    <div class="reason-item">
+      <div class="reason-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="18" height="18" rx="2"/>
+          <line x1="7" y1="8" x2="17" y2="8"/>
+          <line x1="7" y1="12" x2="17" y2="12"/>
+          <line x1="7" y1="16" x2="13" y2="16"/>
+        </svg>
+      </div>
+      <h3 class="reason-title">履歴書・面接も<br>フルサポート</h3>
+      <p class="reason-desc">書類の書き方から面接対策まで、内定獲得に向けて徹底的にサポートします。</p>
+    </div>
+    <div class="reason-item">
+      <div class="reason-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L8.5 9.5L1 10.5l5.5 5.5L5 23l7-4 7 4-1.5-7L23 10.5l-7.5-1L12 2z"/>
+        </svg>
+      </div>
+      <h3 class="reason-title">未経験OKの<br>厳選求人</h3>
+      <p class="reason-desc">経験がなくても挑戦できる求人を多数ご用意。あなたに合った仕事が必ず見つかります。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="cta" aria-label="お問い合わせ">
+  <div class="fade-in">
+    <h2 class="cta-heading">まずは気軽に<br>ご相談ください</h2>
+    <p class="cta-desc">キャリアアドバイザーがあなたの"これから"を全力でサポートします。相談は完全無料です。</p>
+    <a href="#" class="cta-btn">無料キャリア相談を予約する</a>
+    <p class="cta-notes">※相談だけでもOK&nbsp;&nbsp;/&nbsp;&nbsp;服装自由&nbsp;&nbsp;/&nbsp;&nbsp;オンライン対応可</p>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <p class="footer-name">キャリアサポート</p>
+  <p>© 2025 キャリアサポート All Rights Reserved.</p>
+</footer>
+
+<script>
+(function () {
+  // ---- Hero Slider ----
+  var slides = document.querySelectorAll('.hero-slide');
+  var indicators = document.querySelectorAll('.hero-indicator');
+  var progressBar = document.querySelector('.hero-progress');
+  var prevBtn = document.querySelector('.hero-nav--prev');
+  var nextBtn = document.querySelector('.hero-nav--next');
+  var current = 0;
+  var total = slides.length;
+  var interval = 5000;
+  var autoTimer = null;
+  var progressTimer = null;
+  var progressStart = 0;
+
+  function goToSlide(index) {
+    if (index === current) return;
+    slides[current].classList.remove('active');
+    slides[current].classList.add('leaving');
+    setTimeout(function () { slides[current === index ? (index + total - 1) % total : current].classList.remove('leaving'); }, 800);
+
+    indicators[current].classList.remove('active');
+    current = (index + total) % total;
+    slides[current].classList.add('active');
+    indicators[current].classList.add('active');
+    startProgress();
+  }
+
+  function nextSlide() { goToSlide((current + 1) % total); }
+  function prevSlide() { goToSlide((current - 1 + total) % total); }
+
+  function startProgress() {
+    if (progressTimer) cancelAnimationFrame(progressTimer);
+    progressStart = performance.now();
+    function tick(now) {
+      var elapsed = now - progressStart;
+      var pct = Math.min((elapsed / interval) * 100, 100);
+      progressBar.style.width = pct + '%';
+      if (pct < 100) {
+        progressTimer = requestAnimationFrame(tick);
+      }
+    }
+    progressTimer = requestAnimationFrame(tick);
+  }
+
+  function startAuto() {
+    stopAuto();
+    startProgress();
+    autoTimer = setInterval(nextSlide, interval);
+  }
+
+  function stopAuto() {
+    if (autoTimer) clearInterval(autoTimer);
+    if (progressTimer) cancelAnimationFrame(progressTimer);
+  }
+
+  prevBtn.addEventListener('click', function () { stopAuto(); prevSlide(); startAuto(); });
+  nextBtn.addEventListener('click', function () { stopAuto(); nextSlide(); startAuto(); });
+
+  indicators.forEach(function (dot) {
+    dot.addEventListener('click', function () {
+      stopAuto();
+      goToSlide(parseInt(this.getAttribute('data-slide')));
+      startAuto();
+    });
+  });
+
+  var hero = document.querySelector('.hero');
+  var touchStartX = 0;
+  hero.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+  hero.addEventListener('touchend', function (e) {
+    var diff = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(diff) > 50) {
+      stopAuto();
+      if (diff < 0) nextSlide(); else prevSlide();
+      startAuto();
+    }
+  }, { passive: true });
+
+  startAuto();
+
+  // ---- Intersection Observer (scroll fade-in) ----
+  var fadeEls = document.querySelectorAll('.fade-in, .career-card, .reason-item');
+
+  if ('IntersectionObserver' in window) {
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          var el = entry.target;
+          var siblings = Array.from(el.parentElement.children);
+          var idx = siblings.indexOf(el);
+          var delay = el.classList.contains('career-card') || el.classList.contains('reason-item')
+            ? idx * 80
+            : 0;
+          setTimeout(function () { el.classList.add('visible'); }, delay);
+          observer.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    fadeEls.forEach(function (el) { observer.observe(el); });
+  } else {
+    fadeEls.forEach(function (el) { el.classList.add('visible'); });
+  }
+})();
+</script>
+</body>
+</html>
