@@ -232,6 +232,15 @@ body {
   .hero-nav--prev { left: 0.8rem; }
   .hero-nav--next { right: 0.8rem; }
   .hero-indicators { bottom: 1.5rem; right: 50%; transform: translateX(50%); }
+
+  /* モバイルでは横長画像を左右にパンして全体を見せる */
+  .hero-slide-img {
+    animation: hero-pan 10s ease-in-out infinite alternate;
+    animation-play-state: paused;
+  }
+  .hero-slide.active .hero-slide-img {
+    animation-play-state: running;
+  }
 }
 
 /* =====================
@@ -547,6 +556,11 @@ footer .footer-name {
 /* =====================
    REDUCED MOTION
    ===================== */
+@keyframes hero-pan {
+  0%   { object-position: 20% center; }
+  100% { object-position: 80% center; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
   .hero-slide { opacity: 0; transform: none !important; }
