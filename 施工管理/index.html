@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>施工管理という選択肢 — 年収もやりがいも、全部手に入る仕事</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: '#0f1b2d',
+            steel: '#1e3a5f',
+            sky: '#4a90d9',
+            gold: '#d4a843',
+            warm: '#f5e6d3',
+            cream: '#faf7f2',
+            coral: '#e8734a',
+            mint: '#2d9a8c',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --color-navy: #0f1b2d;
+      --color-steel: #1e3a5f;
+      --color-sky: #4a90d9;
+      --color-gold: #d4a843;
+      --color-warm: #f5e6d3;
+      --color-cream: #faf7f2;
+      --color-coral: #e8734a;
+      --color-mint: #2d9a8c;
+      --font-heading: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+      --font-body: 'Noto Sans JP', sans-serif;
+      --font-accent: 'Playfair Display', serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      color: #1a1a2e;
+      background: var(--color-cream);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+    }
+
+    .accent-font {
+      font-family: var(--font-accent);
+    }
+
+    .hero-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 27, 45, 0.92) 0%,
+        rgba(30, 58, 95, 0.85) 40%,
+        rgba(74, 144, 217, 0.7) 100%
+      );
+      z-index: 1;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-divider {
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-gold), var(--color-sky), var(--color-gold));
+      border: none;
+    }
+
+    .card-image {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card-image:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+    }
+
+    .hook-text {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+
+    .number-highlight {
+      color: var(--color-coral);
+      font-weight: 900;
+      font-size: 1.2em;
+    }
+
+    .salary-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .salary-table th {
+      background: var(--color-navy);
+      color: white;
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .salary-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #e8e0d5;
+      font-size: 0.95rem;
+    }
+
+    .salary-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .salary-table .highlight-row {
+      background: linear-gradient(90deg, #fff3e0, #fff8f0);
+      font-weight: 700;
+    }
+
+    .salary-table .highlight-row td {
+      color: var(--color-coral);
+      font-size: 1.05rem;
+    }
+
+    .flow-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .flow-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .flow-number {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--color-steel), var(--color-sky));
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      font-family: var(--font-accent);
+      flex-shrink: 0;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-steel) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(212, 168, 67, 0.15), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--color-gold), #e8b84a);
+      color: var(--color-navy);
+      font-weight: 900;
+      font-size: 1.1rem;
+      padding: 18px 48px;
+      border-radius: 60px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(212, 168, 67, 0.4);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 32px rgba(212, 168, 67, 0.5);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .geo-pattern {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.03;
+      background-image:
+        linear-gradient(30deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f),
+        linear-gradient(150deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f),
+        linear-gradient(30deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f),
+        linear-gradient(150deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f);
+      background-size: 80px 140px;
+      background-position: 0 0, 0 0, 40px 70px, 40px 70px;
+      pointer-events: none;
+    }
+
+    .quote-mark {
+      font-family: var(--font-accent);
+      font-size: 4rem;
+      line-height: 1;
+      color: var(--color-gold);
+      opacity: 0.6;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      border-top: 4px solid var(--color-sky);
+    }
+
+    .stat-number {
+      font-family: var(--font-accent);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-coral);
+    }
+
+    @media (max-width: 768px) {
+      .hero-section { min-height: 90vh; }
+      .stat-number { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ========== HERO SECTION ========== -->
+  <section class="hero-section">
+    <img src="施工管理画像/施工管理とは.jpg" alt="施工管理の仕事をする女性" class="hero-bg">
+    <div class="hero-content text-center px-6 max-w-4xl mx-auto">
+      <div class="mb-6">
+        <span class="tag bg-gold/90 text-navy">CAREER GUIDE 2026</span>
+      </div>
+      <h1 class="text-white text-3xl md:text-5xl lg:text-6xl hook-text mb-6 leading-tight">
+        <span class="block text-gold/90 text-lg md:text-2xl accent-font italic mb-4">"知らなかった"では、もう遅い。</span>
+        年収も、やりがいも、<br class="hidden md:block">
+        <span class="text-gold">全部手に入る仕事</span>がある。
+      </h1>
+      <p class="text-white/80 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-light">
+        「施工管理」という仕事を知っていますか？<br>
+        今、未経験から飛び込む20代・30代の女性が急増しています。<br>
+        その理由を、この記事で全て明かします。
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">未経験OK</span>
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">年収400万円〜</span>
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">女性活躍中</span>
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">土日休み可</span>
+      </div>
+      <div class="mt-12">
+        <a href="#intro" class="text-white/60 hover:text-white transition-colors">
+          <svg class="w-8 h-8 mx-auto animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ========== SECTION 1: 施工管理とは ========== -->
+  <section id="intro" class="py-20 md:py-28 relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-sky/10 text-sky mb-4">SECTION 01</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
+          現場の<span class="text-coral">"司令塔"</span>——<br class="md:hidden">建物をゼロから完成させる仕事
+        </h2>
+        <p class="text-steel/60 accent-font italic text-lg mb-8">The Conductor of Construction</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="施工管理画像/施工管理とは.jpg" alt="タブレットを持ち現場を指揮する女性施工管理者" class="card-image mb-8">
+      </div>
+
+      <div class="fade-in space-y-5 text-base md:text-lg leading-relaxed text-navy/80">
+        <p>
+          施工管理とは、建設現場の<strong class="text-navy">「プロジェクトマネージャー」</strong>です。
+          ビルやマンション、商業施設、道路、橋——あらゆる建造物が「設計図通り」「予算内で」「安全に」「期日までに」完成するよう、
+          現場全体をコントロールする仕事です。
+        </p>
+        <p>
+          「ガテン系」「力仕事」というイメージを持つ方も多いですが、実態は大きく異なります。
+          <strong class="text-navy">施工管理者が直接工事をすることはありません。</strong>
+          職人さんたちに指示を出し、スケジュールを調整し、安全を確認し、品質を管理する——いわば<strong class="text-coral">「現場の指揮者」</strong>です。
+        </p>
+        <p>
+          必要なのは腕力ではなく、<strong class="text-navy">段取り力・コミュニケーション力・細やかな気配り</strong>。
+          だからこそ今、業界未経験の方や女性が続々と活躍し始めているのです。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 2: なぜ人が殺到しているのか ========== -->
+  <section class="py-20 md:py-28 bg-white relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-coral/10 text-coral mb-4">SECTION 02</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
+          応募者が前年比<span class="text-coral">200%</span>超。<br>
+          この仕事に人が殺到する<span class="text-coral">"5つの理由"</span>
+        </h2>
+        <p class="text-steel/60 accent-font italic text-lg mb-8">Why Everyone Is Rushing In</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="施工管理画像/転職の理由.jpg" alt="施工管理の先輩と後輩が建設現場のオフィスで語り合う" class="card-image mb-10">
+      </div>
+
+      <div class="fade-in grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="stat-card">
+          <div class="stat-number">34万人</div>
+          <p class="text-navy/70 text-sm mt-2">2030年に不足する<br>建設技術者の数</p>
+        </div>
+        <div class="stat-card" style="border-top-color: var(--color-gold);">
+          <div class="stat-number" style="color: var(--color-gold);">1.5倍</div>
+          <p class="text-navy/70 text-sm mt-2">一般職種に比べた<br>求人倍率</p>
+        </div>
+        <div class="stat-card" style="border-top-color: var(--color-mint);">
+          <div class="stat-number" style="color: var(--color-mint);">92%</div>
+          <p class="text-navy/70 text-sm mt-2">未経験入社者の<br>1年後定着率</p>
+        </div>
+      </div>
+
+      <div class="fade-in space-y-6">
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">1</div>
+          <div>
+            <h4 class="font-bold text-navy text-lg">圧倒的な人手不足＝「選ばれる側」になれる</h4>
+            <p class="text-navy/70 mt-1">建設業界は深刻な人手不足。そのため、未経験者でも積極的に採用され、入社後の研修体制も充実しています。「経験がないから…」という不安は不要です。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">2</div>
+          <div>
+            <h4 class="font-bold text-navy text-lg">国が本気で待遇改善に動いている</h4>
+            <p class="text-navy/70 mt-1">2024年の「建設業の働き方改革」により、残業規制が強化。週休二日制の導入も急速に進み、かつての「休めない業界」は過去のものになりつつあります。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">3</div>
+          <div>
+            <h4 class="font-bold text-navy text-lg">資格を取れば、一生食いっぱぐれない</h4>
+            <p class="text-navy/70 mt-1">施工管理技士の国家資格は、取得すれば全国どこでも通用する"一生モノ"のスキル。転職市場での価値が飛躍的に上がります。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">4</div>
+          <div>
+            <h4 class="font-bold text-navy text-lg">「形に残る仕事」という圧倒的なやりがい</h4>
+            <p class="text-navy/70 mt-1">自分が携わった建物が何十年も街に残る。「あの建物、私が担当したんだよ」と言える仕事は、他にほとんどありません。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">5</div>
+          <div>
+            <h4 class="font-bold text-navy text-lg">年功序列ではなく、実力で年収が上がる</h4>
+            <p class="text-navy/70 mt-1">資格手当・現場手当・役職手当など、努力がダイレクトに年収に反映されるのが施工管理の特徴。20代で年収500万円超も珍しくありません。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 3: 女性の応募者が殺到 ========== -->
+  <section class="py-20 md:py-28 relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-gold/10 text-gold mb-4">SECTION 03</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
+          <span class="text-coral">"男の仕事"</span>は完全に過去の話。<br>
+          女性応募者が<span class="text-coral">3年で4倍</span>に急増中
+        </h2>
+        <p class="text-steel/60 accent-font italic text-lg mb-8">Women Are Changing the Industry</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="施工管理画像/事務作業.jpg" alt="女性施工管理者3人がオフィスで図面を確認する様子" class="card-image mb-10">
+      </div>
+
+      <div class="fade-in">
+        <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-8">
+          <div class="quote-mark">"</div>
+          <p class="text-lg md:text-xl text-navy/80 leading-relaxed -mt-6 ml-8">
+            最初は「私に建設業なんて…」と思っていました。でも実際に始めてみたら、
+            <strong class="text-navy">求められるのは力仕事ではなく"気配り"と"調整力"</strong>。
+            前職の接客経験がこんなに活きるとは思いませんでした。
+          </p>
+          <p class="text-steel/50 text-sm mt-4 ml-8">—— 28歳・元アパレル販売員 → 施工管理2年目</p>
+        </div>
+      </div>
+
+      <div class="fade-in space-y-5 text-base md:text-lg leading-relaxed text-navy/80">
+        <p>
+          「建設現場＝男社会」というイメージは、急速に変わりつつあります。国土交通省の推進する
+          <strong class="text-navy">「けんせつ小町」</strong>プロジェクトをはじめ、業界全体で女性の受け入れ体制が整備されました。
+        </p>
+        <p>
+          実は施工管理の業務の<strong class="text-coral">約6割はデスクワーク</strong>です。
+          書類作成、スケジュール調整、関係者との連絡、図面のチェック——これらは体力よりも
+          <strong class="text-navy">正確さ・丁寧さ・コミュニケーション力</strong>が求められる仕事。
+          事務職や接客業で培ったスキルが、そのまま武器になります。
+        </p>
+        <p>
+          さらに、女性専用の更衣室・トイレの設置が義務化され、産休・育休の取得実績も年々増加。
+          「女性が長く働ける環境」が、制度面からも整ってきています。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 4: 給料比較 ========== -->
+  <section class="py-20 md:py-28 bg-white relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-coral/10 text-coral mb-4">SECTION 04</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
+          同い年の友達と、年収差<span class="text-coral">120万円</span>。<br>
+          この現実、知っていましたか？
+        </h2>
+        <p class="text-steel/60 accent-font italic text-lg mb-8">The Salary Gap You Didn't Know</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="施工管理画像/給料比較.jpg" alt="カフェでスマホの給与情報を見て驚く女性" class="card-image mb-10">
+      </div>
+
+      <div class="fade-in">
+        <p class="text-base md:text-lg text-navy/80 leading-relaxed mb-8">
+          施工管理の最大の魅力のひとつが<strong class="text-navy">「収入の高さ」</strong>です。
+          大手IT企業や外資系を除いた、一般的な職種と比較してみましょう。
+          同じ年齢・同じ未経験スタートでも、<strong class="text-coral">数年後には大きな差</strong>が生まれます。
+        </p>
+
+        <div class="overflow-x-auto mb-8">
+          <table class="salary-table w-full text-left">
+            <thead>
+              <tr>
+                <th>職種</th>
+                <th>入社1年目</th>
+                <th>入社3年目</th>
+                <th>入社5年目</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-white">
+                <td class="font-medium text-navy">一般事務</td>
+                <td>約250万円</td>
+                <td>約280万円</td>
+                <td>約310万円</td>
+              </tr>
+              <tr class="bg-cream/50">
+                <td class="font-medium text-navy">販売・接客</td>
+                <td>約240万円</td>
+                <td>約270万円</td>
+                <td>約300万円</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="font-medium text-navy">飲食店スタッフ</td>
+                <td>約230万円</td>
+                <td>約260万円</td>
+                <td>約290万円</td>
+              </tr>
+              <tr class="bg-cream/50">
+                <td class="font-medium text-navy">介護職</td>
+                <td>約260万円</td>
+                <td>約290万円</td>
+                <td>約320万円</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="font-medium text-navy">コールセンター</td>
+                <td>約260万円</td>
+                <td>約280万円</td>
+                <td>約300万円</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>施工管理</td>
+                <td>約350万円</td>
+                <td>約420万円</td>
+                <td>約500万円</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-gradient-to-r from-coral/5 to-gold/5 rounded-2xl p-6 border-l-4 border-coral">
+          <p class="text-navy font-bold text-lg mb-2">注目ポイント</p>
+          <p class="text-navy/70">
+            施工管理は入社1年目から<strong class="text-coral">約350万円</strong>。
+            一般事務と比べると<strong class="text-coral">年間100万円以上</strong>の差があります。
+            さらに、施工管理技士の資格を取得すれば資格手当が加算され、
+            5年目には<strong class="text-coral">年収500万円</strong>に到達するケースも珍しくありません。
+            10年目以降は<strong>700万円超</strong>も現実的な数字です。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 5: 1日の業務の流れ ========== -->
+  <section class="py-20 md:py-28 relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-mint/10 text-mint mb-4">SECTION 05</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
+          <span class="text-coral">"ガテン系"</span>はイメージだけ。<br>
+          施工管理者の<span class="text-coral">リアルな1日</span>を公開
+        </h2>
+        <p class="text-steel/60 accent-font italic text-lg mb-12">A Day in the Life</p>
+      </div>
+
+      <div class="space-y-16">
+
+        <!-- 業務1: 事務作業 -->
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">08:00</span>
+            <div>
+              <h3 class="text-xl font-bold">朝礼・事務作業</h3>
+              <p class="text-white/70 text-sm">書類作成・安全書類の確認</p>
+            </div>
+          </div>
+          <img src="施工管理画像/事務作業.jpg" alt="女性施工管理者が事務所でチームと書類を確認する" class="w-full">
+          <div class="p-6 md:p-8">
+            <p class="text-navy/80 leading-relaxed">
+              出勤したらまず<strong class="text-navy">朝礼</strong>で、その日の作業内容と注意事項を全員に共有します。
+              その後はデスクに戻り、<strong class="text-navy">安全書類の作成・確認</strong>、
+              <strong class="text-navy">作業日報の整理</strong>、<strong class="text-navy">写真の整理・記録</strong>を行います。
+              実は施工管理の業務時間の半分以上がこうしたデスクワーク。
+              Excelや専用ソフトを使った作業が中心で、体力よりも<strong class="text-coral">正確さと段取り力</strong>が求められます。
+            </p>
+          </div>
+        </div>
+
+        <!-- 業務2: 図面チェック -->
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">10:00</span>
+            <div>
+              <h3 class="text-xl font-bold">図面チェック</h3>
+              <p class="text-white/70 text-sm">設計と現場の"橋渡し役"</p>
+            </div>
+          </div>
+          <img src="施工管理画像/図面チェック.jpg" alt="モニターの3Dモデルを確認しながら図面をチェックする女性" class="w-full">
+          <div class="p-6 md:p-8">
+            <p class="text-navy/80 leading-relaxed">
+              設計事務所から届いた図面を確認し、<strong class="text-navy">現場で実際に施工可能かどうか</strong>をチェックします。
+              「この配管の位置だと壁と干渉する」「ここの寸法は現場と合っていない」——
+              こうした<strong class="text-coral">細かな矛盾を見つけ出し、設計者にフィードバック</strong>するのが施工管理の重要な役割です。
+              最近はBIM（3D建築モデル）を使ったデジタル図面も普及しており、
+              PCスキルを活かせる場面がどんどん増えています。
+            </p>
+          </div>
+        </div>
+
+        <!-- 業務3: 工程管理 -->
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">13:00</span>
+            <div>
+              <h3 class="text-xl font-bold">工程管理</h3>
+              <p class="text-white/70 text-sm">現場全体の"指揮者"になる</p>
+            </div>
+          </div>
+          <img src="施工管理画像/行程管理.jpg" alt="建設現場で図面を広げて打ち合わせする2人の女性" class="w-full">
+          <div class="p-6 md:p-8">
+            <p class="text-navy/80 leading-relaxed">
+              午後は現場に出て、<strong class="text-navy">工事の進捗状況を確認</strong>します。
+              「基礎工事は予定通り進んでいるか」「次の工程に入る準備は整っているか」「天候による遅れはないか」——
+              全体のスケジュールを俯瞰しながら、<strong class="text-coral">各職人チームの作業を調整</strong>するのが工程管理です。
+              まるでオーケストラの指揮者のように、それぞれのパートが噛み合うようコントロールする。
+              この<strong class="text-navy">「段取り力」</strong>こそ、施工管理者の腕の見せどころです。
+            </p>
+          </div>
+        </div>
+
+        <!-- 業務4: 現場確認 -->
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">15:00</span>
+            <div>
+              <h3 class="text-xl font-bold">現場の安全確認</h3>
+              <p class="text-white/70 text-sm">人の命を守る責任と誇り</p>
+            </div>
+          </div>
+          <img src="施工管理画像/現場確認.jpg" alt="建設現場で安全確認を行い指差し確認する女性施工管理者" class="w-full">
+          <div class="p-6 md:p-8">
+            <p class="text-navy/80 leading-relaxed">
+              施工管理の中で最も重要な業務のひとつが<strong class="text-coral">安全管理</strong>です。
+              現場を巡回し、<strong class="text-navy">足場の状態、安全帯の使用状況、危険箇所の確認</strong>を行います。
+              「何事もなく全員が無事に帰宅する」——当たり前のことを当たり前にするために、
+              施工管理者は現場の隅々まで目を配ります。
+              この仕事には<strong class="text-navy">「人の命を預かる」という大きな責任</strong>がありますが、
+              だからこそ感じられるやりがいと誇りは、他の仕事では得られないものです。
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 6: ワークライフバランス ========== -->
+  <section class="py-20 md:py-28 bg-white relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-sky/10 text-sky mb-4">SECTION 06</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
+          稼いで、休めて、<span class="text-coral">自由に帰れる</span>。<br>
+          "建設業"のイメージが<span class="text-coral">180度</span>変わる
+        </h2>
+        <p class="text-steel/60 accent-font italic text-lg mb-12">Work Hard, Live Freely</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <!-- 直行直帰 -->
+        <div class="fade-in">
+          <img src="施工管理画像/直行直帰.jpg" alt="仕事終わりにカフェでゆったり過ごす女性たち" class="card-image mb-5">
+          <h3 class="text-xl font-bold text-navy mb-3">
+            <span class="text-coral">直行直帰OK</span>——<br>会社に縛られない働き方
+          </h3>
+          <p class="text-navy/70 leading-relaxed">
+            施工管理者は自宅から直接現場に向かい、現場から直接帰宅する<strong class="text-navy">「直行直帰」</strong>が一般的。
+            わざわざ会社に出勤してから現場に行く必要はありません。
+            現場が自宅の近くなら通勤時間が大幅に短縮されることも。
+            <strong class="text-coral">仕事終わりにカフェに寄ったり、趣味の時間を楽しんだり</strong>——
+            会社に縛られない自由な働き方が実現できます。
+          </p>
+        </div>
+
+        <!-- 休日 -->
+        <div class="fade-in">
+          <img src="施工管理画像/休日.jpg" alt="休日に海辺で楽しむ女性たち" class="card-image mb-5">
+          <h3 class="text-xl font-bold text-navy mb-3">
+            <span class="text-coral">週休二日制</span>が急速に普及中
+          </h3>
+          <p class="text-navy/70 leading-relaxed">
+            「建設業＝休みが少ない」は、もう昔の話。
+            2024年の法改正により、建設業にも<strong class="text-navy">残業の上限規制</strong>が適用され、
+            <strong class="text-coral">週休二日制（4週8休）</strong>を導入する企業が急増しています。
+            しっかり稼いで、しっかり休む。
+            旅行に行ったり、友達と遊んだり——プライベートも充実させながら
+            キャリアを築ける、それが今の施工管理です。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== SECTION 7: CTA（新しい挑戦） ========== -->
+  <section class="cta-section py-20 md:py-28">
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+      <div class="fade-in text-center mb-10">
+        <span class="tag bg-gold/20 text-gold mb-4">YOUR NEXT STEP</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-white mb-2">
+          未経験から始めた女性の<span class="text-gold">8割</span>が<br>
+          "転職してよかった"と答えた理由
+        </h2>
+        <p class="text-white/50 accent-font italic text-lg mb-8">Your New Chapter Starts Here</p>
+      </div>
+
+      <div class="fade-in max-w-xl mx-auto mb-10">
+        <img src="施工管理画像/新しい挑戦.jpg" alt="夕日の中、新しい挑戦に向けて背中を押す先輩と後輩" class="card-image">
+      </div>
+
+      <div class="fade-in text-center">
+        <p class="text-white/80 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+          「自分にできるか不安…」<br>
+          「建設業界なんて考えたこともなかった…」<br><br>
+          大丈夫です。<strong class="text-gold">今活躍している施工管理者の多くが、最初は全くの未経験</strong>でした。<br>
+          元事務員、元販売員、元飲食スタッフ——前職は関係ありません。<br><br>
+          必要なのは、<strong class="text-white">「やってみよう」という気持ちだけ</strong>。<br>
+          あなたの次のキャリアは、想像以上に近くにあるかもしれません。
+        </p>
+
+        <div class="space-y-4">
+          <a href="#" class="cta-button">まずは無料で相談してみる</a>
+          <p class="text-white/40 text-sm mt-4">相談は完全無料・オンライン対応可・服装自由</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4 mt-12 max-w-lg mx-auto">
+          <div class="text-center">
+            <div class="text-gold text-2xl md:text-3xl font-bold accent-font">3分</div>
+            <p class="text-white/50 text-xs mt-1">かんたん申込</p>
+          </div>
+          <div class="text-center">
+            <div class="text-gold text-2xl md:text-3xl font-bold accent-font">0円</div>
+            <p class="text-white/50 text-xs mt-1">完全無料</p>
+          </div>
+          <div class="text-center">
+            <div class="text-gold text-2xl md:text-3xl font-bold accent-font">24h</div>
+            <p class="text-white/50 text-xs mt-1">以内に返信</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-navy py-10 text-center">
+    <p class="text-white/30 text-sm">
+      &copy; 2026 杜の都工房 キャリアアドバイザー事業部
+    </p>
+  </footer>
+
+  <!-- ========== SCROLL ANIMATION ========== -->
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
