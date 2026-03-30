@@ -303,16 +303,16 @@
   }
 
   /* ===== TALK SCRIPT / JOB INFO OVERLAY ===== */
-  #ts-overlay, #jobs-overlay, #manual-overlay, #sekokanri-overlay {
+  #ts-overlay, #jobs-overlay, #manual-overlay {
     display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
     z-index: 9000;
     background: var(--c-bg);
   }
-  #ts-overlay.active, #jobs-overlay.active, #manual-overlay.active, #sekokanri-overlay.active { display: block; }
-  #ts-iframe, #jobs-iframe, #manual-iframe, #sekokanri-iframe { width: 100%; height: 100%; border: none; }
-  #ts-back-btn, #jobs-back-btn, #manual-back-btn, #sekokanri-back-btn {
+  #ts-overlay.active, #jobs-overlay.active, #manual-overlay.active { display: block; }
+  #ts-iframe, #jobs-iframe, #manual-iframe { width: 100%; height: 100%; border: none; }
+  #ts-back-btn, #jobs-back-btn, #manual-back-btn {
     position: fixed;
     top: 12px; right: 12px;
     z-index: 9999;
@@ -330,8 +330,8 @@
     transition: background 0.15s, transform 0.1s;
     letter-spacing: 0.01em;
   }
-  #ts-back-btn:hover, #jobs-back-btn:hover, #manual-back-btn:hover, #sekokanri-back-btn:hover, #doc-back-btn:hover { background: #0d3320; transform: translateY(-1px); }
-  #ts-back-btn svg, #jobs-back-btn svg, #manual-back-btn svg, #sekokanri-back-btn svg, #doc-back-btn svg { width: 14px; height: 14px; }
+  #ts-back-btn:hover, #jobs-back-btn:hover, #manual-back-btn:hover, #doc-back-btn:hover { background: #0d3320; transform: translateY(-1px); }
+  #ts-back-btn svg, #jobs-back-btn svg, #manual-back-btn svg, #doc-back-btn svg { width: 14px; height: 14px; }
   #doc-back-btn {
     position: fixed;
     top: 12px; left: 12px;
@@ -495,14 +495,6 @@
         </span>
         <span class="cover-btn-arrow">›</span>
       </button>
-      <button class="cover-btn" onclick="showSekokanri()">
-        <span class="cover-btn-icon">🏗️</span>
-        <span class="cover-btn-label">
-          施工管理のお仕事紹介
-          <span class="cover-btn-sub">施工管理の魅力・仕事内容・給料を解説</span>
-        </span>
-        <span class="cover-btn-arrow">›</span>
-      </button>
     </div>
     <div class="cover-footer">© 株式会社杜の都工房</div>
   </div>
@@ -529,14 +521,6 @@
   <div id="manual-overlay">
     <button id="manual-back-btn" type="button" onclick="showCover()">← ホームに戻る</button>
     <iframe id="manual-iframe" src="about:blank" title="使い方マニュアル"></iframe>
-  </div>
-
-  <!-- ============================================
-       施工管理記事 オーバーレイ
-       ============================================ -->
-  <div id="sekokanri-overlay">
-    <button id="sekokanri-back-btn" type="button" onclick="showCover()">← ホームに戻る</button>
-    <iframe id="sekokanri-iframe" src="about:blank" title="施工管理のお仕事紹介"></iframe>
   </div>
 
   <!-- ============================================
@@ -941,12 +925,10 @@
       document.getElementById('ts-overlay').classList.remove('active');
       document.getElementById('jobs-overlay').classList.remove('active');
       document.getElementById('manual-overlay').classList.remove('active');
-      document.getElementById('sekokanri-overlay').classList.remove('active');
       document.getElementById('doc-back-btn').classList.remove('visible');
       document.getElementById('ts-iframe').src = 'ca_talk_script.html';
       document.getElementById('jobs-iframe').src = 'about:blank';
       document.getElementById('manual-iframe').src = 'about:blank';
-      document.getElementById('sekokanri-iframe').src = 'about:blank';
     }
     function showTalkScript() {
       document.getElementById('cover-screen').style.display = 'none';
@@ -954,7 +936,6 @@
       document.getElementById('ts-overlay').classList.add('active');
       document.getElementById('jobs-overlay').classList.remove('active');
       document.getElementById('manual-overlay').classList.remove('active');
-      document.getElementById('sekokanri-overlay').classList.remove('active');
       document.getElementById('doc-back-btn').classList.remove('visible');
     }
     function showDocCreate() {
@@ -963,7 +944,6 @@
       document.getElementById('ts-overlay').classList.remove('active');
       document.getElementById('jobs-overlay').classList.remove('active');
       document.getElementById('manual-overlay').classList.remove('active');
-      document.getElementById('sekokanri-overlay').classList.remove('active');
       document.getElementById('doc-back-btn').classList.add('visible');
     }
     function showJobInfo() {
@@ -972,7 +952,6 @@
       document.getElementById('ts-overlay').classList.remove('active');
       document.getElementById('jobs-overlay').classList.add('active');
       document.getElementById('manual-overlay').classList.remove('active');
-      document.getElementById('sekokanri-overlay').classList.remove('active');
       document.getElementById('doc-back-btn').classList.remove('visible');
       document.getElementById('jobs-iframe').src = 'job-info.html';
     }
@@ -982,19 +961,8 @@
       document.getElementById('ts-overlay').classList.remove('active');
       document.getElementById('jobs-overlay').classList.remove('active');
       document.getElementById('manual-overlay').classList.add('active');
-      document.getElementById('sekokanri-overlay').classList.remove('active');
       document.getElementById('doc-back-btn').classList.remove('visible');
       document.getElementById('manual-iframe').src = 'manual.html';
-    }
-    function showSekokanri() {
-      document.getElementById('cover-screen').style.display = 'none';
-      document.getElementById('doc-create-section').style.display = 'none';
-      document.getElementById('ts-overlay').classList.remove('active');
-      document.getElementById('jobs-overlay').classList.remove('active');
-      document.getElementById('manual-overlay').classList.remove('active');
-      document.getElementById('sekokanri-overlay').classList.add('active');
-      document.getElementById('doc-back-btn').classList.remove('visible');
-      document.getElementById('sekokanri-iframe').src = '施工管理/index.html';
     }
     function openTenshokuSupport() {
       window.location.href = 'tenshoku-support/index.html';
