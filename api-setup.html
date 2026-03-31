@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenAI API の設定手順 | CAサポートAPP</title>
+  <meta name="description" content="初心者向け：OpenAI APIキーの取得から課金設定まで、CAサポートAPP用の手順を順番に説明します。">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["'Noto Sans JP'", 'sans-serif'],
+            display: ["'Plus Jakarta Sans'", "'Noto Sans JP'", 'sans-serif'],
+          },
+          colors: {
+            forest: { 950: '#052e16', 900: '#14532d', 800: '#166534', 700: '#15803d', 100: '#dcfce7', 50: '#f0fdf4' },
+            lime: { 500: '#84cc16', 600: '#65a30d' },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --c-primary: #14532d;
+      --c-accent: #65a30d;
+      --font-display: 'Plus Jakarta Sans', 'Noto Sans JP', sans-serif;
+      --font-body: 'Noto Sans JP', sans-serif;
+    }
+    body { font-family: var(--font-body); }
+    h1, h2, h3 { font-family: var(--font-display); }
+    .step-num {
+      font-family: var(--font-display);
+      background: linear-gradient(135deg, #14532d 0%, #166534 100%);
+    }
+    .bg-page {
+      background:
+        radial-gradient(ellipse at 10% 90%, rgba(101,163,13,0.12) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 10%, rgba(22,163,74,0.1) 0%, transparent 45%),
+        linear-gradient(165deg, #f0fdf4 0%, #ecfdf5 40%, #f8fafc 100%);
+    }
+    .card-glass {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+    }
+    a.ext-link { word-break: break-all; }
+  </style>
+</head>
+<body class="bg-page text-slate-800 min-h-screen">
+  <header class="sticky top-0 z-20 border-b border-emerald-200/60 bg-white/90 backdrop-blur-md">
+    <div class="max-w-3xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+      <p class="font-display font-bold text-forest-900 text-sm sm:text-base">OpenAI API 設定ガイド</p>
+      <div class="flex flex-wrap gap-2">
+        <a href="index.html" class="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-white px-3 py-2 text-xs font-semibold text-forest-900 hover:bg-emerald-50 transition-colors">← アプリに戻る</a>
+        <a href="manual.html#step0" class="inline-flex items-center gap-1.5 rounded-lg bg-forest-900 px-3 py-2 text-xs font-semibold text-white hover:bg-forest-800 transition-colors">使い方マニュアル STEP 0</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8 sm:py-12 pb-16">
+    <div class="mb-10">
+      <h1 class="font-display text-2xl sm:text-3xl font-extrabold text-forest-950 tracking-tight mb-3">
+        はじめての方向け：OpenAI API の準備
+      </h1>
+      <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+        このページでは、<strong>CAサポートAPP</strong>で使う <strong>OpenAI API キー</strong>を、口座開設のイメージで<strong>ゼロから</strong>用意する流れを説明します。画面の表示は OpenAI 側の更新で少しずつ変わることがありますが、大まかな順序は同じです。
+      </p>
+    </div>
+
+    <!-- 重要：課金・自動更新 -->
+    <section class="card-glass rounded-2xl border border-amber-200/80 p-5 sm:p-6 mb-10" aria-labelledby="billing-notice">
+      <h2 id="billing-notice" class="font-display text-lg font-bold text-amber-950 mb-3 flex items-center gap-2">
+        <span class="text-xl" aria-hidden="true">⚠️</span> 課金・残高について（必ずお読みください）
+      </h2>
+      <ul class="text-sm text-amber-950/90 space-y-2.5 list-disc pl-5 leading-relaxed">
+        <li><strong>利用には料金がかかります。</strong>API を呼び出すたびに、OpenAI アカウントの<strong>残高（クレジット）</strong>から従量課金で引かれます。</li>
+        <li><strong>初めてのチャージは 5 ドル（USD）程度を推奨</strong>します。お試し利用なら十分なことが多く、必要になったら<strong>あとから追加で購入（チャージ）</strong>できます。</li>
+        <li><strong>このアプリが自動で OpenAI に課金したり、カードから勝手に引き落としたりすることはありません。</strong>チャージや支払いは、必ず <a href="https://platform.openai.com/settings/organization/billing/overview" class="text-emerald-800 font-semibold underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">OpenAI の公式サイト（Billing）</a>で行います。</li>
+        <li>OpenAI 側の「自動リロード（残高が減ったら自動でチャージ）」などの設定は、<strong>使わない・オフにする</strong>ことを推奨します。意図しない請求を防ぐため、<strong>都度、自分で残高を確認してから追加購入する</strong>運用にしてください。</li>
+      </ul>
+    </section>
+
+    <ol class="space-y-8 list-none p-0 m-0">
+      <!-- Step 1 -->
+      <li class="card-glass rounded-2xl border border-emerald-100 p-5 sm:p-6">
+        <div class="flex gap-4 mb-4">
+          <span class="step-num flex-shrink-0 w-11 h-11 rounded-xl text-white text-sm font-bold flex items-center justify-center" aria-hidden="true">1</span>
+          <div>
+            <h2 class="font-display text-lg font-bold text-forest-950">OpenAI のアカウントを作る</h2>
+            <p class="text-sm text-slate-600 mt-1">メールアドレスで登録し、必要なら電話番号の確認などを済ませます。</p>
+          </div>
+        </div>
+        <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+          <li>ブラウザで <a href="https://platform.openai.com/signup" class="text-emerald-800 font-medium underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">https://platform.openai.com/signup</a> を開きます。</li>
+          <li>画面の案内にしたがってアカウントを作成し、ログインできる状態にします。</li>
+        </ol>
+      </li>
+
+      <!-- Step 2 -->
+      <li class="card-glass rounded-2xl border border-emerald-100 p-5 sm:p-6">
+        <div class="flex gap-4 mb-4">
+          <span class="step-num flex-shrink-0 w-11 h-11 rounded-xl text-white text-sm font-bold flex items-center justify-center" aria-hidden="true">2</span>
+          <div>
+            <h2 class="font-display text-lg font-bold text-forest-950">支払い方法を登録し、残高をチャージする</h2>
+            <p class="text-sm text-slate-600 mt-1">API を使うには課金用の設定が必要です。<strong>5 USD 前後</strong>から始めるのが無難です。</p>
+          </div>
+        </div>
+        <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+          <li><a href="https://platform.openai.com/settings/organization/billing/overview" class="text-emerald-800 font-medium underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">Billing（請求・残高）</a>の画面を開きます。</li>
+          <li>クレジットカードなどの<strong>支払い方法を追加</strong>します（表示は英語のことが多いです）。</li>
+          <li><strong>Add to credit balance</strong> や <strong>Buy credits</strong> などのボタンから、<strong>少額（推奨：5 ドル）</strong>を購入して残高を作ります。</li>
+          <li>残高が少なくなったら、同じ画面から<strong>再度、自分で追加購入</strong>してください。アプリ側から残高を増やす操作はできません。</li>
+        </ol>
+      </li>
+
+      <!-- Step 3 -->
+      <li class="card-glass rounded-2xl border border-emerald-100 p-5 sm:p-6">
+        <div class="flex gap-4 mb-4">
+          <span class="step-num flex-shrink-0 w-11 h-11 rounded-xl text-white text-sm font-bold flex items-center justify-center" aria-hidden="true">3</span>
+          <div>
+            <h2 class="font-display text-lg font-bold text-forest-950">API キーを発行する</h2>
+            <p class="text-sm text-slate-600 mt-1">キーは<strong>パスワードと同じ</strong>です。他人に見せたり、メールで送ったりしないでください。</p>
+          </div>
+        </div>
+        <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+          <li><a href="https://platform.openai.com/api-keys" class="text-emerald-800 font-medium underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">API keys</a> のページを開きます。</li>
+          <li><strong>Create new secret key</strong>（新しいシークレットキー）を押し、名前を付けて作成します。</li>
+          <li>表示された文字列（<code class="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono">sk-</code> で始まる）を<strong>すぐにコピー</strong>します。この画面を閉じると<strong>再表示できない</strong>ことが多いので、メモアプリなどに一時保存しても構いません（共有厳禁）。</li>
+        </ol>
+      </li>
+
+      <!-- Step 4 -->
+      <li class="card-glass rounded-2xl border border-emerald-100 p-5 sm:p-6">
+        <div class="flex gap-4 mb-4">
+          <span class="step-num flex-shrink-0 w-11 h-11 rounded-xl text-white text-sm font-bold flex items-center justify-center" aria-hidden="true">4</span>
+          <div>
+            <h2 class="font-display text-lg font-bold text-forest-950">CAサポートAPP に貼り付ける</h2>
+            <p class="text-sm text-slate-600 mt-1">キーはブラウザ内にだけ保存され、当社のサーバーには送られません。</p>
+          </div>
+        </div>
+        <ol class="text-sm text-slate-700 space-y-2 list-decimal pl-5">
+          <li><a href="index.html" class="text-emerald-800 font-medium underline hover:no-underline">アプリ（index.html）</a>を開きます。</li>
+          <li>右上の <strong>「設定」</strong>を押し、コピーした API キーを入力して <strong>「保存する」</strong>を押します。</li>
+        </ol>
+        <p class="mt-4 text-xs text-slate-500 border-t border-slate-100 pt-4">
+          本アプリは GPT-4o などのモデルを利用します。OpenAI アカウント側でモデルや利用地域の制限がある場合は、<a href="https://platform.openai.com/docs/guides/rate-limits" class="text-emerald-800 underline hover:no-underline" target="_blank" rel="noopener noreferrer">公式ドキュメント</a>もあわせてご確認ください。
+        </p>
+      </li>
+    </ol>
+
+    <section class="mt-10 rounded-2xl border border-slate-200 bg-white/80 p-5 text-sm text-slate-600">
+      <h2 class="font-display font-bold text-forest-900 mb-2">公式リンク一覧</h2>
+      <ul class="space-y-2">
+        <li><a href="https://platform.openai.com/signup" class="text-emerald-800 underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">アカウント作成（Sign up）</a></li>
+        <li><a href="https://platform.openai.com/settings/organization/billing/overview" class="text-emerald-800 underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">請求・残高（Billing overview）</a></li>
+        <li><a href="https://platform.openai.com/api-keys" class="text-emerald-800 underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">API キー管理（API keys）</a></li>
+        <li><a href="https://openai.com/policies" class="text-emerald-800 underline hover:no-underline ext-link" target="_blank" rel="noopener noreferrer">OpenAI のポリシー・利用規約</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="border-t border-emerald-100 bg-white/60 py-6 text-center text-xs text-slate-500">
+    <p>(株)杜の都工房 — CAサポートAPP 用ドキュメント</p>
+  </footer>
+</body>
+</html>
