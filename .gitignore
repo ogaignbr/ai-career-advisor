@@ -1,5 +1,9 @@
-﻿node_modules/
+node_modules/
 .env
 .env.local
 .env.*.local
 .next/
+
+# ローカルメモ・作業用（アプリから参照しない）
+syorui_API.txt
+*ワードプレス*.txt
