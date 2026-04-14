@@ -434,6 +434,26 @@ strong { font-weight: 700; }
 }
 
 /* =============================================
+   MEMO BLOCK (学習用メモ)
+   ============================================= */
+.memo-block {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-left: 4px solid #f97316;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  padding: 13px 16px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow-card);
+}
+.memo-block .talk-label {
+  font-size: 10px; font-weight: 800;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: #c2410c; margin-bottom: 5px;
+}
+.memo-block .talk-body { font-size: 13px; color: #7c2d12; line-height: 1.75; }
+.memo-block .talk-body em { font-style: normal; font-weight: 700; color: #9a3412; }
+
+/* =============================================
    PRINT
    ============================================= */
 @media print {
@@ -489,11 +509,16 @@ strong { font-weight: 700; }
   </button>
   <button class="step-tab" onclick="goTo(4)">
     <span class="tab-num">STEP 5</span>
-    <span class="tab-name">弊社説明</span>
+    <span class="tab-name">ビジョン・志望動機</span>
     <span class="tab-time">約 5 分</span>
   </button>
   <button class="step-tab" onclick="goTo(5)">
     <span class="tab-num">STEP 6</span>
+    <span class="tab-name">弊社説明</span>
+    <span class="tab-time">約 5 分</span>
+  </button>
+  <button class="step-tab" onclick="goTo(6)">
+    <span class="tab-num">STEP 7</span>
     <span class="tab-name">併願・クロージング</span>
     <span class="tab-time">約 5 分</span>
   </button>
@@ -505,6 +530,7 @@ strong { font-weight: 700; }
   <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>併願マッチング</div>
   <div class="legend-item"><div class="legend-dot" style="background:#8b5cf6"></div>AIスキル確認</div>
   <div class="legend-item"><div class="legend-dot" style="background:#9ca3af"></div>補足</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>学習用メモ</div>
 </div>
 
 <!-- =============================================
@@ -521,7 +547,7 @@ strong { font-weight: 700; }
       <div class="page-meta">⏱ 約3分　｜　場の設定・信頼構築・基本属性の把握</div>
     </div>
     <div class="band-progress">
-      <div class="band-prog-count" id="bpc-0">0 / 4</div>
+      <div class="band-prog-count" id="bpc-0">0 / 0</div>
       <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-0" style="width:0%"></div></div>
     </div>
   </div>
@@ -531,7 +557,7 @@ strong { font-weight: 700; }
 
     <div class="talk-block">
       <div class="talk-label">自己紹介</div>
-      <div class="talk-body">「〇〇株式会社 人材事業部の〇〇と申します。本来は人事部担当ですが、内定戦略強化のため私が担当します。本日の内容は録画・文字起こしし人事部へ共有します。」</div>
+      <div class="talk-body">「〇〇株式会社 採用代行の〇〇と申します。弊社では今後の新規事業発足に伴い、おかげさまで想像以上に応募が集まっておりまして、人事部が対応しきれていない状況です。そのため本日は採用代行として私が担当させていただきます。本日の内容は録画・文字起こしし人事部へ共有します。」</div>
     </div>
 
     <div class="talk-block">
@@ -550,46 +576,6 @@ strong { font-weight: 700; }
     <div class="talk-block">
       <div class="talk-label">アイスブレイク</div>
       <div class="talk-body">カジュアル面談である旨を伝え、場を和ませる</div>
-    </div>
-
-    <div class="talk-block">
-      <div class="talk-label">本日の構成説明</div>
-      <div class="talk-body">「本日は3ブロックで進めます。① 転職ヒアリング　② 職歴ヒアリング　③ 会社説明。お気軽にお話しいただければと思います。」</div>
-    </div>
-
-    <div class="sec-heading">確認チェックリスト</div>
-    <div class="check-all-row">
-      <button class="btn-check-all" onclick="checkAllPage(0)">すべてチェック</button>
-    </div>
-    <div class="checklist-card" id="cl-0">
-      <div class="ci" onclick="toggleCheck(this)">
-        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="ci-body">
-          <div class="ci-q">選考フロー（4ステップ）を説明した</div>
-          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
-        </div>
-      </div>
-      <div class="ci" onclick="toggleCheck(this)">
-        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="ci-body">
-          <div class="ci-q">アイスブレイクで場を和ませた</div>
-          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
-        </div>
-      </div>
-      <div class="ci" onclick="toggleCheck(this)">
-        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="ci-body">
-          <div class="ci-q">本日の3ブロック構成を説明した</div>
-          <div class="ci-tags"><span class="tag tag-s">補足</span></div>
-        </div>
-      </div>
-      <div class="ci" onclick="toggleCheck(this)">
-        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="ci-body">
-          <div class="ci-q">お名前・ご年齢・ご住所（市区町村まで）を確認した</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
-        </div>
-      </div>
     </div>
 
   </div>
@@ -660,14 +646,14 @@ strong { font-weight: 700; }
       <div class="page-meta">⏱ 7〜8分　｜　希望職種・給与・キャリアの把握＋併願マッチング核心</div>
     </div>
     <div class="band-progress">
-      <div class="band-prog-count" id="bpc-2">0 / 13</div>
+      <div class="band-prog-count" id="bpc-2">0 / 12</div>
       <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-2" style="width:0%"></div></div>
     </div>
   </div>
   <div class="page-content">
 
     <div class="point-box">
-      <strong>ポイント：</strong>このブロックが<strong>併願先マッチングの核心</strong>。面接の質問をしながら紹介求人の条件整理を同時に行う。
+      <strong>ポイント：</strong>このステップでは主に<strong>転職軸や過去のヒアリング</strong>をする項目です。面接の質問をしながら紹介求人の条件整理を同時に行う。
     </div>
 
     <div class="sec-heading">① 希望職種・業種</div>
@@ -762,13 +748,6 @@ strong { font-weight: 700; }
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
-          <div class="ci-q">今後どんなキャリアを歩みたいですか？</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
-        </div>
-      </div>
-      <div class="ci" onclick="toggleCheck(this)">
-        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="ci-body">
           <div class="ci-q">人と関わる仕事 vs 黙々と作業する仕事、どちらにやりがいを感じますか？</div>
           <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
@@ -805,9 +784,8 @@ strong { font-weight: 700; }
   </div>
   <div class="page-content">
 
-    <div class="talk-block">
-      <div class="talk-label">導入トーク</div>
-      <div class="talk-body">「これまでのご経歴を、学校卒業から現在まで簡単な流れで教えてください。」</div>
+    <div class="point-box">
+      <strong>ポイント：</strong>このステップでは<strong>職歴やスキル、過去のヒアリング</strong>をする項目です。
     </div>
 
     <div class="sec-heading">業務内容・スキル</div>
@@ -953,12 +931,85 @@ strong { font-weight: 700; }
   <div class="page-band">
     <div class="page-badge">5</div>
     <div class="page-band-text">
+      <div class="page-title">ビジョン・志望動機ヒアリング</div>
+      <div class="page-meta">⏱ 約5分　｜　志望理由・未来のビジョン・キャリアゴールの把握</div>
+    </div>
+    <div class="band-progress">
+      <div class="band-prog-count" id="bpc-4">0 / 4</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-4" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="point-box">
+      <strong>ポイント：</strong>求職者の<strong>ビジョンや未来</strong>に対してヒアリングをする項目です。「なぜ弊社なのか」「どうなりたいのか」を把握することで、その後の提案精度が上がります。
+    </div>
+
+    <div class="sec-heading">志望動機</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s5a')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s5a">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">弊社を受けた理由を教えてください</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">今回、事務職に挑戦したい理由は何ですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-heading">キャリアビジョン</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllCard('s5b')">このセクションをすべてチェック</button>
+    </div>
+    <div class="checklist-card" id="s5b">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">5年後・10年後、どんなビジョンを持っていますか？<small>（年収を上げたい・役割・役職を持ちたい・スキルをつけたい・ワークライフバランスを重視したい など）</small></div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">今後どんな仕事・人生を送りたいですか？</div>
+          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>深掘りのコツ：</strong> 「なんとなく」「特にない」という回答が返ってきたら、選択肢を渡してあげる。「例えば収入を上げたい・役割を持ちたい・スキルをつけたいなど、どれかに近いですか？」と聞くと答えやすい。出てきた言葉がその後の提案の軸になる。
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(3)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-4"></span>
+    <button class="btn btn-next" onclick="goTo(5)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 6 ========== -->
+<div class="step-page" id="page-5">
+  <div class="page-band">
+    <div class="page-badge">6</div>
+    <div class="page-band-text">
       <div class="page-title">弊社説明</div>
       <div class="page-meta">⏱ 約5分　｜　企業理解の促進・候補者軸に合わせた訴求</div>
     </div>
     <div class="band-progress">
-      <div class="band-prog-count" id="bpc-4">0 / 3</div>
-      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-4" style="width:0%"></div></div>
+      <div class="band-prog-count" id="bpc-5">0 / 3</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-5" style="width:0%"></div></div>
     </div>
   </div>
   <div class="page-content">
@@ -972,27 +1023,31 @@ strong { font-weight: 700; }
       </ol>
     </div>
 
-    <div class="sec-heading">弊社はこれをやっています（事業内容）</div>
+    <div class="sec-heading">弊社はこれをやっています（事業内容）<span style="font-size:10px;font-weight:500;color:#f97316;margin-left:6px;">▼ 学習用メモ</span></div>
     <div class="talk-block">
       <div class="talk-label">会社の主軸</div>
-      <div class="talk-body">「<strong>株式会社○○</strong>は、<strong>AIを中心とした事業</strong>を展開しています。今後の日本や世界の動きを見据えると、AIは社会に欠かせない存在になると考えておりまして、一時的な流行としてではなく、これからの時代を生きていくうえで<strong>必要不可欠な技術</strong>として捉え、事業を進めています。」</div>
+      <div class="talk-body">「<strong>株式会社○○</strong>は、AI・不動産・SNSなどを中心とした事業を展開しています。その中で今後の<strong>新規事業</strong>として、AIに関連した事業をさらに拡大していく予定です。AIは一時的な流行ではなく、これからの時代を生きていくうえで<strong>必要不可欠な技術</strong>と捉えており、この事業に本腰を入れて取り組んでいきます。」</div>
     </div>
-    <div class="talk-block">
+    <div class="memo-block">
       <div class="talk-label">解決したい社会課題</div>
       <div class="talk-body">「日本では、AIの重要性が高まっている一方で、<strong>AI教育がまだ十分に行き届いていない</strong>という課題があります。弊社は、この課題をそのままにしておくことは、個人にとっても企業にとっても、そして日本全体にとっても<strong>大きな機会損失</strong>になると考えています。<br><br>
         そのため、単に自社の売上を伸ばすだけでなく、<strong>AI教育の普及を通じて社会に貢献する</strong>ことも、私たちにとって重要なテーマにしています。」</div>
     </div>
-    <div class="talk-block">
+    <div class="memo-block">
       <div class="talk-label">主な事業内容①　法人向けサービス</div>
       <div class="talk-body">「具体的には、まず<strong>法人向けの事業</strong>として、企業へのAI導入支援と社員研修を行っています。AIを会社の業務に取り入れたいけれど、どこから始めればいいかわからないという企業様に対して、現場に合った形でAIを活用できるようサポートしています。また、<strong>社員向けのAI研修</strong>を通じて、企業全体のデジタルリテラシーを底上げし、業務効率化を実現するお手伝いもしています。」</div>
     </div>
-    <div class="talk-block">
+    <div class="memo-block">
       <div class="talk-label">主な事業内容②　個人向けリスキリング</div>
       <div class="talk-body">「そして<strong>個人向け</strong>には、AIスキルのリスキリング支援を行っています。AIを学ぶことで、今の仕事の中で業務改善・効率化ができるようになったり、<strong>AIに関連する資格を取得</strong>することで、転職活動での市場価値を高めることができます。「AIを使える人材」は今後ますます需要が高まっていく領域ですので、早い段階でスキルを身につけることが大きなアドバンテージになります。」</div>
     </div>
     <div class="talk-block">
-      <div class="talk-label">今回の募集ポジション</div>
-      <div class="talk-body">「今回ご応募いただいているポジションは、<strong>こうした事業を支える書類作成や広報の業務</strong>をご担当いただく役割です。AI事業の成長を現場から支えていただくお仕事で、裁量も広く、やりがいのある環境だと思っています。」</div>
+      <div class="talk-label">主な業務内容</div>
+      <div class="talk-body">「今回ご応募いただいているポジションは、AI研修・AI教育に関わる<strong>書類作成・打ち合わせ・資料作成</strong>などの業務をご担当いただく役割です。事業の現場を内側から支えるお仕事で、裁量も広く、やりがいのある環境だと思っています。」</div>
+    </div>
+    <div class="talk-block">
+      <div class="talk-label">給与について</div>
+      <div class="talk-body">「給与についてですが、弊社は一般的な事務職と比較して<strong>高めの水準</strong>に設定しています。理由は、単に『事務をやってもらう』という考え方ではなく、AIを積極的に活用して業務の幅を広げてもらいたいと考えているからです。AIを使いこなせるようになればなるほどできることが増えていき、<strong>それに見合った形で給与もアップしていく</strong>設計になっています。」</div>
     </div>
 
     <div class="talk-block">
@@ -1006,13 +1061,13 @@ strong { font-weight: 700; }
 
     <div class="sec-heading">完了チェックリスト</div>
     <div class="check-all-row">
-      <button class="btn-check-all" onclick="checkAllPage(4)">すべてチェック</button>
+      <button class="btn-check-all" onclick="checkAllPage(5)">すべてチェック</button>
     </div>
-    <div class="checklist-card" id="cl-4">
+    <div class="checklist-card" id="cl-5">
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
-          <div class="ci-q">会社紹介（AI中心の主軸・法人AI導入・社員研修・個人リスキリング・募集ポジション）を説明した</div>
+          <div class="ci-q">会社紹介（新規AI事業・主な業務内容・給与の考え方）を説明した</div>
           <div class="ci-tags"><span class="tag tag-s">補足</span></div>
         </div>
       </div>
@@ -1034,23 +1089,23 @@ strong { font-weight: 700; }
 
   </div>
   <div class="nav-bar">
-    <button class="btn btn-prev" onclick="goTo(3)">◀ 前へ</button>
-    <span class="nav-remaining" id="nr-4"></span>
-    <button class="btn btn-next" onclick="goTo(5)">次のSTEP ▶</button>
+    <button class="btn btn-prev" onclick="goTo(4)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-5"></span>
+    <button class="btn btn-next" onclick="goTo(6)">次のSTEP ▶</button>
   </div>
 </div>
 
-<!-- ========== STEP 6 ========== -->
-<div class="step-page" id="page-5">
+<!-- ========== STEP 7 ========== -->
+<div class="step-page" id="page-6">
   <div class="page-band">
-    <div class="page-badge" style="background:var(--c-primary-deep)">6</div>
+    <div class="page-badge" style="background:var(--c-primary-deep)">7</div>
     <div class="page-band-text">
       <div class="page-title">クロージング（2点アナウンス・併願提案・連絡先交換）</div>
       <div class="page-meta">⏱ 約5分　｜　次のアクション確定・サポート関係の構築</div>
     </div>
     <div class="band-progress">
-      <div class="band-prog-count" id="bpc-5">0 / 3</div>
-      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-5" style="width:0%"></div></div>
+      <div class="band-prog-count" id="bpc-6">0 / 3</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-6" style="width:0%"></div></div>
     </div>
   </div>
   <div class="page-content">
@@ -1080,9 +1135,9 @@ strong { font-weight: 700; }
 
     <div class="sec-heading">完了チェックリスト</div>
     <div class="check-all-row">
-      <button class="btn-check-all" onclick="checkAllPage(5)">すべてチェック</button>
+      <button class="btn-check-all" onclick="checkAllPage(6)">すべてチェック</button>
     </div>
-    <div class="checklist-card" id="cl-5">
+    <div class="checklist-card" id="cl-6">
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
@@ -1108,8 +1163,8 @@ strong { font-weight: 700; }
 
   </div>
   <div class="nav-bar">
-    <button class="btn btn-prev" onclick="goTo(4)">◀ 前へ</button>
-    <span class="nav-remaining" id="nr-5"></span>
+    <button class="btn btn-prev" onclick="goTo(5)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-6"></span>
     <button class="btn btn-finish" onclick="showDone()">面談完了 ✓</button>
   </div>
 </div>
@@ -1131,14 +1186,15 @@ strong { font-weight: 700; }
 // DATA: page index → array of checklist card IDs
 // =============================================
 const PAGE_CARDS = [
-  ['cl-0'],
+  [],
   ['cl-1'],
   ['s3a','s3b','s3c'],
   ['s4a','s4b','s4c','s4d'],
-  ['cl-4'],
-  ['cl-5']
+  ['s5a','s5b'],
+  ['cl-5'],
+  ['cl-6']
 ];
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 7;
 
 // =============================================
 // TOGGLE single item
