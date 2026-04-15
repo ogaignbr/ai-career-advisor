@@ -564,6 +564,22 @@ strong { font-weight: 700; }
 
 .s2-page .nav-remaining.warn { color: var(--c-s2); }
 
+.btn-open-sekou {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 20px;
+  background: linear-gradient(135deg, var(--c-s2), var(--c-s2-accent));
+  color: #fff; font-size: 13px; font-weight: 700;
+  border-radius: var(--radius-md);
+  text-decoration: none; white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(234,88,12,.3);
+  transition: transform .15s, box-shadow .15s;
+}
+.btn-open-sekou:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(234,88,12,.4);
+}
+.btn-open-sekou:active { transform: scale(.97); }
+
 .response-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
 .response-table th { background: var(--c-s2-deep); color: #fff; padding: 8px 12px; text-align: left; font-weight: 700; font-size: 12px; }
 .response-table td { padding: 8px 12px; border-bottom: 1px solid var(--c-s2-border); line-height: 1.6; }
@@ -1485,8 +1501,9 @@ strong { font-weight: 700; }
     <!-- ② 施工管理の説明 -->
     <div class="sec-heading sec-heading-s2">② 施工管理ページを見せながら説明</div>
 
-    <div class="note-box note-box-s2">
-      <strong>★ここで施工管理ページ（施工管理/index.html）を画面共有 or スマホで見せる</strong>
+    <div class="note-box note-box-s2" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <strong>★ここで施工管理ページを画面共有 or スマホで見せる</strong>
+      <a href="施工管理/index.html" target="_blank" class="btn-open-sekou">施工管理ページを開く ▶</a>
     </div>
 
     <div class="talk-block talk-block-s2">
