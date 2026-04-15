@@ -30,6 +30,20 @@
   --c-tag-ai-tx:    #5b21b6;
   --c-tag-sub-bg:   #f3f4f6;
   --c-tag-sub-tx:   #6b7280;
+  --c-tag-s2-bg:    #fff7ed;
+  --c-tag-s2-tx:    #c2410c;
+
+  /* Secondary (2次面談 Orange) */
+  --c-s2:           #ea580c;
+  --c-s2-dark:      #c2410c;
+  --c-s2-deep:      #7c2d12;
+  --c-s2-mid:       #9a3412;
+  --c-s2-accent:    #f97316;
+  --c-s2-surface-1: #fff7ed;
+  --c-s2-surface-2: #ffedd5;
+  --c-s2-border:    #fed7aa;
+  --c-s2-border-mid:#fdba74;
+
   --radius-sm:      6px;
   --radius-md:      10px;
   --radius-lg:      14px;
@@ -455,6 +469,108 @@ strong { font-weight: 700; }
 .memo-block .talk-body em { font-style: normal; font-weight: 700; color: #9a3412; }
 
 /* =============================================
+   2次面談 (STEP 8–13) ORANGE OVERRIDES
+   ============================================= */
+.tab-sep {
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 18px;
+  color: var(--c-s2-accent);
+  font-size: 10px; font-weight: 800;
+  letter-spacing: .1em;
+  white-space: nowrap;
+  user-select: none;
+  flex: 0 0 auto;
+}
+.tab-sep::before, .tab-sep::after {
+  content: ""; display: block; width: 16px; height: 1.5px;
+  background: var(--c-s2-accent); opacity: .5; margin: 0 6px;
+}
+
+.step-tab.s2 { color: rgba(255,255,255,.4); }
+.step-tab.s2:hover { color: var(--c-s2-accent); background: rgba(255,255,255,.05); }
+.step-tab.s2.active { color: var(--c-white); border-bottom-color: var(--c-s2-accent); background: rgba(249,115,22,.12); }
+.step-tab.s2.done { color: var(--c-s2-accent); }
+
+.page-badge-s2 {
+  background: linear-gradient(135deg, var(--c-s2-deep), var(--c-s2));
+  box-shadow: 0 2px 8px rgba(234,88,12,.35);
+}
+
+.talk-block-s2 { border-left-color: var(--c-s2); }
+.talk-block-s2 .talk-label { color: var(--c-s2); }
+.talk-block-s2 .talk-body em { color: var(--c-s2-deep); }
+
+.sec-heading-s2 { color: var(--c-s2-mid); }
+.sec-heading-s2::before { background: var(--c-s2); }
+
+.point-box-s2 {
+  background: var(--c-s2-surface-1);
+  border-left-color: var(--c-s2);
+  color: var(--c-s2-deep);
+}
+
+.note-box-s2 {
+  background: #fef3c7;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.announce-s2 .announce-head { background: var(--c-s2-deep); }
+.announce-s2 .announce-head.variant { background: var(--c-s2); }
+
+.flow-block-s2 { border-color: var(--c-s2-border); }
+
+.s2-page .ci.checked .ci-box {
+  border-color: var(--c-s2);
+  background: var(--c-s2);
+}
+
+.btn-next-s2 {
+  background: var(--c-s2);
+  color: var(--c-white);
+  margin-left: auto;
+  box-shadow: 0 2px 8px rgba(234,88,12,.3);
+  flex-shrink: 0;
+}
+.btn-next-s2:hover { background: var(--c-s2-dark); }
+
+.btn-finish-s2 {
+  background: var(--c-s2-deep);
+  color: var(--c-white);
+  margin-left: auto;
+  box-shadow: 0 2px 8px rgba(124,45,18,.3);
+}
+.btn-finish-s2:hover { background: var(--c-s2-mid); }
+
+.band-prog-s2 .band-prog-count { color: var(--c-s2); }
+.band-prog-s2 .band-prog-fill { background: var(--c-s2); }
+
+.memo-block-s2 {
+  background: var(--c-s2-surface-1);
+  border-color: var(--c-s2-border);
+  border-left-color: var(--c-s2);
+}
+.memo-block-s2 .talk-label { color: var(--c-s2-dark); }
+.memo-block-s2 .talk-body { color: var(--c-s2-deep); }
+.memo-block-s2 .talk-body em { color: var(--c-s2-mid); }
+
+.tag-s2 { background: var(--c-tag-s2-bg); color: var(--c-tag-s2-tx); }
+
+.s2-page .check-all-row .btn-check-all {
+  color: var(--c-s2-dark);
+  border-color: var(--c-s2-border-mid);
+}
+.s2-page .check-all-row .btn-check-all:hover { background: var(--c-s2-surface-2); }
+
+.s2-page .nav-remaining.warn { color: var(--c-s2); }
+
+.response-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0; }
+.response-table th { background: var(--c-s2-deep); color: #fff; padding: 8px 12px; text-align: left; font-weight: 700; font-size: 12px; }
+.response-table td { padding: 8px 12px; border-bottom: 1px solid var(--c-s2-border); line-height: 1.6; }
+.response-table tr:last-child td { border-bottom: none; }
+.response-table tr:nth-child(even) { background: var(--c-s2-surface-1); }
+
+/* =============================================
    PRINT
    ============================================= */
 @media print {
@@ -477,7 +593,7 @@ strong { font-weight: 700; }
 <header class="app-header">
   <div class="header-left">
     <h1>CA 面談トークスクリプト</h1>
-    <div class="header-sub">AI企業〇〇 正社員採用 一次面談　|　人材事業部（CAチーム）　|　計 30〜40分</div>
+    <div class="header-sub">AI企業〇〇 正社員採用　|　一次面談＋二次面談　|　人材事業部（CAチーム）</div>
   </div>
   <div class="header-overall">
     <div class="overall-pct" id="overallPct">0%</div>
@@ -522,6 +638,37 @@ strong { font-weight: 700; }
     <span class="tab-num">STEP 7</span>
     <span class="tab-name">併願・クロージング</span>
     <span class="tab-time">約 5 分</span>
+  </button>
+  <div class="tab-sep">二次面談</div>
+  <button class="step-tab s2" onclick="goTo(7)">
+    <span class="tab-num">STEP 8</span>
+    <span class="tab-name">オープニング</span>
+    <span class="tab-time">約 3 分</span>
+  </button>
+  <button class="step-tab s2" onclick="goTo(8)">
+    <span class="tab-num">STEP 9</span>
+    <span class="tab-name">振り返り・再確認</span>
+    <span class="tab-time">約 5 分</span>
+  </button>
+  <button class="step-tab s2" onclick="goTo(9)">
+    <span class="tab-num">STEP 10</span>
+    <span class="tab-name">★イメージ変換</span>
+    <span class="tab-time">12〜15 分</span>
+  </button>
+  <button class="step-tab s2" onclick="goTo(10)">
+    <span class="tab-num">STEP 11</span>
+    <span class="tab-name">併願先確定</span>
+    <span class="tab-time">7〜8 分</span>
+  </button>
+  <button class="step-tab s2" onclick="goTo(11)">
+    <span class="tab-num">STEP 12</span>
+    <span class="tab-name">次のステップ</span>
+    <span class="tab-time">約 3 分</span>
+  </button>
+  <button class="step-tab s2" onclick="goTo(12)">
+    <span class="tab-num">STEP 13</span>
+    <span class="tab-name">クロージング</span>
+    <span class="tab-time">約 2 分</span>
   </button>
 </nav>
 
@@ -1152,7 +1299,568 @@ strong { font-weight: 700; }
   <div class="nav-bar">
     <button class="btn btn-prev" onclick="goTo(5)">◀ 前へ</button>
     <span class="nav-remaining" id="nr-6"></span>
-    <button class="btn btn-finish" onclick="showDone()">面談完了 ✓</button>
+    <button class="btn btn-next-s2" onclick="goTo(7)">二次面談へ ▶</button>
+  </div>
+</div>
+
+<!-- ==========================================================
+     ██  二次面談  STEP 8 – 13  (ORANGE THEME)  ██
+     ========================================================== -->
+
+<!-- ========== STEP 8 ========== -->
+<div class="step-page s2-page" id="page-7">
+  <div class="page-band" style="background:var(--c-s2-surface-1);border-bottom-color:var(--c-s2-border)">
+    <div class="page-badge page-badge-s2">8</div>
+    <div class="page-band-text">
+      <div class="page-title" style="color:var(--c-s2-deep)">オープニング・近況確認</div>
+      <div class="page-meta">⏱ 約3分　｜　信頼構築・前回からの変化確認・2次面談の目的共有</div>
+    </div>
+    <div class="band-progress band-prog-s2">
+      <div class="band-prog-count" id="bpc-7">0 / 2</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-7" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="sec-heading sec-heading-s2">トークスクリプト</div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">挨拶</div>
+      <div class="talk-body">「○○さん、先日はお忙しい中お時間いただきありがとうございました。その後いかがお過ごしですか？」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">2次面談の目的を伝える</div>
+      <div class="talk-body">「今日は、前回の面談でお聞きした○○さんの希望やビジョンを踏まえて、<em>具体的な併願先を一緒に考えて確定</em>させていきたいと思います。○○さんにとって一番いい選択肢を一緒に探しましょう。」</div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">完了チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(7)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-7">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">前回の面談後、転職活動の状況に変化はあったか確認した</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">2次面談の目的（併願先の確定）を伝えた</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(6)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-7"></span>
+    <button class="btn btn-next-s2" onclick="goTo(8)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 9 ========== -->
+<div class="step-page s2-page" id="page-8">
+  <div class="page-band" style="background:var(--c-s2-surface-1);border-bottom-color:var(--c-s2-border)">
+    <div class="page-badge page-badge-s2">9</div>
+    <div class="page-band-text">
+      <div class="page-title" style="color:var(--c-s2-deep)">1次面談の振り返り・条件再確認</div>
+      <div class="page-meta">⏱ 約5分　｜　前回ヒアリング内容の確認・変化の把握・STEP10への布石</div>
+    </div>
+    <div class="band-progress band-prog-s2">
+      <div class="band-prog-count" id="bpc-8">0 / 5</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-8" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="point-box point-box-s2">
+      <strong>ポイント：</strong>前回のヒアリング内容をサッと振り返り、変化がないか確認する。特に<strong>キャリアビジョン（年収を上げたい・安定したいなど）</strong>と<strong>希望年収</strong>を意図的にピックアップし、STEP 10の施工管理提案への布石にする。
+    </div>
+
+    <div class="sec-heading sec-heading-s2">質問チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(8)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-8">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">希望職種に変化はないか確認した<small>（多くの場合「事務職」を希望）</small></div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">希望年収・最低ラインの再確認をした</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">勤務地・通勤手段に変更がないか確認した</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">譲れない条件の再確認をした</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">キャリアビジョン（5年後・10年後のビジョン）を再確認した<small>※ここが重要。「年収を上げたい」「安定したい」などの言葉を拾っておく</small></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span><span class="tag tag-m">併願マッチング</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">布石トーク</div>
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">STEP 10への橋渡し</div>
+      <div class="talk-body">「前回、○○さんは5年後には年収を上げたい・安定した仕事に就きたいとおっしゃっていましたよね。今日はそこも踏まえて、<em>一番いい選択肢を一緒に考えていきましょう</em>。」</div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(7)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-8"></span>
+    <button class="btn btn-next-s2" onclick="goTo(9)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 10 ========== -->
+<div class="step-page s2-page" id="page-9">
+  <div class="page-band" style="background:var(--c-s2-surface-1);border-bottom-color:var(--c-s2-border)">
+    <div class="page-badge page-badge-s2">10</div>
+    <div class="page-band-text">
+      <div class="page-title" style="color:var(--c-s2-deep)">★ イメージ変換トーク（施工管理への導入）</div>
+      <div class="page-meta">⏱ 12〜15分　｜　★2次面談の最重要パート｜施工管理のイメージ変換・事務職との比較</div>
+    </div>
+    <div class="band-progress band-prog-s2">
+      <div class="band-prog-count" id="bpc-9">0 / 6</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-9" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="point-box point-box-s2">
+      <strong>★最重要ステップ：</strong>事務職を希望する求職者に対して、施工管理のイメージを変換していくパートです。<strong>施工管理ページ（施工管理/index.html）を画面共有またはスマホで見せながら</strong>進めてください。
+    </div>
+
+    <!-- ① 課題提示 -->
+    <div class="sec-heading sec-heading-s2">① 課題提示（事務職の現実）</div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">導入</div>
+      <div class="talk-body">「事務職を希望される方は非常に多いのですが、正直にお伝えすると…」</div>
+    </div>
+
+    <div class="announce announce-s2">
+      <div class="announce-head">事務職のリアルな現実</div>
+      <div class="announce-body">
+        <ul style="padding-left:18px;margin:0">
+          <li style="margin-bottom:6px">事務職は<strong>求人倍率が非常に高い</strong>（人気職種のため競争が激しい）</li>
+          <li style="margin-bottom:6px">未経験だと<strong>年収250万円前後スタート</strong>で、5年経っても310万円程度</li>
+          <li style="margin-bottom:6px">スキルが付きにくく、<strong>差別化が難しい</strong>（AIや自動化で代替されやすい）</li>
+          <li>前回おっしゃっていた「年収を上げたい」「安定したい」と<strong>ギャップがある可能性</strong>がある</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">選択肢の提示</div>
+      <div class="talk-body">「もちろん事務職も併願先には入れますが、もう1つ、○○さんに<em>ぜひ知っておいてほしい選択肢</em>があります。」</div>
+    </div>
+
+    <!-- ② 施工管理の説明 -->
+    <div class="sec-heading sec-heading-s2">② 施工管理ページを見せながら説明</div>
+
+    <div class="note-box note-box-s2">
+      <strong>★ここで施工管理ページ（施工管理/index.html）を画面共有 or スマホで見せる</strong>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">a) イメージを壊す</div>
+      <div class="talk-body">「施工管理って聞いたことありますか？ 多くの方が"ガテン系"や"力仕事"をイメージされるんですが、実際はまったく違います。施工管理者は自分で工事をしません。現場の<em>"プロジェクトマネージャー"</em>です。必要なのは腕力ではなく、<em>段取り力・コミュニケーション力・気配り</em>なんです。」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">b) 6割は事務作業</div>
+      <div class="talk-body">「実は施工管理の<em>業務の約6割がデスクワーク</em>なんです。書類作成、スケジュール調整、関係者との連絡、図面チェック。事務職で培ったスキルがそのまま活かせます。イメージとしては、<em>事務の仕事をしながら、事務職では得られない収入とキャリアが手に入る</em>仕事です。」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">c) 給料比較</div>
+      <div class="talk-body">「ここ見てください。事務職が5年で310万円に対して、施工管理は<em>5年で500万円</em>。同じ年齢・同じ未経験スタートで<em>年間190万円の差</em>が出ます。前回○○さんが希望されていた年収ラインも、施工管理ならクリアできる可能性が高いです。」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">d) 女性の活躍</div>
+      <div class="talk-body">「"建設業＝男社会"は完全に過去の話で、<em>女性の応募者が3年で4倍</em>に増えています。元事務員、元販売員、元飲食スタッフ——前職は関係ありません。女性用の更衣室・トイレの設置も義務化され、産休・育休の取得実績も増えています。」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">e) 手に職（国家資格）</div>
+      <div class="talk-body">「施工管理技士の国家資格を取れば、<em>全国どこでも通用する一生モノのスキル</em>になります。AIに代替されにくい仕事でもあります。現場を管理する人間は絶対に必要なので。」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">f) 働き方改革</div>
+      <div class="talk-body">「2024年の法改正で残業規制が強化され、<em>週休二日制の導入</em>も急速に進んでいます。直行直帰もOKなので、会社に縛られない自由な働き方ができます。」</div>
+    </div>
+
+    <!-- ③ 切り返し -->
+    <div class="sec-heading sec-heading-s2">③ 反応に合わせた切り返し<span style="font-size:10px;font-weight:500;color:var(--c-s2);margin-left:6px;">▼ 学習用メモ</span></div>
+
+    <div class="memo-block memo-block-s2">
+      <div class="talk-label">パターン別切り返しトーク</div>
+      <div class="talk-body">
+        <table class="response-table">
+          <thead><tr><th style="width:35%">求職者の反応</th><th>切り返しトーク</th></tr></thead>
+          <tbody>
+            <tr><td>「興味あるかも」</td><td>→ そのままSTEP 11で施工管理を併願1位に提案</td></tr>
+            <tr><td>「でも体力が…」</td><td>→「6割がデスクワークです。事務経験がある方こそ向いています」</td></tr>
+            <tr><td>「建設業は怖い」</td><td>→「一度こちらのページを見てみてください。イメージと全然違うと思います」</td></tr>
+            <tr><td>「やっぱり事務がいい」</td><td>→ 無理強いせず「では事務も入れつつ、もう1つ別の選択肢も見てみませんか？」</td></tr>
+            <tr><td>「考えさせて」</td><td>→「もちろんです。情報として持っておいて損はないので、併願の1つとして検討してみてください」</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">完了チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(9)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-9">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">事務職の現実（年収・競争率・代替リスク）を伝えた</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">施工管理ページを見せた</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">「6割がデスクワーク」であることを伝えた</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">給料比較（事務 vs 施工管理）を見せた</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">女性の活躍・働き方改革について説明した</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">求職者の反応を確認し、適切に対応した</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(8)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-9"></span>
+    <button class="btn btn-next-s2" onclick="goTo(10)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 11 ========== -->
+<div class="step-page s2-page" id="page-10">
+  <div class="page-band" style="background:var(--c-s2-surface-1);border-bottom-color:var(--c-s2-border)">
+    <div class="page-badge page-badge-s2">11</div>
+    <div class="page-band-text">
+      <div class="page-title" style="color:var(--c-s2-deep)">併願先の提案・確定</div>
+      <div class="page-meta">⏱ 7〜8分　｜　優先順位に基づく2〜3社の併願先確定</div>
+    </div>
+    <div class="band-progress band-prog-s2">
+      <div class="band-prog-count" id="bpc-10">0 / 3</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-10" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="point-box point-box-s2">
+      <strong>ポイント：</strong>STEP 10の反応を踏まえて、優先順位に沿った<strong>2〜3社の併願先</strong>を確定させる。
+    </div>
+
+    <div class="sec-heading sec-heading-s2">提案の優先順位</div>
+
+    <div class="announce announce-s2">
+      <div class="announce-head variant">併願先プッシュ優先順位</div>
+      <div class="announce-body">
+        <div style="margin-bottom:8px"><strong style="color:var(--c-s2)">★1位：施工管理</strong>　← 最優先で提案</div>
+        <div style="margin-bottom:8px"><strong style="color:var(--c-s2-dark)">★2位：営業・販売・経営 or IT事務</strong>　← 施工管理に消極的な場合の第2候補</div>
+        <div><strong style="color:var(--c-s2-mid)">★3位：一般事務</strong>　← 本人の希望を尊重しつつ「保険の1社」</div>
+      </div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">トークスクリプト</div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">まとめの切り出し</div>
+      <div class="talk-body">「では今日お話しした内容を踏まえて、併願先をまとめましょう。」</div>
+    </div>
+
+    <div class="memo-block memo-block-s2">
+      <div class="talk-label">提案パターン（学習用メモ）</div>
+      <div class="talk-body">
+        <strong>パターンA（施工管理に前向き）</strong><br>
+        → 施工管理 ＋ 営業 or IT事務 ＋ 事務<br><br>
+        <strong>パターンB（施工管理に慎重）</strong><br>
+        → 営業 or IT事務 ＋ 事務 ＋ 施工管理（情報収集として）<br><br>
+        <strong>パターンC（事務一択の場合）</strong><br>
+        → 事務2社 ＋ 営業 or IT事務 or 施工管理を「とりあえず見てみる」枠
+      </div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">★2位：営業・IT事務の提案トーク</div>
+      <div class="talk-body">「営業や販売の仕事は、○○さんの対人スキルを活かしながら<em>成果が収入に直結</em>する仕事です。IT事務は通常の事務スキルに加えて<em>ITの知識が身につく</em>ので、今後のキャリアの幅が広がります。」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">★3位：一般事務の提案トーク</div>
+      <div class="talk-body">「もちろん事務職も入れておきましょう。○○さんの希望に一番近い職種なので、<em>安心材料として1社</em>は持っておくといいと思います。」</div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">完了チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(10)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-10">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">優先順位に沿って併願先を提案した</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">2〜3社の併願先を確定させた</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">求職者が各併願先に納得しているか確認した</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(9)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-10"></span>
+    <button class="btn btn-next-s2" onclick="goTo(11)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 12 ========== -->
+<div class="step-page s2-page" id="page-11">
+  <div class="page-band" style="background:var(--c-s2-surface-1);border-bottom-color:var(--c-s2-border)">
+    <div class="page-badge page-badge-s2">12</div>
+    <div class="page-band-text">
+      <div class="page-title" style="color:var(--c-s2-deep)">次のステップ確認</div>
+      <div class="page-meta">⏱ 約3分　｜　書類準備・推薦スケジュール・次回連絡日の確定</div>
+    </div>
+    <div class="band-progress band-prog-s2">
+      <div class="band-prog-count" id="bpc-11">0 / 4</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-11" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="sec-heading sec-heading-s2">① 書類準備について</div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">今後の流れを伝える</div>
+      <div class="talk-body">「では確定した併願先について、今後の流れをご説明しますね。」</div>
+    </div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">書類準備</div>
+      <div class="talk-body">「本日確定した併願先に向けて、<em>履歴書と職務経歴書を準備</em>していきます。書類の作成はこちらでサポートできますので、お気軽にご相談ください。また、<em>推薦書もこちらで企業様へ提出</em>しておきますのでご安心ください。」</div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">② 選考スケジュール</div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">書類選考の結果について</div>
+      <div class="talk-body">「書類選考の結果ですが、<em>早ければ3日以内</em>で届きます。多くの場合は<em>5日以内</em>にご連絡が来ることが多いです。もし通過した場合は、次は面接に進んでいただく流れになります。」</div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">③ 面接日程の確保 ★重要</div>
+
+    <div class="announce announce-s2">
+      <div class="announce-head variant">面接日程の事前確保（重要）</div>
+      <div class="announce-body">
+        「面接日程を<strong>先に企業様へ提出</strong>できればと思いますので、<strong>今日から5日以降で、5つほど空き日程</strong>を教えていただきたいです。<br><br>
+        特に<strong>今の時期はかなり埋まってしまう</strong>ため、早めに日程を確認するようにお願いします。」
+      </div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">④ レスポンスの重要性</div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">★今後の心構え</div>
+      <div class="talk-body">「この先、面接の日程調整や、企業様よりアンケートへの回答、事前の適性診断など、<em>さまざまなことが進んでいきます</em>。それを随時共有させていただくので、<em>なるべく早いレスポンスを心がけていただきたい</em>です。<br><br>
+      こういったところからも、<em>すでに採用試験が始まっている</em>——そんな感覚でいてもらえれば、企業側からの評価もすごく高くなると思います。」</div>
+    </div>
+
+    <div class="note-box note-box-s2">
+      <strong>ポイント：</strong>レスポンスの速さ＝採用試験の一部という意識を持ってもらう。ここで伝えておくことで、今後の連絡のやり取りがスムーズになる。
+    </div>
+
+    <div class="flow-block flow-block-s2">
+      <ol>
+        <li style="margin-bottom:8px">本日確定した併願先に向けて<strong>履歴書・職務経歴書を準備</strong></li>
+        <li style="margin-bottom:8px"><strong>推薦書</strong>をこちらから企業様へ提出</li>
+        <li style="margin-bottom:8px">書類選考の結果は<strong>早ければ3日・多くは5日以内</strong>に連絡</li>
+        <li style="margin-bottom:8px">通過した場合 →<strong>面接</strong>（事前に5つの空き日程を提出済み）</li>
+        <li style="margin-bottom:8px">面接日程調整・アンケート回答・適性診断などを<strong>随時共有</strong></li>
+        <li><strong>早いレスポンス</strong>を心がける → 高評価につながる</li>
+      </ol>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">完了チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(11)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-11">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">書類準備（履歴書・職務経歴書）と推薦書提出について説明した</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">書類選考の結果スケジュール（3〜5日以内）を伝えた</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">面接の空き日程（5日以降で5つ）を確認した</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">今後のレスポンスの重要性（＝採用試験の一部）を伝えた</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(10)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-11"></span>
+    <button class="btn btn-next-s2" onclick="goTo(12)">次のSTEP ▶</button>
+  </div>
+</div>
+
+<!-- ========== STEP 13 ========== -->
+<div class="step-page s2-page" id="page-12">
+  <div class="page-band" style="background:var(--c-s2-surface-1);border-bottom-color:var(--c-s2-border)">
+    <div class="page-badge page-badge-s2">13</div>
+    <div class="page-band-text">
+      <div class="page-title" style="color:var(--c-s2-deep)">クロージング</div>
+      <div class="page-meta">⏱ 約2分　｜　まとめ・信頼関係の強化・背中を押す一言</div>
+    </div>
+    <div class="band-progress band-prog-s2">
+      <div class="band-prog-count" id="bpc-12">0 / 2</div>
+      <div class="band-prog-wrap"><div class="band-prog-fill" id="bpf-12" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="page-content">
+
+    <div class="sec-heading sec-heading-s2">併願先のまとめ</div>
+
+    <div class="announce announce-s2">
+      <div class="announce-head variant">確定した併願先のまとめ</div>
+      <div class="announce-body">
+        「本日確定した併願先をまとめます。<br><br>
+        <strong>①</strong>（施工管理 / 営業 / IT事務 / 事務）<br>
+        <strong>②</strong>（施工管理 / 営業 / IT事務 / 事務）<br>
+        <strong>③</strong>（施工管理 / 営業 / IT事務 / 事務）<br><br>
+        この3社で進めていきますね。」
+      </div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">最後のトーク</div>
+
+    <div class="talk-block talk-block-s2">
+      <div class="talk-label">クロージングトーク</div>
+      <div class="talk-body">「○○さんのキャリアを一番いい形でサポートしたいと思っていますので、何か気になることがあればいつでも連絡してください。<em>一緒に頑張りましょう。</em>」</div>
+    </div>
+
+    <div class="sec-heading sec-heading-s2">完了チェックリスト</div>
+    <div class="check-all-row">
+      <button class="btn-check-all" onclick="checkAllPage(12)">すべてチェック</button>
+    </div>
+    <div class="checklist-card" id="cl-12">
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">確定した併願先を求職者と一緒に最終確認した</div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+      <div class="ci" onclick="toggleCheck(this)">
+        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="ci-body">
+          <div class="ci-q">最後に前向きな言葉をかけて面談を締めくくった</div>
+          <div class="ci-tags"><span class="tag tag-s2">2次面談</span></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="nav-bar">
+    <button class="btn btn-prev" onclick="goTo(11)">◀ 前へ</button>
+    <span class="nav-remaining" id="nr-12"></span>
+    <button class="btn btn-finish-s2" onclick="showDone()">面談完了 ✓</button>
   </div>
 </div>
 
@@ -1160,7 +1868,7 @@ strong { font-weight: 700; }
 <div class="step-page" id="page-done">
   <div class="done-screen">
     <div class="done-icon">🎉</div>
-    <div class="done-title">面談お疲れ様でした！</div>
+    <div class="done-title">一次・二次面談 お疲れ様でした！</div>
     <div class="done-sub" id="doneSummary"></div>
     <button class="btn-restart" onclick="restart()">最初からやり直す</button>
   </div>
@@ -1179,9 +1887,15 @@ const PAGE_CARDS = [
   ['s4a','s4b','s4c','s4d'],
   ['s5a','s5b'],
   ['cl-5'],
-  ['cl-6']
+  ['cl-6'],
+  ['cl-7'],
+  ['cl-8'],
+  ['cl-9'],
+  ['cl-10'],
+  ['cl-11'],
+  ['cl-12']
 ];
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 13;
 
 // =============================================
 // TOGGLE single item
