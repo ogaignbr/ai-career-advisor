@@ -21,7 +21,6 @@ const state = {
   activeTab: 'resume',
   resumeBlob: null,
   cvBlob: null,
-  isOniMode: false,
 };
 
 const API_KEY_STORAGE = 'career_advisor_api_key';
@@ -34,23 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function initApp() {
-  // APIキーをlocalStorageから読み込む
   state.apiKey = localStorage.getItem(API_KEY_STORAGE) || '';
 
-  // PDF.js ワーカーの設定
   if (typeof pdfjsLib !== 'undefined') {
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
 
-  // API設定状態の表示更新
   updateApiKeyStatus();
-
-  // イベントリスナーをバインド
   bindEventListeners();
   initChatPanels();
-
-  // 生成ボタンの状態更新
   updateGenerateButton();
 }
 
@@ -58,13 +50,11 @@ function initApp() {
 // Event Listeners
 // ============================================
 function bindEventListeners() {
-  // 設定ボタン
   const settingsBtn = document.getElementById('settingsBtn');
   if (settingsBtn) {
     settingsBtn.addEventListener('click', openSettingsModal);
   }
 
-  // 設定モーダル
   const modalOverlay = document.getElementById('modalOverlay');
   if (modalOverlay) {
     modalOverlay.addEventListener('click', (e) => {
@@ -86,15 +76,13 @@ function bindEventListeners() {
     apiKeyInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') saveApiKey();
     });
-    // 既存の値を設定
     apiKeyInput.value = state.apiKey || '';
   }
 
-  // パスワード表示切替
   const toggleApiKeyBtn = document.getElementById('toggleApiKeyBtn');
   if (toggleApiKeyBtn) toggleApiKeyBtn.addEventListener('click', toggleApiKeyVisibility);
 
-  // 応募情報
+  // 応募先企業名
   const targetCompanyInput = document.getElementById('targetCompany');
   if (targetCompanyInput) {
     targetCompanyInput.addEventListener('input', (e) => {
@@ -102,9 +90,28 @@ function bindEventListeners() {
     });
   }
 
-  const targetPositionInput = document.getElementById('targetPosition');
-  if (targetPositionInput) {
-    targetPositionInput.addEventListener('input', (e) => {
+  // 応募職種（ドロップダウン）
+  const targetPositionSelect = document.getElementById('targetPosition');
+  if (targetPositionSelect) {
+    targetPositionSelect.addEventListener('change', (e) => {
+      const val = e.target.value;
+      const otherWrapper = document.getElementById('otherPositionWrapper');
+      if (val === 'other') {
+        if (otherWrapper) otherWrapper.classList.remove('hidden');
+        state.targetPosition = '';
+        const otherInput = document.getElementById('otherPositionInput');
+        if (otherInput) otherInput.focus();
+      } else {
+        if (otherWrapper) otherWrapper.classList.add('hidden');
+        state.targetPosition = val;
+      }
+    });
+  }
+
+  // その他（自由入力）
+  const otherPositionInput = document.getElementById('otherPositionInput');
+  if (otherPositionInput) {
+    otherPositionInput.addEventListener('input', (e) => {
       state.targetPosition = e.target.value;
     });
   }
@@ -257,19 +264,16 @@ function toggleApiKeyVisibility() {
 function updateApiKeyStatus() {
   const hasKey = !!state.apiKey;
 
-  // ヘッダーの設定ボタンに状態インジケーター
   const settingsBtn = document.getElementById('settingsBtn');
   if (settingsBtn) {
     settingsBtn.title = hasKey ? 'APIキー設定済み ⚙️' : 'APIキーを設定してください ⚙️';
   }
 
-  // 警告バナー
   const warningBanner = document.getElementById('apiKeyWarning');
   if (warningBanner) {
     warningBanner.classList.toggle('hidden', hasKey);
   }
 
-  // 設定モーダルのステータス表示
   const keyStatus = document.getElementById('apiKeyStatus');
   if (keyStatus) {
     if (hasKey) {
@@ -354,9 +358,6 @@ function updatePdfAreaDisplay(areaId, filename) {
   }
 }
 
-/**
- * ドラッグアンドドロップの設定
- */
 function setupDragAndDrop(element, onDrop, acceptedTypes) {
   element.addEventListener('dragover', (e) => {
     e.preventDefault();
@@ -428,7 +429,6 @@ function updateGenerateButton() {
 async function handleGenerate() {
   if (state.loading) return;
 
-  // バリデーション
   const hasInput = !!(
     state.transcript.trim() ||
     state.resumePdfFile ||
@@ -449,7 +449,6 @@ async function handleGenerate() {
   clearError();
 
   try {
-    // PDFテキストの抽出
     let resumeText = '';
     let cvText = '';
 
@@ -471,7 +470,6 @@ async function handleGenerate() {
       }
     }
 
-    // OpenAI API呼び出し
     const generatedData = await generateCareerDocuments({
       apiKey: state.apiKey,
       transcript: state.transcript,
@@ -482,9 +480,7 @@ async function handleGenerate() {
     });
 
     state.generatedData = generatedData;
-    state.isOniMode = !!generatedData._isOniMode;
 
-    // Wordファイルを生成
     let wordError = null;
     try {
       state.resumeBlob = await generateResumeDocx(generatedData.resume, state.photoDataUrl);
@@ -506,16 +502,12 @@ async function handleGenerate() {
       showError(`Word生成エラー: ${wordError}　※書類のプレビューは表示されます。`);
     }
 
-    // ダウンロードボタンの有効化
     const downloadResumeBtn = document.getElementById('downloadResumeBtn');
     const downloadCvBtn = document.getElementById('downloadCvBtn');
     if (downloadResumeBtn) downloadResumeBtn.disabled = !state.resumeBlob;
     if (downloadCvBtn) downloadCvBtn.disabled = !state.cvBlob;
 
-    // 結果を描画
     renderResults(generatedData);
-
-    // アクティブタブに切り替え
     switchTab(state.activeTab);
 
     showToast('書類の生成が完了しました！', 'success');
@@ -537,14 +529,13 @@ function setLoading(isLoading) {
     if (isLoading) {
       btn.innerHTML = `
         <span class="spinner-sm mr-2"></span>
-        ✨ 生成中（しばらくお待ちください）...
+        生成中（しばらくお待ちください）...
       `;
     } else {
-      btn.innerHTML = '✨ 書類を自動生成する';
+      btn.innerHTML = '書類を自動生成する';
     }
   }
 
-  // ローディングスピナー
   const outputLoading = document.getElementById('outputLoading');
   const outputEmpty = document.getElementById('outputEmpty');
   const outputContent = document.getElementById('outputContent');
@@ -564,30 +555,18 @@ function setLoading(isLoading) {
 function switchTab(tabName) {
   state.activeTab = tabName;
 
-  // タブボタンの状態更新
   document.querySelectorAll('.tab-pill').forEach(btn => {
     const isActive = btn.getAttribute('data-tab') === tabName;
     btn.classList.toggle('active', isActive);
   });
 
-  // タブコンテンツの表示切替
-  const panels = ['resume', 'work_history', 'career_advice'];
+  const panels = ['resume', 'work_history'];
   panels.forEach(panel => {
     const el = document.getElementById(`panel-${panel}`);
     if (el) {
       el.classList.toggle('hidden', panel !== tabName);
     }
   });
-
-  // キャリアアドバイスタブ表示時にチャートを再描画
-  if (tabName === 'career_advice' && state.generatedData) {
-    setTimeout(() => {
-      const advice = state.generatedData.career_advice;
-      if (advice) {
-        renderCharts(advice);
-      }
-    }, 50);
-  }
 }
 
 // ============================================
@@ -600,11 +579,8 @@ function renderResults(data) {
   if (outputEmpty) outputEmpty.classList.add('hidden');
   if (outputContent) outputContent.classList.remove('hidden');
 
-  // 各パネルを描画
   renderResume(data.resume, state.photoDataUrl);
   renderWorkHistory(data.work_history);
-  renderCareerAdvice(data.career_advice);
-  // チャットパネルを表示
   showChatPanels();
 }
 
@@ -808,332 +784,6 @@ function renderWorkHistory(data) {
   `;
 }
 
-/**
- * キャリアアドバイスを描画する
- */
-function renderCareerAdvice(data) {
-  const container = document.getElementById('career-advice-content');
-  if (!container) return;
-
-  const isOni = state.isOniMode || false;
-  const panel = document.getElementById('panel-career_advice');
-  if (panel) {
-    panel.classList.toggle('oni-mode', isOni);
-  }
-
-  const score = data.overall_score || 0;
-
-  // 強みカード
-  const strengthsHtml = (data.strengths || []).map(s => `
-    <div class="strength-card">
-      <div class="font-bold text-green-800 text-sm mb-1">✅ ${escHtml(s.title)}</div>
-      <div class="text-sm text-gray-700 mb-1">${escHtml(s.detail)}</div>
-      ${s.evidence ? `<div class="text-xs text-gray-500 italic border-l-2 border-green-400 pl-2 mt-1">根拠: ${escHtml(s.evidence)}</div>` : ''}
-    </div>
-  `).join('');
-
-  // 課題カード
-  const growthAreasHtml = (data.growth_areas || []).map(g => `
-    <div class="growth-card">
-      <div class="font-bold text-orange-700 text-sm mb-1">📈 ${escHtml(g.title)}</div>
-      <div class="text-sm text-gray-700 mb-1">${escHtml(g.detail)}</div>
-      ${g.advice ? `<div class="text-xs pl-2 mt-1" style="color:#7c3aed;border-left:2px solid #a78bfa;">アドバイス: ${escHtml(g.advice)}</div>` : ''}
-    </div>
-  `).join('');
-
-  // 推奨アクション
-  const recsHtml = (data.recommendations || []).map(rec => {
-    const priorityLabel = rec.priority === 'high' ? '高' : rec.priority === 'medium' ? '中' : '低';
-    const priorityClass = `priority-${rec.priority === 'high' ? 'high' : rec.priority === 'medium' ? 'medium' : 'low'}`;
-    return `
-      <div class="rec-card ${rec.priority || 'low'}">
-        <div class="flex items-center gap-2 mb-1">
-          <span class="priority-badge ${priorityClass}">優先度: ${priorityLabel}</span>
-          <span class="font-semibold text-sm text-gray-800">${escHtml(rec.title)}</span>
-        </div>
-        <div class="text-sm text-gray-600">${escHtml(rec.detail)}</div>
-        ${rec.timing ? `<div class="text-xs mt-1" style="color:#8b5cf6;">⏰ ${escHtml(rec.timing)}</div>` : ''}
-      </div>
-    `;
-  }).join('');
-
-  // キーコート
-  const quotesHtml = (data.key_quotes || []).map(q => {
-    const type = q.highlight_type || 'neutral';
-    return `
-      <div class="quote-card ${type}">
-        <div class="quote-text">"${escHtml(q.quote)}"</div>
-        ${q.context ? `<div class="quote-context">→ ${escHtml(q.context)}</div>` : ''}
-      </div>
-    `;
-  }).join('');
-
-  const hasJobMatch = state.targetCompany && data.job_match;
-
-  // 求人提案HTML
-  const jobSuggestions = data.job_suggestions || [];
-  const jobSuggestionsHtml = jobSuggestions.map((job, idx) => {
-    const matchColor = job.match_score >= 85 ? '#10b981' : job.match_score >= 70 ? '#8b5cf6' : '#f59e0b';
-    const rankColors = ['linear-gradient(135deg,#8b5cf6,#ec4899)', 'linear-gradient(135deg,#06b6d4,#8b5cf6)', 'linear-gradient(135deg,#f59e0b,#ec4899)', 'linear-gradient(135deg,#10b981,#06b6d4)'];
-    const rankBg = rankColors[idx % rankColors.length];
-    const reasonsList = (job.match_reasons || []).map(r => `<li class="text-xs text-gray-600 mb-0.5">✓ ${escHtml(r)}</li>`).join('');
-    const appealPts = job.appeal_points || [];
-    const appealList = appealPts.length
-      ? `<div style="margin:0 0 .5rem;padding:.5rem .65rem;background:#faf5ff;border-radius:10px;border:1px solid #ede9fe;">
-          <div style="font-size:.68rem;font-weight:700;color:#6d28d9;margin-bottom:.35rem;">求人情報からのアピールポイント</div>
-          <ul style="margin:0;padding-left:1rem;list-style:disc;">${appealPts.map(a => `<li class="text-xs text-gray-700 mb-0.5">${escHtml(a)}</li>`).join('')}</ul>
-        </div>`
-      : '';
-    const box = (title, body, bg, border, titleColor) => body
-      ? `<div style="margin:0 0 .5rem;padding:.55rem .65rem;background:${bg};border-radius:10px;border:1px solid ${border};">
-          <div style="font-size:.68rem;font-weight:700;color:${titleColor};margin-bottom:.35rem;">${title}</div>
-          <p style="margin:0;font-size:.8125rem;color:#374151;line-height:1.65;">${escHtml(body)}</p>
-        </div>`
-      : '';
-    const whyFit = box('なぜあなたに向いているか（面談を踏まえて）', job.why_fit_for_candidate, '#f0fdf4', '#bbf7d0', '#15803d');
-    const whyRec = box('なぜこの求人をおすすめするか', job.why_recommend, '#eff6ff', '#bfdbfe', '#1d4ed8');
-    const closing = job.closing_to_candidate
-      ? `<div style="margin:.5rem 0;padding:.6rem .7rem;background:linear-gradient(135deg,#faf5ff,#fdf4ff);border-radius:12px;border:1.5px solid #ddd6fe;">
-          <div style="font-size:.68rem;font-weight:700;color:#7c3aed;margin-bottom:.4rem;">💬 求職者へのクロージング</div>
-          <p style="margin:0;font-size:.8125rem;color:#4c1d95;line-height:1.7;">${escHtml(job.closing_to_candidate)}</p>
-        </div>`
-      : '';
-    const skillCareer = box('手に職・スキルアップ・キャリアの広がり', job.skill_career_message, '#fffbeb', '#fde68a', '#b45309');
-    return `
-      <div style="border:1.5px solid #ede9fe;border-radius:16px;padding:1rem;margin-bottom:0.875rem;background:white;transition:box-shadow .2s;" onmouseover="this.style.boxShadow='0 6px 20px rgba(139,92,246,.14)'" onmouseout="this.style.boxShadow='none'">
-        <div style="display:flex;align-items:flex-start;gap:0.875rem;">
-          <div style="width:38px;height:38px;border-radius:50%;background:${rankBg};color:white;font-size:.8rem;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;">No.${job.rank || (idx+1)}</div>
-          <div style="flex:1;min-width:0;">
-            <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.375rem;">
-              <span style="font-size:.9375rem;font-weight:700;color:#3b0764;">${escHtml(job.company || '')}</span>
-              <span style="font-size:.75rem;color:white;background:${matchColor};border-radius:50px;padding:.1rem .55rem;font-weight:700;">マッチ度 ${job.match_score || ''}%</span>
-            </div>
-            <div style="font-size:.8125rem;font-weight:600;color:#8b5cf6;margin-bottom:.5rem;">${escHtml(job.position || '')}</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.25rem .75rem;margin-bottom:.625rem;">
-              <div style="font-size:.75rem;color:#374151;"><span style="color:#a78bfa;font-weight:600;">💰 </span>${escHtml(job.annual_salary || job.monthly_salary || '')}</div>
-              <div style="font-size:.75rem;color:#374151;"><span style="color:#a78bfa;font-weight:600;">📍 </span>${escHtml(job.location || '')}</div>
-              <div style="font-size:.75rem;color:#374151;"><span style="color:#a78bfa;font-weight:600;">📅 </span>${escHtml(job.holiday || '')}</div>
-              <div style="font-size:.75rem;color:#374151;"><span style="color:#a78bfa;font-weight:600;">⏰ </span>${escHtml(job.overtime || '')}</div>
-            </div>
-            ${whyFit}
-            ${whyRec}
-            ${appealList}
-            ${reasonsList ? `<div style="font-size:.68rem;font-weight:700;color:#5b21b6;margin:.25rem 0 .35rem;">おすすめの要点</div><ul style="margin:0 0 .5rem;padding-left:.25rem;list-style:none;">${reasonsList}</ul>` : ''}
-            ${skillCareer}
-            ${closing}
-            <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
-              ${job.skill_growth ? `<span style="font-size:.7rem;background:#f5f3ff;color:#5b21b6;border:1px solid #ede9fe;border-radius:50px;padding:.1rem .5rem;">📈 ${escHtml(job.skill_growth)}</span>` : ''}
-              ${job.career_path ? `<span style="font-size:.7rem;background:#fdf4ff;color:#ec4899;border:1px solid #fce7f3;border-radius:50px;padding:.1rem .5rem;">🚀 ${escHtml(job.career_path)}</span>` : ''}
-            </div>
-            ${job.caution ? `<div style="font-size:.7rem;color:#b45309;background:#fffbeb;border-radius:8px;padding:.25rem .5rem;margin-top:.375rem;">⚠️ ${escHtml(job.caution)}</div>` : ''}
-          </div>
-        </div>
-      </div>
-    `;
-  }).join('');
-
-  // キャリアビジョンHTML
-  const vision = data.career_vision || {};
-  const visionHtml = (vision.short_term || vision.mid_term || vision.salary_potential) ? `
-    <div class="advice-inner-card mb-5">
-      <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">🔭 キャリアビジョン</h3>
-      <div style="display:flex;flex-direction:column;gap:.625rem;">
-        ${vision.short_term ? `
-          <div style="display:flex;gap:.625rem;align-items:flex-start;">
-            <div style="min-width:52px;background:linear-gradient(135deg,#8b5cf6,#a78bfa);color:white;font-size:.65rem;font-weight:700;border-radius:6px;padding:.2rem .4rem;text-align:center;">3年後</div>
-            <p class="text-sm text-gray-700">${escHtml(vision.short_term)}</p>
-          </div>` : ''}
-        ${vision.mid_term ? `
-          <div style="display:flex;gap:.625rem;align-items:flex-start;">
-            <div style="min-width:52px;background:linear-gradient(135deg,#ec4899,#f472b6);color:white;font-size:.65rem;font-weight:700;border-radius:6px;padding:.2rem .4rem;text-align:center;">5年後</div>
-            <p class="text-sm text-gray-700">${escHtml(vision.mid_term)}</p>
-          </div>` : ''}
-        ${vision.salary_potential ? `
-          <div style="display:flex;gap:.625rem;align-items:flex-start;">
-            <div style="min-width:52px;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:white;font-size:.65rem;font-weight:700;border-radius:6px;padding:.2rem .4rem;text-align:center;">年収</div>
-            <p class="text-sm text-gray-700">${escHtml(vision.salary_potential)}</p>
-          </div>` : ''}
-      </div>
-    </div>
-  ` : '';
-
-  // 鬼CAモード：老後資金シミュレーション
-  const fr = data.financial_reality || {};
-  const financialHtml = (isOni && fr.reality_check) ? `
-    <div class="oni-financial-card mb-5">
-      <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.75rem;">
-        <span style="font-size:1.5rem;">🔥</span>
-        <h3 style="font-size:.95rem;font-weight:800;color:#991b1b;margin:0;">老後資金リアルシミュレーション</h3>
-      </div>
-      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;margin-bottom:.75rem;">
-        ${fr.current_age ? `<div class="oni-metric"><div class="oni-metric-label">現在の年齢</div><div class="oni-metric-value">${escHtml(fr.current_age)}歳</div></div>` : ''}
-        ${fr.years_to_retirement ? `<div class="oni-metric"><div class="oni-metric-label">定年まで</div><div class="oni-metric-value">${escHtml(fr.years_to_retirement)}年</div></div>` : ''}
-        ${fr.retirement_years ? `<div class="oni-metric"><div class="oni-metric-label">退職後の生活</div><div class="oni-metric-value">${escHtml(fr.retirement_years)}年</div></div>` : ''}
-        ${fr.monthly_expense ? `<div class="oni-metric"><div class="oni-metric-label">月間想定支出</div><div class="oni-metric-value">${escHtml(fr.monthly_expense)}</div></div>` : ''}
-        ${fr.pension_estimate ? `<div class="oni-metric"><div class="oni-metric-label">想定年金月額</div><div class="oni-metric-value">${escHtml(fr.pension_estimate)}</div></div>` : ''}
-        ${fr.monthly_shortfall ? `<div class="oni-metric"><div class="oni-metric-label">月間不足額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.monthly_shortfall)}</div></div>` : ''}
-        ${fr.total_shortfall ? `<div class="oni-metric"><div class="oni-metric-label">退職後の総不足額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.total_shortfall)}</div></div>` : ''}
-        ${fr.required_monthly_saving ? `<div class="oni-metric"><div class="oni-metric-label">毎月必要な貯金額</div><div class="oni-metric-value oni-metric-danger">${escHtml(fr.required_monthly_saving)}</div></div>` : ''}
-      </div>
-      ${fr.pension_risk ? `
-      <div style="background:rgba(180,69,9,.08);border-radius:10px;padding:.75rem;border-left:4px solid #f59e0b;margin-bottom:.5rem;">
-        <div style="font-size:.7rem;font-weight:700;color:#b45309;margin-bottom:.35rem;">⚠️ 年金リスク（少子高齢化）</div>
-        <p style="margin:0;font-size:.8125rem;color:#78350f;line-height:1.7;">${escHtml(fr.pension_risk)}</p>
-      </div>
-      ` : ''}
-      <div style="background:rgba(127,29,29,.08);border-radius:10px;padding:.75rem;border-left:4px solid #dc2626;">
-        <div style="font-size:.7rem;font-weight:700;color:#991b1b;margin-bottom:.35rem;">💀 現実チェック</div>
-        <p style="margin:0;font-size:.8125rem;color:#7f1d1d;line-height:1.7;">${escHtml(fr.reality_check)}</p>
-      </div>
-    </div>
-  ` : '';
-
-  // 鬼CAモードバナー
-  const oniBannerHtml = isOni ? `
-    <div class="oni-banner mb-5">
-      <span style="font-size:1.25rem;">👹</span>
-      <div>
-        <div style="font-weight:800;font-size:.875rem;">鬼CAモード ON</div>
-        <div style="font-size:.75rem;opacity:.9;">あなたの人生を本気で守るための辛口キャリアアドバイスです</div>
-      </div>
-    </div>
-  ` : '';
-
-  container.innerHTML = `
-    ${oniBannerHtml}
-
-    <!-- サマリーセクション -->
-    <div class="summary-section flex items-start gap-4 mb-5${isOni ? ' oni-summary' : ''}">
-      <div class="overall-score-badge${isOni ? ' oni-score' : ''}">${score}</div>
-      <div class="flex-1">
-        <div class="text-xs font-semibold uppercase tracking-wide mb-1" style="color:${isOni ? '#dc2626' : '#8b5cf6'};">${isOni ? '🔥 鬼CA総合スコア' : '総合スコア'}</div>
-        <p class="text-sm leading-relaxed" style="color:${isOni ? '#1c1917' : '#374151'};">${escHtml(data.summary)}</p>
-      </div>
-    </div>
-
-    <!-- 老後資金シミュレーション（鬼CAモード時のみ） -->
-    ${financialHtml}
-
-    <!-- キーメトリクス -->
-    ${(data.key_metrics || []).length > 0 ? `
-      <div id="key-metrics-container" class="mb-5"></div>
-    ` : ''}
-
-    <!-- スコアブレークダウン & レーダーチャート -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-      <div class="advice-inner-card">
-        <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">📊 評価スコア詳細</h3>
-        <div id="score-breakdown-container"></div>
-      </div>
-      <div class="advice-inner-card">
-        <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">🕸️ スキルレーダー</h3>
-        <div class="radar-container">
-          <canvas id="skills-radar-chart"></canvas>
-        </div>
-      </div>
-    </div>
-
-    <!-- 🌟 求人提案（メインセクション） -->
-    ${jobSuggestionsHtml ? `
-      <div class="advice-inner-card mb-5" style="border-color:rgba(139,92,246,.25);">
-        <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;">
-          <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#8b5cf6,#ec4899);display:flex;align-items:center;justify-content:center;font-size:.875rem;">🌟</div>
-          <h3 class="text-sm font-bold" style="color:#5b21b6;">おすすめ求人ピックアップ</h3>
-          <span style="font-size:.65rem;background:#f3e8ff;color:#7c3aed;border:1px solid #ddd6fe;border-radius:50px;padding:.1rem .5rem;font-weight:700;">AIマッチング</span>
-        </div>
-        <p style="font-size:.75rem;color:#94a3b8;margin-bottom:1rem;">求人情報（業種別まとめ）から<strong style="color:#7c3aed;">3件</strong>を選定。面談内容を踏まえ、向いている理由・おすすめ理由・クロージング・成長の観点も表示します。</p>
-        ${jobSuggestionsHtml}
-      </div>
-    ` : ''}
-
-    <!-- キャリアビジョン -->
-    ${visionHtml}
-
-    <!-- キャリアタイムライン -->
-    ${(data.career_timeline || []).length > 0 ? `
-      <div class="advice-inner-card mb-5">
-        <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">📅 キャリア年表</h3>
-        <div id="career-timeline-container"></div>
-      </div>
-    ` : ''}
-
-    <!-- 面談での注目発言 -->
-    ${quotesHtml ? `
-      <div class="advice-inner-card mb-5">
-        <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">💬 面談での注目発言</h3>
-        ${quotesHtml}
-      </div>
-    ` : ''}
-
-    <!-- 強み・課題 -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-      ${strengthsHtml ? `
-        <div class="advice-inner-card">
-          <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">💪 強み・アピールポイント</h3>
-          ${strengthsHtml}
-        </div>
-      ` : ''}
-      ${growthAreasHtml ? `
-        <div class="advice-inner-card">
-          <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">📈 成長・改善エリア</h3>
-          ${growthAreasHtml}
-        </div>
-      ` : ''}
-    </div>
-
-    <!-- 推奨アクション -->
-    ${recsHtml ? `
-      <div class="advice-inner-card mb-5">
-        <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">✅ 推奨アクションアイテム</h3>
-        ${recsHtml}
-      </div>
-    ` : ''}
-
-    <!-- 応募先マッチ度（応募先入力時のみ） -->
-    ${hasJobMatch ? `
-      <div class="advice-inner-card mb-5">
-        <h3 class="text-sm font-bold mb-3" style="color:#5b21b6;">🎯 応募先マッチ度分析</h3>
-        <div id="job-match-container"></div>
-      </div>
-    ` : ''}
-  `;
-
-  // チャートを描画
-  renderCharts(data);
-}
-
-/**
- * チャートを描画する（タブ切り替え時にも呼ばれる）
- */
-function renderCharts(data) {
-  if (!data) return;
-
-  // キーメトリクス
-  if (data.key_metrics && data.key_metrics.length > 0) {
-    renderKeyMetrics('key-metrics-container', data.key_metrics);
-  }
-
-  // スコアブレークダウン
-  if (data.score_breakdown) {
-    renderScoreBreakdown('score-breakdown-container', data.score_breakdown);
-  }
-
-  // レーダーチャート
-  if (data.skills_radar) {
-    renderSkillsRadar('skills-radar-chart', data.skills_radar);
-  }
-
-  // キャリアタイムライン
-  if (data.career_timeline && data.career_timeline.length > 0) {
-    renderCareerTimeline('career-timeline-container', data.career_timeline);
-  }
-
-  // 求人マッチゲージ
-  if (data.job_match && state.targetCompany) {
-    renderJobMatchGauge('job-match-container', data.job_match, state.targetCompany);
-  }
-}
-
 // ============================================
 // Download Handlers
 // ============================================
@@ -1159,12 +809,10 @@ function downloadCv() {
 
 function triggerDownload(blob, filename) {
   try {
-    // FileSaver.js が読み込まれていればそちらを優先（iOS/Edge対応）
     if (typeof saveAs !== 'undefined') {
       saveAs(blob, filename);
       return;
     }
-    // フォールバック: anchor要素によるダウンロード
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -1257,7 +905,6 @@ function getCurrentDateJP() {
 // Chat Panel (AI修正機能)
 // ============================================
 function initChatPanels() {
-  // クイックアクションボタン
   document.querySelectorAll('.quick-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const targetId = btn.getAttribute('data-target');
@@ -1266,7 +913,6 @@ function initChatPanels() {
     });
   });
 
-  // Ctrl+Enter で送信
   document.getElementById('resume-chat-input')?.addEventListener('keydown', e => {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') handleRevision('resume');
   });
@@ -1274,7 +920,6 @@ function initChatPanels() {
     if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') handleRevision('work_history');
   });
 
-  // 送信ボタン
   document.getElementById('resume-chat-submit')?.addEventListener('click', () => handleRevision('resume'));
   document.getElementById('cv-chat-submit')?.addEventListener('click', () => handleRevision('work_history'));
 }
@@ -1306,7 +951,6 @@ async function handleRevision(docType) {
     return;
   }
 
-  // ローディング
   submitBtn.disabled = true;
   submitBtn.textContent = '🔄 修正中...';
   clearError();
@@ -1360,7 +1004,6 @@ function addRevisionHistoryItem(histId, instruction) {
   const container = document.getElementById(histId);
   if (!container) return;
 
-  // 最大5件 (古いものを削除)
   const existing = container.querySelectorAll('.history-item');
   if (existing.length >= 5) existing[existing.length - 1].remove();
 

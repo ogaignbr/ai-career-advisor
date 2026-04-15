@@ -9,9 +9,6 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-
   <!-- PDF.js CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
@@ -22,7 +19,7 @@
   <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 
   <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/style.css?v=8">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -648,7 +645,33 @@
             </div>
             <div>
               <label class="input-label" for="targetPosition">応募職種</label>
-              <input id="targetPosition" type="text" placeholder="例：営業マネージャー、Webエンジニア" class="app-input">
+              <div class="select-wrapper">
+                <select id="targetPosition" class="app-select">
+                  <option value="">✓ 指定なし（標準）</option>
+                  <option value="施工管理・建設・土木">1. 施工管理・建設・土木</option>
+                  <option value="営業（法人・個人・ルート）">2. 営業（法人・個人・ルート）</option>
+                  <option value="一般事務・営業事務・受付">3. 一般事務・営業事務・受付</option>
+                  <option value="経理・財務・会計">4. 経理・財務・会計</option>
+                  <option value="人事・総務・労務">5. 人事・総務・労務</option>
+                  <option value="ITエンジニア（SE・プログラマ）">6. ITエンジニア（SE・プログラマ）</option>
+                  <option value="Web・マーケティング・広告">7. Web・マーケティング・広告</option>
+                  <option value="製造・工場・生産管理">8. 製造・工場・生産管理</option>
+                  <option value="物流・倉庫・配送ドライバー">9. 物流・倉庫・配送ドライバー</option>
+                  <option value="接客・販売・店舗管理">10. 接客・販売・店舗管理</option>
+                  <option value="飲食・調理・フードサービス">11. 飲食・調理・フードサービス</option>
+                  <option value="医療・介護・福祉">12. 医療・介護・福祉</option>
+                  <option value="教育・保育・インストラクター">13. 教育・保育・インストラクター</option>
+                  <option value="不動産・住宅・設備管理">14. 不動産・住宅・設備管理</option>
+                  <option value="コンサルタント・専門職">15. コンサルタント・専門職</option>
+                  <option value="クリエイティブ（デザイン・映像）">16. クリエイティブ（デザイン・映像）</option>
+                  <option value="警備・清掃・ビルメンテナンス">17. 警備・清掃・ビルメンテナンス</option>
+                  <option value="公務員・団体職員">18. 公務員・団体職員</option>
+                  <option value="other">その他（自由入力）</option>
+                </select>
+              </div>
+              <div id="otherPositionWrapper" class="hidden mt-2">
+                <input id="otherPositionInput" type="text" placeholder="職種を入力してください" class="app-input">
+              </div>
             </div>
           </div>
  
@@ -740,7 +763,7 @@
 
         <!-- 生成ボタン -->
         <button id="generateBtn" disabled class="btn-generate">
-          ✨ 書類を自動生成する
+          書類を自動生成する
         </button>
         <p class="text-center text-xs text-gray-400 pb-2">生成には通常30〜60秒かかります</p>
 
@@ -757,7 +780,6 @@
           <div class="tab-strip no-print">
             <button class="tab-pill active" data-tab="resume">📋 履歴書</button>
             <button class="tab-pill" data-tab="work_history">📑 職務経歴書</button>
-            <button class="tab-pill" data-tab="career_advice">💡 アドバイス</button>
           </div>
 
           <!-- ダウンロードバー -->
@@ -787,10 +809,10 @@
               <p class="empty-state-title font-display">書類がまだ生成されていません</p>
               <p class="empty-state-text">
                 左側のフォームに面談内容を入力し、<br>
-                「✨ 書類を自動生成する」を押してください。<br>
+                「書類を自動生成する」を押してください。<br>
                 <span class="text-xs block mt-2">
                   AIが面談テキスト・既存書類から情報を抽出し、<br>
-                  履歴書・職務経歴書・キャリアアドバイスを自動生成します。
+                  履歴書・職務経歴書を自動生成します。
                 </span>
               </p>
             </div>
@@ -846,11 +868,6 @@
         </div>
               </div>
 
-              <!-- キャリアアドバイスパネル -->
-              <div id="panel-career_advice" class="hidden">
-                <div id="career-advice-content"></div>
-              </div>
-
             </div>
 
           </div>
@@ -864,20 +881,19 @@
 
   <!-- フッター -->
   <footer class="app-footer no-print">
-    <p class="text-xs text-center" style="color: #c4b5fd;">
-      ✨ CAサポートAPP &nbsp;|&nbsp; データはブラウザ内のみで処理されます
+    <p class="text-xs text-center app-footer-text">
+      CAサポートAPP &nbsp;|&nbsp; データはブラウザ内のみで処理されます
     </p>
   </footer>
 
   </div><!-- /#doc-create-section -->
 
   <!-- JS (読み込み順序重要) -->
-  <script src="js/resume-template.js?v=7"></script>
-  <script src="js/pdf-reader.js?v=7"></script>
-  <script src="js/openai.js?v=7"></script>
-  <script src="js/doc-gen.js?v=7"></script>
-  <script src="js/charts.js?v=7"></script>
-  <script src="js/app.js?v=7"></script>
+  <script src="js/resume-template.js?v=8"></script>
+  <script src="js/pdf-reader.js?v=8"></script>
+  <script src="js/openai.js?v=8"></script>
+  <script src="js/doc-gen.js?v=8"></script>
+  <script src="js/app.js?v=8"></script>
 
   <script>
     document.addEventListener('DOMContentLoaded', () => {
@@ -933,6 +949,7 @@
   <!-- ===== 画面切り替えナビゲーション ===== -->
   <script>
     function showCover() {
+      document.body.classList.remove('app-dark');
       document.getElementById('cover-screen').style.display = '';
       document.getElementById('doc-create-section').style.display = 'none';
       document.getElementById('ts-overlay').classList.remove('active');
@@ -944,6 +961,7 @@
       document.getElementById('manual-iframe').src = 'about:blank';
     }
     function showTalkScript() {
+      document.body.classList.remove('app-dark');
       document.getElementById('cover-screen').style.display = 'none';
       document.getElementById('doc-create-section').style.display = 'none';
       document.getElementById('ts-overlay').classList.add('active');
@@ -952,6 +970,7 @@
       document.getElementById('doc-back-btn').classList.remove('visible');
     }
     function showDocCreate() {
+      document.body.classList.add('app-dark');
       document.getElementById('cover-screen').style.display = 'none';
       document.getElementById('doc-create-section').style.display = '';
       document.getElementById('ts-overlay').classList.remove('active');
