@@ -304,6 +304,7 @@ strong { font-weight: 700; }
 .tag-m { background: var(--c-tag-mat-bg); color: var(--c-tag-mat-tx); }
 .tag-a { background: var(--c-tag-ai-bg);  color: var(--c-tag-ai-tx);  }
 .tag-s { background: var(--c-tag-sub-bg); color: var(--c-tag-sub-tx); }
+.tag-req { background: #fee2e2; color: #b91c1c; }
 
 /* =============================================
    ANNOUNCE CARD
@@ -616,15 +617,15 @@ strong { font-weight: 700; }
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
-          <div class="ci-q">転職の目標時期はいつ頃をお考えですか？</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+          <div class="ci-q">転職の目標時期はいつ頃をお考えですか？<small>（具体的な日程も聞ければグッド）</small></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span></div>
         </div>
       </div>
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">他社のキャリアアドバイザー（CA）は活用されていますか？<small>活用中 → サポート内容を確認　／　未活用 → クロージングへの布石として記録</small></div>
-          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
     </div>
@@ -707,14 +708,14 @@ strong { font-weight: 700; }
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">前職の年収はどのくらいでしたか？（月給・手当・ボーナス含む）</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">希望年収・月収の最低ラインはどのくらいですか？</div>
-          <div class="ci-tags"><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
       <div class="ci" onclick="toggleCheck(this)">
@@ -735,7 +736,7 @@ strong { font-weight: 700; }
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">仕事を選ぶ上で<strong>絶対に譲れない条件を1つ</strong>教えてください</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
       <div class="ci" onclick="toggleCheck(this)">
@@ -811,14 +812,14 @@ strong { font-weight: 700; }
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">保有資格・免許、勉強中のものはありますか？</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">運転免許の有無・通勤手段（電車 or 車）を確認した</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
     </div>
@@ -905,13 +906,6 @@ strong { font-weight: 700; }
           <div class="ci-tags"><span class="tag tag-i">面接</span></div>
         </div>
       </div>
-      <div class="ci" onclick="toggleCheck(this)">
-        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="ci-body">
-          <div class="ci-q">職場での自分を一言で表すと？</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
-        </div>
-      </div>
     </div>
 
     <div class="note-box">
@@ -954,14 +948,7 @@ strong { font-weight: 700; }
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">弊社を受けた理由を教えてください</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
-        </div>
-      </div>
-      <div class="ci" onclick="toggleCheck(this)">
-        <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <div class="ci-body">
-          <div class="ci-q">今回、事務職に挑戦したい理由は何ですか？</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span></div>
         </div>
       </div>
     </div>
@@ -975,14 +962,14 @@ strong { font-weight: 700; }
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">5年後・10年後、どんなビジョンを持っていますか？<small>（年収を上げたい・役割・役職を持ちたい・スキルをつけたい・ワークライフバランスを重視したい など）</small></div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
       <div class="ci" onclick="toggleCheck(this)">
         <div class="ci-box"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,9 11,1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div class="ci-body">
           <div class="ci-q">今後どんな仕事・人生を送りたいですか？</div>
-          <div class="ci-tags"><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
+          <div class="ci-tags"><span class="tag tag-req">必須</span><span class="tag tag-i">面接</span><span class="tag tag-m">併願マッチング</span></div>
         </div>
       </div>
     </div>
