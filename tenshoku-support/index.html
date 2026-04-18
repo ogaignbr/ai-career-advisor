@@ -43,214 +43,17 @@ body {
 }
 
 /* =====================
-   HERO SLIDER
+   HERO
    ===================== */
 .hero {
-  position: relative;
   width: 100%;
-  height: 85vh;
-  min-height: 500px;
-  max-height: 800px;
-  overflow: hidden;
   background: var(--navy);
 }
 
-.hero-slider {
-  position: absolute;
-  inset: 0;
+.hero-img {
   width: 100%;
-  height: 100%;
-}
-
-.hero-slide {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  transform: scale(1.04);
-}
-
-.hero-slide.active {
-  opacity: 1;
-  transform: scale(1);
-  z-index: 2;
-}
-
-.hero-slide.leaving {
-  opacity: 0;
-  transform: scale(0.97);
-  z-index: 1;
-}
-
-.hero-slide-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
+  height: auto;
   display: block;
-}
-
-.hero-slide-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(10, 15, 30, 0.45) 0%,
-    rgba(10, 15, 30, 0.20) 40%,
-    rgba(10, 15, 30, 0.25) 60%,
-    rgba(10, 15, 30, 0.70) 100%
-  );
-  z-index: 1;
-}
-
-.hero-content {
-  position: absolute;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: flex-start;
-  padding: 0 6% 8%;
-}
-
-.hero-label {
-  display: inline-block;
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: #5ffbf1;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  background: rgba(12, 186, 186, 0.18);
-  border: 1px solid rgba(95, 251, 241, 0.35);
-  border-radius: 4px;
-  padding: 0.35rem 1rem;
-  margin-bottom: 1rem;
-  backdrop-filter: blur(4px);
-}
-
-.hero-main-copy {
-  font-size: clamp(2rem, 5.5vw, 3.6rem);
-  font-weight: 900;
-  color: #fff;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-  margin-bottom: 1rem;
-  text-shadow: 0 2px 20px rgba(0,0,0,0.4);
-}
-
-.hero-main-copy span {
-  color: #5ffbf1;
-  text-shadow: 0 0 30px rgba(95,251,241,0.3);
-}
-
-.hero-sub-copy {
-  font-size: clamp(0.88rem, 1.8vw, 1.1rem);
-  color: rgba(255, 255, 255, 0.85);
-  line-height: 1.8;
-  max-width: 520px;
-  text-shadow: 0 1px 8px rgba(0,0,0,0.4);
-}
-
-/* Slide indicators */
-.hero-indicators {
-  position: absolute;
-  bottom: 2.5rem;
-  right: 6%;
-  z-index: 12;
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.hero-indicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.6);
-  background: transparent;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  padding: 0;
-}
-
-.hero-indicator.active {
-  background: #5ffbf1;
-  border-color: #5ffbf1;
-  box-shadow: 0 0 12px rgba(95,251,241,0.5);
-  transform: scale(1.15);
-}
-
-.hero-indicator:hover {
-  border-color: #fff;
-}
-
-/* Nav arrows */
-.hero-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 12;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.3);
-  background: rgba(0,0,0,0.2);
-  backdrop-filter: blur(6px);
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  padding: 0;
-}
-
-.hero-nav:hover {
-  background: rgba(12,186,186,0.4);
-  border-color: rgba(95,251,241,0.6);
-}
-
-.hero-nav--prev { left: 1.5rem; }
-.hero-nav--next { right: 1.5rem; }
-
-.hero-nav svg {
-  width: 20px;
-  height: 20px;
-  stroke: #fff;
-  stroke-width: 2.5;
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-/* Progress bar */
-.hero-progress {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #5ffbf1, #0CBABA);
-  z-index: 12;
-  transition: width 0.3s linear;
-}
-
-@media (max-width: 768px) {
-  .hero { height: 75vh; min-height: 420px; }
-  .hero-content { padding: 0 5% 18%; }
-  .hero-nav { width: 40px; height: 40px; }
-  .hero-nav--prev { left: 0.8rem; }
-  .hero-nav--next { right: 0.8rem; }
-  .hero-indicators { bottom: 1.5rem; right: 50%; transform: translateX(50%); }
-
-  /* モバイルでは画像全体が見えるようにcontainで表示 */
-  .hero-slide-img {
-    object-fit: contain;
-    object-position: center center;
-    animation: none;
-  }
 }
 
 /* =====================
@@ -437,7 +240,8 @@ body {
   outline-offset: 2px;
 }
 
-#sekokanri-lp-overlay {
+#sekokanri-lp-overlay,
+#teian-eigyo-lp-overlay {
   display: none;
   position: fixed;
   inset: 0;
@@ -445,11 +249,13 @@ body {
   background: #f0f4f1;
 }
 
-#sekokanri-lp-overlay.active {
+#sekokanri-lp-overlay.active,
+#teian-eigyo-lp-overlay.active {
   display: block;
 }
 
-#sekokanri-lp-back {
+#sekokanri-lp-back,
+#teian-eigyo-lp-back {
   position: fixed;
   top: 12px;
   right: 12px;
@@ -470,16 +276,172 @@ body {
   transition: background 0.15s, transform 0.1s;
 }
 
-#sekokanri-lp-back:hover {
+#sekokanri-lp-back:hover,
+#teian-eigyo-lp-back:hover {
   background: #0d8579;
   transform: translateY(-1px);
 }
 
-#sekokanri-lp-iframe {
+#teian-eigyo-lp-back {
+  background: #0c8069;
+}
+
+#teian-eigyo-lp-back:hover {
+  background: #0a6b58;
+}
+
+#sekokanri-lp-iframe,
+#teian-eigyo-lp-iframe {
   width: 100%;
   height: 100%;
   border: none;
   display: block;
+}
+
+/* =====================
+   CA CAROUSEL
+   ===================== */
+.ca-section {
+  background: var(--navy);
+  padding: 80px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.ca-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 600px 400px at 20% 50%, rgba(12,186,186,0.08), transparent),
+    radial-gradient(ellipse 500px 350px at 80% 30%, rgba(95,251,241,0.05), transparent);
+  pointer-events: none;
+}
+
+.ca-section .section-header {
+  position: relative;
+  z-index: 2;
+  padding: 0 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.ca-section .section-heading {
+  color: #fff;
+}
+
+.ca-section .section-heading::after {
+  background: linear-gradient(90deg, #5ffbf1, var(--primary));
+}
+
+.ca-section .section-subheading {
+  color: rgba(255,255,255,0.65);
+}
+
+.ca-track-wrapper {
+  position: relative;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 8%, #000 92%, transparent 100%);
+}
+
+.ca-track {
+  display: flex;
+  gap: 2rem;
+  width: max-content;
+  animation: ca-scroll 35s linear infinite;
+  padding: 1rem 0;
+}
+
+.ca-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes ca-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ca-card {
+  flex-shrink: 0;
+  width: 260px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 20px;
+  overflow: hidden;
+  backdrop-filter: blur(12px);
+  transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  cursor: default;
+}
+
+.ca-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 20px 50px rgba(12,186,186,0.2), 0 0 0 1px rgba(95,251,241,0.3);
+  border-color: rgba(95,251,241,0.35);
+}
+
+.ca-card-img-wrap {
+  width: 100%;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ca-card-img-wrap::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to top, rgba(26,26,46,0.9), transparent);
+  pointer-events: none;
+}
+
+.ca-card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  transition: transform 0.5s ease;
+}
+
+.ca-card:hover .ca-card-img-wrap img {
+  transform: scale(1.08);
+}
+
+.ca-card-body {
+  padding: 1.2rem 1.3rem 1.5rem;
+  text-align: center;
+}
+
+.ca-card-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.04em;
+}
+
+.ca-card-role {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: #5ffbf1;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.7rem;
+  text-transform: uppercase;
+}
+
+.ca-card-msg {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+  line-height: 1.7;
+}
+
+@media (max-width: 768px) {
+  .ca-section { padding: 60px 0; }
+  .ca-card { width: 220px; }
+  .ca-card-img-wrap { height: 250px; }
+  .ca-track { gap: 1.2rem; animation-duration: 25s; }
 }
 
 /* =====================
@@ -640,16 +602,11 @@ footer .footer-name {
 /* =====================
    REDUCED MOTION
    ===================== */
-@keyframes hero-pan {
-  0%   { object-position: 20% center; }
-  100% { object-position: 80% center; }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
-  .hero-slide { opacity: 0; transform: none !important; }
-  .hero-slide.active { opacity: 1; }
   .fade-in, .career-card, .reason-item { opacity: 1 !important; transform: none !important; }
+  .ca-track { animation: none !important; flex-wrap: wrap; justify-content: center; gap: 1.5rem; padding: 0 1.5rem; }
+  .ca-card { opacity: 1 !important; }
 }
 </style>
 </head>
@@ -657,41 +614,7 @@ footer .footer-name {
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" aria-label="ヒーローセクション">
-  <div class="hero-slider">
-    <div class="hero-slide active" data-index="0">
-      <img class="hero-slide-img" src="LP画像/表紙 (1).webp" alt="一般事務から施工管理へ ― 輝く未来へのキャリアチェンジ">
-      <div class="hero-slide-overlay"></div>
-    </div>
-    <div class="hero-slide" data-index="1">
-      <img class="hero-slide-img" src="LP画像/表紙 (2).webp" alt="工場勤務からビジネスコンサルタントへのキャリアチェンジ">
-      <div class="hero-slide-overlay"></div>
-    </div>
-    <div class="hero-slide" data-index="2">
-      <img class="hero-slide-img" src="LP画像/表紙⑶.webp" alt="コンビニ店員からIT事務へのキャリアチェンジ">
-      <div class="hero-slide-overlay"></div>
-    </div>
-  </div>
-
-  <div class="hero-content">
-    <span class="hero-label">Career Change Support</span>
-    <h1 class="hero-main-copy">あなたの <span>"これから"</span> を、<br>一緒に描く。</h1>
-    <p class="hero-sub-copy">今の自分では想像もできなかった未来が、ここから始まります。</p>
-  </div>
-
-  <button class="hero-nav hero-nav--prev" aria-label="前のスライド">
-    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-  </button>
-  <button class="hero-nav hero-nav--next" aria-label="次のスライド">
-    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
-  </button>
-
-  <div class="hero-indicators">
-    <button class="hero-indicator active" data-slide="0" aria-label="スライド1"></button>
-    <button class="hero-indicator" data-slide="1" aria-label="スライド2"></button>
-    <button class="hero-indicator" data-slide="2" aria-label="スライド3"></button>
-  </div>
-
-  <div class="hero-progress" style="width: 0%"></div>
+  <img class="hero-img" src="LP画像/転職サポート表紙.jpg" alt="転職サポート ― あなたのこれからを一緒に描く">
 </section>
 
 <!-- ===================== INTRO ===================== -->
@@ -721,6 +644,9 @@ footer .footer-name {
       <div class="career-card-body">
         <h3 class="career-card-title">提案営業</h3>
         <p class="career-card-desc">お客様の課題を解決する提案型の営業スタイル。未経験でも丁寧な研修で成長できます。</p>
+        <button type="button" class="career-card-lp-btn" onclick="openTeianEigyoGuide()" aria-label="提案営業のお仕事紹介ページを開く">
+          お仕事紹介を見る
+        </button>
       </div>
     </article>
     <article class="career-card">
@@ -771,6 +697,131 @@ footer .footer-name {
         <p class="career-card-desc">縁の下の力持ちとして会社を支える。ワークライフバランスも取りやすい職種です。</p>
       </div>
     </article>
+  </div>
+</section>
+
+<!-- ===================== CA CAROUSEL ===================== -->
+<section class="ca-section" aria-label="キャリアアドバイザー紹介">
+  <div class="section-header fade-in">
+    <h2 class="section-heading">あなたを支える<br>キャリアアドバイザー</h2>
+    <p class="section-subheading">経験豊富なアドバイザーが、あなたの転職を全力でサポートします</p>
+  </div>
+  <div class="ca-track-wrapper">
+    <div class="ca-track" aria-label="アドバイザー一覧スライダー">
+      <div class="ca-card">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/1.png" alt="キャリアアドバイザー 今村けんと" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">今村 けんと</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">あなたの「やりたい」を形にするお手伝いをします。</p>
+        </div>
+      </div>
+      <div class="ca-card">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/2.png" alt="キャリアアドバイザー 大竹ちほ" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">大竹 ちほ</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">未経験からの挑戦、一緒に乗り越えましょう。</p>
+        </div>
+      </div>
+      <div class="ca-card">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/3.png" alt="キャリアアドバイザー 山田かずき" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">山田 かずき</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">あなたの強みを見つけ、最適なキャリアを提案します。</p>
+        </div>
+      </div>
+      <div class="ca-card">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/4.png" alt="キャリアアドバイザー 小笠原ともひろ" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">小笠原 ともひろ</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">転職の不安を安心に変える。それが私の仕事です。</p>
+        </div>
+      </div>
+      <div class="ca-card">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/5.png" alt="キャリアアドバイザー 工藤みく" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">工藤 みく</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">笑顔で新しいスタートを切れるようサポートします。</p>
+        </div>
+      </div>
+      <div class="ca-card">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/6.png" alt="キャリアアドバイザー 中山けんと" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">中山 けんと</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">あなたの人生の転機に、全力で寄り添います。</p>
+        </div>
+      </div>
+      <div class="ca-card">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/7.png" alt="キャリアアドバイザー 新妻ゆきひで" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">新妻 ゆきひで</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">「自分らしく働く」を一緒に見つけましょう。</p>
+        </div>
+      </div>
+      <!-- 無限ループ用に複製 -->
+      <div class="ca-card" aria-hidden="true">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/1.png" alt="" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">今村 けんと</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">あなたの「やりたい」を形にするお手伝いをします。</p>
+        </div>
+      </div>
+      <div class="ca-card" aria-hidden="true">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/2.png" alt="" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">大竹 ちほ</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">未経験からの挑戦、一緒に乗り越えましょう。</p>
+        </div>
+      </div>
+      <div class="ca-card" aria-hidden="true">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/3.png" alt="" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">山田 かずき</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">あなたの強みを見つけ、最適なキャリアを提案します。</p>
+        </div>
+      </div>
+      <div class="ca-card" aria-hidden="true">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/4.png" alt="" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">小笠原 ともひろ</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">転職の不安を安心に変える。それが私の仕事です。</p>
+        </div>
+      </div>
+      <div class="ca-card" aria-hidden="true">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/5.png" alt="" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">工藤 みく</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">笑顔で新しいスタートを切れるようサポートします。</p>
+        </div>
+      </div>
+      <div class="ca-card" aria-hidden="true">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/6.png" alt="" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">中山 けんと</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">あなたの人生の転機に、全力で寄り添います。</p>
+        </div>
+      </div>
+      <div class="ca-card" aria-hidden="true">
+        <div class="ca-card-img-wrap"><img src="CA宣材写真/7.png" alt="" loading="lazy"></div>
+        <div class="ca-card-body">
+          <p class="ca-card-name">新妻 ゆきひで</p>
+          <p class="ca-card-role">Career Advisor</p>
+          <p class="ca-card-msg">「自分らしく働く」を一緒に見つけましょう。</p>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -830,6 +881,12 @@ footer .footer-name {
   <iframe id="sekokanri-lp-iframe" title="施工管理のお仕事紹介" src="about:blank"></iframe>
 </div>
 
+<div id="teian-eigyo-lp-overlay" role="dialog" aria-modal="true" aria-labelledby="teian-eigyo-lp-title" aria-hidden="true">
+  <h2 id="teian-eigyo-lp-title" class="sr-only">提案営業のお仕事紹介</h2>
+  <button type="button" id="teian-eigyo-lp-back" onclick="closeTeianEigyoGuide()">← LPに戻る</button>
+  <iframe id="teian-eigyo-lp-iframe" title="提案営業のお仕事紹介" src="about:blank"></iframe>
+</div>
+
 <!-- ===================== FOOTER ===================== -->
 <footer>
   <p class="footer-name">キャリアサポート</p>
@@ -838,85 +895,6 @@ footer .footer-name {
 
 <script>
 (function () {
-  // ---- Hero Slider ----
-  var slides = document.querySelectorAll('.hero-slide');
-  var indicators = document.querySelectorAll('.hero-indicator');
-  var progressBar = document.querySelector('.hero-progress');
-  var prevBtn = document.querySelector('.hero-nav--prev');
-  var nextBtn = document.querySelector('.hero-nav--next');
-  var current = 0;
-  var total = slides.length;
-  var interval = 5000;
-  var autoTimer = null;
-  var progressTimer = null;
-  var progressStart = 0;
-
-  function goToSlide(index) {
-    if (index === current) return;
-    slides[current].classList.remove('active');
-    slides[current].classList.add('leaving');
-    setTimeout(function () { slides[current === index ? (index + total - 1) % total : current].classList.remove('leaving'); }, 800);
-
-    indicators[current].classList.remove('active');
-    current = (index + total) % total;
-    slides[current].classList.add('active');
-    indicators[current].classList.add('active');
-    startProgress();
-  }
-
-  function nextSlide() { goToSlide((current + 1) % total); }
-  function prevSlide() { goToSlide((current - 1 + total) % total); }
-
-  function startProgress() {
-    if (progressTimer) cancelAnimationFrame(progressTimer);
-    progressStart = performance.now();
-    function tick(now) {
-      var elapsed = now - progressStart;
-      var pct = Math.min((elapsed / interval) * 100, 100);
-      progressBar.style.width = pct + '%';
-      if (pct < 100) {
-        progressTimer = requestAnimationFrame(tick);
-      }
-    }
-    progressTimer = requestAnimationFrame(tick);
-  }
-
-  function startAuto() {
-    stopAuto();
-    startProgress();
-    autoTimer = setInterval(nextSlide, interval);
-  }
-
-  function stopAuto() {
-    if (autoTimer) clearInterval(autoTimer);
-    if (progressTimer) cancelAnimationFrame(progressTimer);
-  }
-
-  prevBtn.addEventListener('click', function () { stopAuto(); prevSlide(); startAuto(); });
-  nextBtn.addEventListener('click', function () { stopAuto(); nextSlide(); startAuto(); });
-
-  indicators.forEach(function (dot) {
-    dot.addEventListener('click', function () {
-      stopAuto();
-      goToSlide(parseInt(this.getAttribute('data-slide')));
-      startAuto();
-    });
-  });
-
-  var hero = document.querySelector('.hero');
-  var touchStartX = 0;
-  hero.addEventListener('touchstart', function (e) { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
-  hero.addEventListener('touchend', function (e) {
-    var diff = e.changedTouches[0].screenX - touchStartX;
-    if (Math.abs(diff) > 50) {
-      stopAuto();
-      if (diff < 0) nextSlide(); else prevSlide();
-      startAuto();
-    }
-  }, { passive: true });
-
-  startAuto();
-
   // ---- Intersection Observer (scroll fade-in) ----
   var fadeEls = document.querySelectorAll('.fade-in, .career-card, .reason-item');
 
@@ -950,6 +928,7 @@ footer .footer-name {
     var iframe = document.getElementById('sekokanri-lp-iframe');
     var backBtn = document.getElementById('sekokanri-lp-back');
     if (!overlay || !iframe) return;
+    closeTeianEigyoGuide();
     iframe.src = '../施工管理/index.html';
     overlay.classList.add('active');
     overlay.setAttribute('aria-hidden', 'false');
@@ -967,13 +946,40 @@ footer .footer-name {
     document.body.style.overflow = '';
   }
 
+  function openTeianEigyoGuide() {
+    var overlay = document.getElementById('teian-eigyo-lp-overlay');
+    var iframe = document.getElementById('teian-eigyo-lp-iframe');
+    var backBtn = document.getElementById('teian-eigyo-lp-back');
+    if (!overlay || !iframe) return;
+    closeSekokanriGuide();
+    iframe.src = '../提案営業/index.html';
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    if (backBtn) backBtn.focus();
+  }
+
+  function closeTeianEigyoGuide() {
+    var overlay = document.getElementById('teian-eigyo-lp-overlay');
+    var iframe = document.getElementById('teian-eigyo-lp-iframe');
+    if (!overlay || !iframe) return;
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+    iframe.src = 'about:blank';
+    document.body.style.overflow = '';
+  }
+
   window.openSekokanriGuide = openSekokanriGuide;
   window.closeSekokanriGuide = closeSekokanriGuide;
+  window.openTeianEigyoGuide = openTeianEigyoGuide;
+  window.closeTeianEigyoGuide = closeTeianEigyoGuide;
 
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    var o = document.getElementById('sekokanri-lp-overlay');
-    if (o && o.classList.contains('active')) closeSekokanriGuide();
+    var t = document.getElementById('teian-eigyo-lp-overlay');
+    var s = document.getElementById('sekokanri-lp-overlay');
+    if (t && t.classList.contains('active')) closeTeianEigyoGuide();
+    else if (s && s.classList.contains('active')) closeSekokanriGuide();
   });
 })();
 </script>
