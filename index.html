@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CAサポートAPP</title>
+  <title>採用代行 サポートページ | CreAIte</title>
   <meta name="description" content="キャリアアドバイザー向け：面談内容から履歴書・職務経歴書を自動生成し、AIによるキャリア分析を提供します。">
 
   <!-- Tailwind CSS CDN -->
@@ -71,159 +71,135 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    background:
-      radial-gradient(ellipse at 15% 85%, rgba(101,163,13,0.18) 0%, transparent 55%),
-      radial-gradient(ellipse at 85% 20%, rgba(22,163,74,0.15) 0%, transparent 50%),
-      linear-gradient(150deg, #0d3320 0%, #14532d 45%, #166534 100%);
-    padding: 48px 24px;
+    background: #ffffff;
+    padding: 0;
     position: relative;
     overflow: hidden;
   }
-  #cover-screen::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
-    background-size: 28px 28px;
-    pointer-events: none;
+  .cover-header {
+    width: 100%;
+    background: linear-gradient(135deg, #14532d 0%, #166534 60%, #1a7a42 100%);
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-shrink: 0;
   }
-  #cover-screen::after {
-    content: '';
-    position: absolute;
-    bottom: -80px; right: -80px;
-    width: 360px; height: 360px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(132,204,22,0.12) 0%, transparent 70%);
-    pointer-events: none;
+  .cover-header-tagline {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.06em;
+    text-align: center;
   }
-  .cover-logo-mark {
+  .cover-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px 24px;
     position: relative;
-    width: 64px; height: 64px;
-    background: rgba(255,255,255,0.10);
-    border: 1.5px solid rgba(255,255,255,0.20);
-    border-radius: 18px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 24px;
-    backdrop-filter: blur(8px);
+    width: 100%;
   }
-  .cover-logo-mark svg { width: 34px; height: 34px; }
+  /* (斜めストライプ装飾は削除済み) */
+  .cover-bottom {
+    width: 100%;
+    background: linear-gradient(135deg, #14532d 0%, #166534 60%, #1a7a42 100%);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-shrink: 0;
+  }
+  .cover-logo-img {
+    max-width: 120px;
+    width: 28%;
+    height: auto;
+    margin-bottom: 16px;
+    position: relative;
+  }
   .cover-app-name {
     font-family: var(--font-display);
-    font-size: 2.2rem;
+    font-size: 1.6rem;
     font-weight: 800;
-    color: #fff;
+    color: var(--c-primary);
     text-align: center;
-    margin-bottom: 8px;
-    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
     position: relative;
   }
   .cover-tagline {
-    font-size: 0.875rem;
-    color: rgba(255,255,255,0.62);
+    font-size: 0.82rem;
+    color: var(--c-text-muted);
     text-align: center;
-    margin-bottom: 52px;
+    margin-bottom: 36px;
     font-weight: 400;
     letter-spacing: 0.01em;
     position: relative;
   }
-  .cover-cards {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    width: 100%;
-    max-width: 560px;
-    position: relative;
+  .cover-tanubo {
+    position: absolute;
+    top: 50%;
+    right: 28px;
+    transform: translateY(-50%);
+    width: 110px;
+    filter: drop-shadow(0 4px 16px rgba(0,0,0,0.12));
+    animation: floatTanubo 3.5s ease-in-out infinite;
   }
-  @media (max-width: 520px) {
-    .cover-cards { grid-template-columns: 1fr; max-width: 340px; }
-    .cover-app-name { font-size: 1.75rem; }
+  @keyframes floatTanubo {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(2deg); }
   }
-  .cover-card {
-    background: rgba(255,255,255,0.09);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 20px;
-    padding: 28px 22px 24px;
-    color: #fff;
-    cursor: pointer;
-    font-family: inherit;
-    transition: background 0.22s, border-color 0.22s, transform 0.2s, box-shadow 0.22s;
-    text-align: left;
-    width: 100%;
-    backdrop-filter: blur(12px);
-    position: relative;
-    overflow: hidden;
+  .tanubo-bubble {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    background: #fff;
+    color: var(--c-text);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    border: 1.5px solid #d1fae5;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateY(6px) scale(0.92);
+    pointer-events: none;
+    transition: opacity 0.25s, transform 0.25s;
   }
-  .cover-card::before {
+  .tanubo-bubble.show {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  .tanubo-bubble::after {
     content: '';
     position: absolute;
-    top: -40px; right: -40px;
-    width: 100px; height: 100px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.04);
-    transition: transform 0.3s;
+    bottom: -7px;
+    right: 36px;
+    width: 14px; height: 14px;
+    background: #fff;
+    border-right: 1.5px solid #d1fae5;
+    border-bottom: 1.5px solid #d1fae5;
+    transform: rotate(45deg);
   }
-  .cover-card:hover {
-    background: rgba(255,255,255,0.17);
-    border-color: rgba(255,255,255,0.45);
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.25);
-  }
-  .cover-card:hover::before { transform: scale(2); }
-  .cover-card-icon {
-    width: 44px; height: 44px;
-    background: rgba(132,204,22,0.2);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    margin-bottom: 16px;
-  }
-  .cover-card-icon svg { width: 22px; height: 22px; }
-  .cover-card-title {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 6px;
-    line-height: 1.3;
-  }
-  .cover-card-sub {
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.58);
-    font-weight: 400;
-    line-height: 1.5;
-  }
-  .cover-card-arrow {
-    position: absolute;
-    bottom: 20px; right: 20px;
-    opacity: 0.35;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  .cover-card:hover .cover-card-arrow { opacity: 0.75; transform: translate(2px, -2px); }
+  /* (cover-cards removed) */
   .cover-footer {
-    margin-top: 44px;
-    font-size: 0.72rem;
-    color: rgba(255,255,255,0.35);
-    position: relative;
-    letter-spacing: 0.03em;
-  }
-
-  /* ===== COVER LOGO ===== */
-  .cover-logo {
-    font-size: 2.8rem;
-    margin-bottom: 20px;
-    position: relative;
-    filter: drop-shadow(0 4px 16px rgba(132,204,22,0.35));
-    animation: floatLogo 3s ease-in-out infinite;
-  }
-  @keyframes floatLogo {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.88);
+    letter-spacing: 0.06em;
+    font-weight: 700;
   }
 
   /* ===== COVER BUTTONS ===== */
   .cover-buttons {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
     width: 100%;
     max-width: 480px;
     position: relative;
@@ -232,71 +208,64 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    background: rgba(255,255,255,0.09);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 18px;
-    padding: 20px 22px;
-    color: #fff;
+    background: #fff;
+    border: 1.5px solid #d1fae5;
+    border-radius: 16px;
+    padding: 18px 20px;
+    color: var(--c-text);
     cursor: pointer;
     font-family: var(--font-display);
     text-align: left;
     width: 100%;
-    backdrop-filter: blur(12px);
     position: relative;
     overflow: hidden;
     transition: background 0.22s, border-color 0.22s, transform 0.2s, box-shadow 0.22s;
   }
-  .cover-btn::before {
-    content: '';
-    position: absolute;
-    top: -30px; right: -30px;
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    transition: transform 0.3s;
-  }
   .cover-btn:hover {
-    background: rgba(255,255,255,0.17);
-    border-color: rgba(255,255,255,0.45);
+    background: #f0fdf4;
+    border-color: #86efac;
     transform: translateY(-3px);
-    box-shadow: 0 14px 36px rgba(0,0,0,0.22);
+    box-shadow: 0 8px 24px rgba(20,83,45,0.10);
   }
-  .cover-btn:hover::before { transform: scale(2.2); }
   .cover-btn-icon {
-    font-size: 1.75rem;
-    width: 48px; height: 48px;
-    background: rgba(132,204,22,0.2);
-    border-radius: 14px;
+    font-size: 1.55rem;
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
   }
   .cover-btn-label {
     flex: 1;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     line-height: 1.25;
+    color: var(--c-primary);
     display: flex;
     flex-direction: column;
     gap: 4px;
   }
   .cover-btn-sub {
     font-size: 0.72rem;
-    color: rgba(255,255,255,0.55);
+    color: var(--c-text-muted);
     font-weight: 400;
   }
   .cover-btn-arrow {
     font-size: 1.5rem;
+    color: var(--c-primary-light);
     opacity: 0.4;
     transition: opacity 0.2s, transform 0.2s;
     flex-shrink: 0;
   }
   .cover-btn:hover .cover-btn-arrow { opacity: 0.9; transform: translateX(4px); }
   @media (max-width: 520px) {
-    .cover-app-name { font-size: 1.75rem; }
+    .cover-app-name { font-size: 1.3rem; }
     .cover-buttons { max-width: 100%; }
-    .cover-btn { padding: 16px 18px; gap: 12px; }
-    .cover-btn-icon { width: 42px; height: 42px; font-size: 1.5rem; }
-    .cover-btn-label { font-size: 0.9rem; }
+    .cover-btn { padding: 14px 16px; gap: 12px; }
+    .cover-btn-icon { width: 40px; height: 40px; font-size: 1.35rem; }
+    .cover-btn-label { font-size: 0.88rem; }
+    .cover-logo-img { max-width: 90px; }
+    .cover-tanubo { width: 68px; right: 10px; }
   }
 
   /* ===== TALK SCRIPT / JOB INFO OVERLAY ===== */
@@ -456,44 +425,61 @@
        表紙（CAサポートAPP）
        ============================================ -->
   <div id="cover-screen">
-    <div class="cover-logo">🌿</div>
-    <div class="cover-app-name">CAサポートAPP</div>
-    <div class="cover-tagline">キャリアアドバイザー専用 面談・書類作成ツール</div>
-    <div class="cover-buttons">
-      <button class="cover-btn" onclick="showTalkScript()">
-        <span class="cover-btn-icon">📋</span>
-        <span class="cover-btn-label">
-          面談トークスクリプト
-          <span class="cover-btn-sub">面談の進行チェックリスト・トーク例</span>
-        </span>
-        <span class="cover-btn-arrow">›</span>
-      </button>
-      <button class="cover-btn" onclick="showDocCreate()">
-        <span class="cover-btn-icon">✨</span>
-        <span class="cover-btn-label">
-          書類を作成する
-          <span class="cover-btn-sub">履歴書・職務経歴書をAIで自動生成</span>
-        </span>
-        <span class="cover-btn-arrow">›</span>
-      </button>
-      <button class="cover-btn" onclick="showJobInfo()">
-        <span class="cover-btn-icon">🏢</span>
-        <span class="cover-btn-label">
-          求人情報
-          <span class="cover-btn-sub">業種別の取り扱い求人・Circus詳細ページ</span>
-        </span>
-        <span class="cover-btn-arrow">›</span>
-      </button>
-      <button class="cover-btn" onclick="openTenshokuSupport()">
-        <span class="cover-btn-icon">🎯</span>
-        <span class="cover-btn-label">
-          転職サポート
-          <span class="cover-btn-sub">転職サポートLPを表示</span>
-        </span>
-        <span class="cover-btn-arrow">›</span>
-      </button>
+    <!-- ヘッダー -->
+    <div class="cover-header">
+      <div class="cover-header-tagline">「AI × あなた」で新たな未来を創造する</div>
     </div>
-    <div class="cover-footer">© 株式会社杜の都工房</div>
+
+    <!-- メインコンテンツ -->
+    <div class="cover-main">
+      <img src="ETOILEロゴ.png" alt="ETOILE ロゴ" class="cover-logo-img">
+      <div class="cover-app-name">採用代行 サポートページ</div>
+      <div class="cover-tagline">（業務委託向け）</div>
+      <div class="cover-buttons">
+        <button class="cover-btn" onclick="showTalkScript()">
+          <span class="cover-btn-icon">📋</span>
+          <span class="cover-btn-label">
+            面談トークスクリプト
+            <span class="cover-btn-sub">面談の進行チェックリスト・トーク例</span>
+          </span>
+          <span class="cover-btn-arrow">›</span>
+        </button>
+        <button class="cover-btn" onclick="showDocCreate()">
+          <span class="cover-btn-icon">✏️</span>
+          <span class="cover-btn-label">
+            書類を作成する
+            <span class="cover-btn-sub">履歴書・職務経歴書をAIで自動生成</span>
+          </span>
+          <span class="cover-btn-arrow">›</span>
+        </button>
+        <button class="cover-btn" onclick="showJobInfo()">
+          <span class="cover-btn-icon">🏢</span>
+          <span class="cover-btn-label">
+            求人情報
+            <span class="cover-btn-sub">業種別の取り扱い求人・Circus詳細ページ</span>
+          </span>
+          <span class="cover-btn-arrow">›</span>
+        </button>
+        <button class="cover-btn" onclick="openTenshokuSupport()">
+          <span class="cover-btn-icon">🎯</span>
+          <span class="cover-btn-label">
+            転職サポート
+            <span class="cover-btn-sub">転職サポートLPを表示</span>
+          </span>
+          <span class="cover-btn-arrow">›</span>
+        </button>
+      </div>
+      <!-- タヌーボキャラクター -->
+      <div class="cover-tanubo" onclick="showTanuboBubble()" style="cursor:pointer">
+        <div id="tanubo-bubble" class="tanubo-bubble">僕は公式キャラクターのタヌーボだお！</div>
+        <img src="タヌーボ_ETOILE.png" alt="タヌーボ" style="width:100%;height:auto">
+      </div>
+    </div>
+
+    <!-- フッター -->
+    <div class="cover-bottom">
+      <div class="cover-footer">✦ 株式会社ETOILE</div>
+    </div>
   </div>
 
   <!-- ============================================
@@ -998,6 +984,13 @@
     }
     function openTenshokuSupport() {
       window.location.href = 'tenshoku-support/index.html';
+    }
+    let _tanuboTimer = null;
+    function showTanuboBubble() {
+      const b = document.getElementById('tanubo-bubble');
+      if (_tanuboTimer) { clearTimeout(_tanuboTimer); }
+      b.classList.add('show');
+      _tanuboTimer = setTimeout(() => { b.classList.remove('show'); _tanuboTimer = null; }, 3000);
     }
   </script>
 
