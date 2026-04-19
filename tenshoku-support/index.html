@@ -337,6 +337,12 @@ body {
   color: rgba(255,255,255,0.65);
 }
 
+.ca-dual-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
 .ca-track-wrapper {
   position: relative;
   width: 100%;
@@ -348,7 +354,6 @@ body {
   display: flex;
   gap: 2rem;
   width: max-content;
-  animation: ca-scroll 35s linear infinite;
   padding: 1rem 0;
 }
 
@@ -356,7 +361,20 @@ body {
   animation-play-state: paused;
 }
 
-@keyframes ca-scroll {
+.ca-track-ltr {
+  animation: ca-scroll-ltr 30s linear infinite;
+}
+
+.ca-track-rtl {
+  animation: ca-scroll-rtl 32s linear infinite;
+}
+
+@keyframes ca-scroll-ltr {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes ca-scroll-rtl {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
@@ -706,119 +724,129 @@ footer .footer-name {
     <h2 class="section-heading">あなたを支える<br>キャリアアドバイザー</h2>
     <p class="section-subheading">経験豊富なアドバイザーが、あなたの転職を全力でサポートします</p>
   </div>
-  <div class="ca-track-wrapper">
-    <div class="ca-track" aria-label="アドバイザー一覧スライダー">
-      <div class="ca-card">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/1.png" alt="キャリアアドバイザー 今村けんと" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">今村 けんと</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">あなたの「やりたい」を形にするお手伝いをします。</p>
+  <div class="ca-dual-rows">
+    <!-- 上段: 左→右スライド（CA 1-4） -->
+    <div class="ca-track-wrapper">
+      <div class="ca-track ca-track-ltr" aria-label="アドバイザー一覧 上段">
+        <div class="ca-card">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/1.png" alt="キャリアアドバイザー 今村けんご" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">今村 けんご</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">あなたの「やりたい」を形にするお手伝いをします。</p>
+          </div>
+        </div>
+        <div class="ca-card">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/2.png" alt="キャリアアドバイザー 大竹ちほ" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">大竹 ちほ</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">未経験からの挑戦、一緒に乗り越えましょう。</p>
+          </div>
+        </div>
+        <div class="ca-card">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/3.png" alt="キャリアアドバイザー 山田かずき" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">山田 かずき</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">あなたの強みを見つけ、最適なキャリアを提案します。</p>
+          </div>
+        </div>
+        <div class="ca-card">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/4.png" alt="キャリアアドバイザー 小笠原ともひろ" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">小笠原 ともひろ</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">転職の不安を安心に変える。それが私の仕事です。</p>
+          </div>
+        </div>
+        <!-- 無限ループ用に複製 -->
+        <div class="ca-card" aria-hidden="true">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/1.png" alt="" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">今村 けんご</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">あなたの「やりたい」を形にするお手伝いをします。</p>
+          </div>
+        </div>
+        <div class="ca-card" aria-hidden="true">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/2.png" alt="" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">大竹 ちほ</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">未経験からの挑戦、一緒に乗り越えましょう。</p>
+          </div>
+        </div>
+        <div class="ca-card" aria-hidden="true">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/3.png" alt="" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">山田 かずき</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">あなたの強みを見つけ、最適なキャリアを提案します。</p>
+          </div>
+        </div>
+        <div class="ca-card" aria-hidden="true">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/4.png" alt="" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">小笠原 ともひろ</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">転職の不安を安心に変える。それが私の仕事です。</p>
+          </div>
         </div>
       </div>
-      <div class="ca-card">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/2.png" alt="キャリアアドバイザー 大竹ちほ" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">大竹 ちほ</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">未経験からの挑戦、一緒に乗り越えましょう。</p>
+    </div>
+
+    <!-- 下段: 右→左スライド（CA 5-7） -->
+    <div class="ca-track-wrapper">
+      <div class="ca-track ca-track-rtl" aria-label="アドバイザー一覧 下段">
+        <div class="ca-card">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/5.png" alt="キャリアアドバイザー 工藤みく" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">工藤 みく</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">笑顔で新しいスタートを切れるようサポートします。</p>
+          </div>
         </div>
-      </div>
-      <div class="ca-card">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/3.png" alt="キャリアアドバイザー 山田かずき" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">山田 かずき</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">あなたの強みを見つけ、最適なキャリアを提案します。</p>
+        <div class="ca-card">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/6.png" alt="キャリアアドバイザー 中山けんと" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">中山 けんと</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">あなたの人生の転機に、全力で寄り添います。</p>
+          </div>
         </div>
-      </div>
-      <div class="ca-card">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/4.png" alt="キャリアアドバイザー 小笠原ともひろ" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">小笠原 ともひろ</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">転職の不安を安心に変える。それが私の仕事です。</p>
+        <div class="ca-card">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/7.png" alt="キャリアアドバイザー 新妻ゆきひで" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">新妻 ゆきひで</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">「自分らしく働く」を一緒に見つけましょう。</p>
+          </div>
         </div>
-      </div>
-      <div class="ca-card">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/5.png" alt="キャリアアドバイザー 工藤みく" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">工藤 みく</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">笑顔で新しいスタートを切れるようサポートします。</p>
+        <!-- 無限ループ用に複製 -->
+        <div class="ca-card" aria-hidden="true">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/5.png" alt="" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">工藤 みく</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">笑顔で新しいスタートを切れるようサポートします。</p>
+          </div>
         </div>
-      </div>
-      <div class="ca-card">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/6.png" alt="キャリアアドバイザー 中山けんと" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">中山 けんと</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">あなたの人生の転機に、全力で寄り添います。</p>
+        <div class="ca-card" aria-hidden="true">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/6.png" alt="" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">中山 けんと</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">あなたの人生の転機に、全力で寄り添います。</p>
+          </div>
         </div>
-      </div>
-      <div class="ca-card">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/7.png" alt="キャリアアドバイザー 新妻ゆきひで" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">新妻 ゆきひで</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">「自分らしく働く」を一緒に見つけましょう。</p>
-        </div>
-      </div>
-      <!-- 無限ループ用に複製 -->
-      <div class="ca-card" aria-hidden="true">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/1.png" alt="" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">今村 けんと</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">あなたの「やりたい」を形にするお手伝いをします。</p>
-        </div>
-      </div>
-      <div class="ca-card" aria-hidden="true">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/2.png" alt="" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">大竹 ちほ</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">未経験からの挑戦、一緒に乗り越えましょう。</p>
-        </div>
-      </div>
-      <div class="ca-card" aria-hidden="true">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/3.png" alt="" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">山田 かずき</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">あなたの強みを見つけ、最適なキャリアを提案します。</p>
-        </div>
-      </div>
-      <div class="ca-card" aria-hidden="true">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/4.png" alt="" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">小笠原 ともひろ</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">転職の不安を安心に変える。それが私の仕事です。</p>
-        </div>
-      </div>
-      <div class="ca-card" aria-hidden="true">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/5.png" alt="" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">工藤 みく</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">笑顔で新しいスタートを切れるようサポートします。</p>
-        </div>
-      </div>
-      <div class="ca-card" aria-hidden="true">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/6.png" alt="" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">中山 けんと</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">あなたの人生の転機に、全力で寄り添います。</p>
-        </div>
-      </div>
-      <div class="ca-card" aria-hidden="true">
-        <div class="ca-card-img-wrap"><img src="CA宣材写真/7.png" alt="" loading="lazy"></div>
-        <div class="ca-card-body">
-          <p class="ca-card-name">新妻 ゆきひで</p>
-          <p class="ca-card-role">Career Advisor</p>
-          <p class="ca-card-msg">「自分らしく働く」を一緒に見つけましょう。</p>
+        <div class="ca-card" aria-hidden="true">
+          <div class="ca-card-img-wrap"><img src="CA宣材写真/7.png" alt="" loading="lazy"></div>
+          <div class="ca-card-body">
+            <p class="ca-card-name">新妻 ゆきひで</p>
+            <p class="ca-card-role">Career Advisor</p>
+            <p class="ca-card-msg">「自分らしく働く」を一緒に見つけましょう。</p>
+          </div>
         </div>
       </div>
     </div>
