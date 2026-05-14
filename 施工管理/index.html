@@ -119,6 +119,57 @@
       border-color: #16a34a;
     }
 
+    /* コンパクト選択タイル（2列・ほぼ正方形に近い比率） */
+    .selection-tile {
+      display: flex; flex-direction: column; align-items: stretch;
+      background: #fff; border-radius: 14px; padding: 10px 10px 12px;
+      box-shadow: 0 2px 14px rgba(0,0,0,0.06); border: 1px solid #e8e8e8;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      cursor: pointer; text-decoration: none; color: inherit;
+      aspect-ratio: 5 / 4;
+      min-height: 0;
+    }
+    .selection-tile:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(22, 163, 74, 0.14);
+      border-color: #86efac;
+    }
+    .selection-tile:focus-visible {
+      outline: 2px solid #16a34a; outline-offset: 3px;
+    }
+    .selection-tile-cta {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.2rem;
+      margin-top: auto; align-self: center;
+      font-size: 0.65rem; font-weight: 700; letter-spacing: 0.04em;
+      padding: 0.35rem 0.65rem; border-radius: 999px;
+      border: 1px solid #bbf7d0; background: #f0fdf4; color: #15803d;
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .selection-tile:hover .selection-tile-cta {
+      background: #dcfce7; border-color: #4ade80;
+    }
+    .selection-tile-cta--solid {
+      background: linear-gradient(135deg, #145a32, #16a34a);
+      color: #fff;
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 2px 8px rgba(22, 163, 74, 0.25);
+    }
+    .selection-tile:hover .selection-tile-cta--solid {
+      background: linear-gradient(135deg, #166534, #22c55e);
+      border-color: rgba(255,255,255,0.35);
+    }
+    .selection-tile-cta--solid-alt {
+      background: linear-gradient(135deg, #15803d, #22c55e);
+      color: #fff;
+      border-color: rgba(255,255,255,0.2);
+      box-shadow: 0 2px 8px rgba(34, 197, 94, 0.22);
+    }
+    .selection-tile:hover .selection-tile-cta--solid-alt {
+      background: linear-gradient(135deg, #16a34a, #4ade80);
+      border-color: rgba(255,255,255,0.35);
+    }
+
+
     /* ===== FADE IN ===== */
     .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
@@ -126,6 +177,13 @@
     /* ===== PAGE TRANSITION ===== */
     .page { display: none; opacity: 0; transition: opacity 0.3s ease; }
     .page.active { display: block; opacity: 1; }
+    .page.page-hub.active {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+      min-height: 0;
+      opacity: 1;
+    }
 
     /* ===== REWARDS LOGIN ===== */
     .hoshu-panel { display: none; }
@@ -275,7 +333,7 @@
   <div id="app" class="mx-auto flex min-h-screen w-full max-w-[1200px] flex-col bg-transparent px-3 pt-3 pb-[5.5rem]">
 
     <!-- WHITE CARD CONTAINER -->
-    <div class="rounded-xl border border-bluegray-100 bg-white shadow-[0_6px_18px_rgba(0,0,0,0.06)] min-h-[calc(100vh-6rem)]">
+    <div class="flex min-h-[calc(100vh-6rem)] flex-col rounded-xl border border-bluegray-100 bg-white shadow-[0_6px_18px_rgba(0,0,0,0.06)]">
 
       <!-- ===== HEADER ===== -->
       <header class="flex items-center justify-between gap-4 px-6 py-4 border-b border-bluegray-100">
@@ -325,34 +383,31 @@
         </div>
 
         <!-- Hero Image -->
-        <div class="mx-6 mb-6">
+        <div class="mx-2 sm:mx-6 mb-6">
           <div class="relative rounded-xl overflow-hidden aspect-[16/7]">
             <img src="../header.jpg" alt="採用代行サポート" class="w-full h-full object-cover" onerror="this.style.display='none'">
           </div>
         </div>
 
         <!-- 3 Card Grid -->
-        <div class="mx-6 mb-6 grid grid-cols-3 gap-4">
+        <div class="mx-2 sm:mx-6 mb-6 grid grid-cols-3 gap-2 sm:gap-4">
           <a href="#" onclick="navigateTo('mendan'); return false;" class="home-neon-card rounded-xl border border-bluegray-100 bg-white p-3 text-center no-underline shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
             <div class="mb-2 aspect-square w-full rounded-lg bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center overflow-hidden">
               <img src="../card1.jpg?v=4" alt="面談&応募" class="w-full h-full object-cover rounded-lg">
             </div>
             <p class="text-[13px] font-bold tracking-wide text-bluegray-800" style="font-family: var(--font-serif);">面談&応募</p>
-            <p class="text-[11px] leading-tight text-bluegray-400 mt-1">トークスクリプト・書類</p>
           </a>
           <a href="#" onclick="navigateTo('kyujin'); return false;" class="home-neon-card rounded-xl border border-bluegray-100 bg-white p-3 text-center no-underline shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
             <div class="mb-2 aspect-square w-full rounded-lg bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center overflow-hidden">
               <img src="../card2.jpg?v=4" alt="求人" class="w-full h-full object-cover rounded-lg">
             </div>
             <p class="text-[13px] font-bold tracking-wide text-bluegray-800" style="font-family: var(--font-serif);">求人</p>
-            <p class="text-[11px] leading-tight text-bluegray-400 mt-1">求人情報・転職サポート</p>
           </a>
           <a href="#" onclick="navigateTo('hoshu'); return false;" class="home-neon-card rounded-xl border border-bluegray-100 bg-white p-3 text-center no-underline shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
             <div class="mb-2 aspect-square w-full rounded-lg bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center overflow-hidden">
               <img src="../card3.jpg?v=4" alt="報酬" class="w-full h-full object-cover rounded-lg">
             </div>
             <p class="text-[13px] font-bold tracking-wide text-bluegray-800" style="font-family: var(--font-serif);">報酬</p>
-            <p class="text-[11px] leading-tight text-bluegray-400 mt-1">見込み・確定報酬の確認</p>
           </a>
         </div>
 
@@ -369,106 +424,80 @@
       </div>
 
       <!-- ===== PAGE: 面談&応募 ===== -->
-      <div id="page-mendan" class="page">
-        <div class="px-6 py-8">
-          <!-- Back + Title -->
-          <div class="flex items-center gap-3 mb-8 flex-wrap">
-            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
-              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-              </svg>
-              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
-            </button>
-            <div class="min-w-0">
-              <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">面談&応募</h2>
-              <p class="text-sm text-bluegray-400">面談準備・書類作成ツール</p>
-            </div>
+      <div id="page-mendan" class="page page-hub">
+        <div class="flex shrink-0 flex-wrap items-center gap-3 border-b border-bluegray-50 px-5 py-5 sm:px-6">
+          <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-2.5 py-1.5 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
+            <svg class="w-4 h-4 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+            <span class="text-xs font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">戻る</span>
+          </button>
+          <div class="min-w-0">
+            <h2 class="text-lg font-bold text-bluegray-800 sm:text-xl" style="font-family: var(--font-serif);">面談&応募</h2>
+            <p class="text-xs text-bluegray-400 sm:text-sm">面談準備・書類作成ツール</p>
           </div>
+        </div>
 
-          <!-- Selection Cards -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-            <a href="../ca_talk_script.html" class="selection-card group">
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
-                <svg class="w-8 h-8 text-mint-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <div class="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
+          <div class="grid w-full max-w-[min(100%,22rem)] grid-cols-2 gap-3 sm:max-w-md sm:gap-4">
+            <a href="../ca_talk_script.html" class="selection-tile group text-center">
+              <div class="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-mint-100 to-mint-50 transition group-hover:from-mint-200 group-hover:to-mint-100">
+                <svg class="h-6 w-6 text-mint-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">面談トークスクリプト</h3>
-              <p class="text-sm text-bluegray-400 leading-relaxed">面談時に使えるトークスクリプトを確認できます。求職者への効果的なヒアリング方法を学びましょう。</p>
-              <div class="flex items-center gap-1 mt-4 text-mint-500 text-sm font-semibold">
-                <span>スクリプトを見る</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                </svg>
-              </div>
+              <h3 class="mt-2 px-0.5 text-[11px] font-bold leading-snug text-bluegray-800 sm:text-xs" style="font-family: var(--font-serif);">面談トークスクリプト</h3>
+              <span class="selection-tile-cta" style="font-family: var(--font-serif);">スクリプト</span>
             </a>
 
-            <a href="../index.html#doc" target="_top" class="selection-card group">
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
-                <svg class="w-8 h-8 text-mint-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <a href="../index.html#doc" target="_top" class="selection-tile group text-center">
+              <div class="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-mint-100 to-mint-50 transition group-hover:from-mint-200 group-hover:to-mint-100">
+                <svg class="h-6 w-6 text-mint-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">書類を作成する</h3>
-              <p class="text-sm text-bluegray-400 leading-relaxed">履歴書・職務経歴書のテンプレートを使って、求職者の応募書類を作成・管理できます。</p>
-              <div class="flex items-center gap-1 mt-4 text-mint-600 text-sm font-semibold">
-                <span>書類作成へ</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                </svg>
-              </div>
+              <h3 class="mt-2 px-0.5 text-[11px] font-bold leading-snug text-bluegray-800 sm:text-xs" style="font-family: var(--font-serif);">書類を作成する</h3>
+              <span class="selection-tile-cta" style="font-family: var(--font-serif);">書類作成</span>
             </a>
           </div>
         </div>
       </div>
 
       <!-- ===== PAGE: 求人 ===== -->
-      <div id="page-kyujin" class="page">
-        <div class="px-6 py-8">
-          <div class="flex items-center gap-3 mb-8 flex-wrap">
-            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
-              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-              </svg>
-              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
-            </button>
-            <div class="min-w-0">
-              <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">求人</h2>
-              <p class="text-sm text-bluegray-400">求人情報・転職サポート</p>
-            </div>
+      <div id="page-kyujin" class="page page-hub">
+        <div class="flex shrink-0 flex-wrap items-center gap-3 border-b border-bluegray-50 px-5 py-5 sm:px-6">
+          <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-2.5 py-1.5 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
+            <svg class="w-4 h-4 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+            <span class="text-xs font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">戻る</span>
+          </button>
+          <div class="min-w-0">
+            <h2 class="text-lg font-bold text-bluegray-800 sm:text-xl" style="font-family: var(--font-serif);">求人</h2>
+            <p class="text-xs text-bluegray-400 sm:text-sm">求人情報・転職サポート</p>
           </div>
+        </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-            <a href="../job-info.html" class="selection-card group">
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
-                <svg class="w-8 h-8 text-mint-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <div class="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
+          <div class="grid w-full max-w-[min(100%,22rem)] grid-cols-2 gap-3 sm:max-w-md sm:gap-4">
+            <a href="../job-info.html" class="selection-tile group text-center">
+              <div class="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-mint-100 to-mint-50 transition group-hover:from-mint-200 group-hover:to-mint-100">
+                <svg class="h-6 w-6 text-mint-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">求人情報</h3>
-              <p class="text-sm text-bluegray-400 leading-relaxed">最新の求人情報を閲覧できます。勤務地・給与・条件で絞り込んで検索しましょう。</p>
-              <div class="flex items-center gap-1 mt-4 text-mint-500 text-sm font-semibold">
-                <span>求人を見る</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                </svg>
-              </div>
+              <h3 class="mt-2 px-0.5 text-[11px] font-bold leading-snug text-bluegray-800 sm:text-xs" style="font-family: var(--font-serif);">求人情報</h3>
+              <span class="selection-tile-cta" style="font-family: var(--font-serif);">求人を見る</span>
             </a>
 
-            <a href="../tenshoku-support/index.html" class="selection-card group">
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
-                <svg class="w-8 h-8 text-mint-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <a href="../tenshoku-support/index.html" class="selection-tile group text-center">
+              <div class="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-mint-100 to-mint-50 transition group-hover:from-mint-200 group-hover:to-mint-100">
+                <svg class="h-6 w-6 text-mint-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">転職サポート</h3>
-              <p class="text-sm text-bluegray-400 leading-relaxed">転職活動の進め方やキャリアプランの相談、面接対策など、転職に関するサポート情報をまとめています。</p>
-              <div class="flex items-center gap-1 mt-4 text-mint-600 text-sm font-semibold">
-                <span>サポートを見る</span>
-                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
-                </svg>
-              </div>
+              <h3 class="mt-2 px-0.5 text-[11px] font-bold leading-snug text-bluegray-800 sm:text-xs" style="font-family: var(--font-serif);">転職サポート</h3>
+              <span class="selection-tile-cta" style="font-family: var(--font-serif);">サポート</span>
             </a>
           </div>
         </div>
@@ -508,7 +537,6 @@
                     </div>
                     <div class="min-w-0 flex-1">
                       <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">管理者ログイン</h3>
-                      <p class="text-sm text-bluegray-400 leading-relaxed">報酬の登録・確定日の更新など、管理用画面へ進みます。</p>
                       <span class="inline-flex items-center gap-1 mt-3 text-mint-600 text-sm font-semibold">
                         ログイン画面へ
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
@@ -526,7 +554,6 @@
                     </div>
                     <div class="min-w-0 flex-1">
                       <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">アドバイザーログイン</h3>
-                      <p class="text-sm text-bluegray-400 leading-relaxed">ご自身の見込み報酬・確定報酬を確認する画面へ進みます。</p>
                       <span class="inline-flex items-center gap-1 mt-3 text-mint-600 text-sm font-semibold">
                         ログイン画面へ
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
@@ -821,55 +848,41 @@
       </div>
 
       <!-- ===== PAGE: 問い合わせ ===== -->
-      <div id="page-contact" class="page">
-        <div class="px-6 py-8">
-          <div class="flex items-center gap-3 mb-8 flex-wrap">
-            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
-              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-              </svg>
-              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
-            </button>
-            <div class="min-w-0">
-              <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">問い合わせ</h2>
-              <p class="text-sm text-bluegray-400">お問い合わせ・請求書提出</p>
-            </div>
+      <div id="page-contact" class="page page-hub">
+        <div class="flex shrink-0 flex-wrap items-center gap-3 border-b border-bluegray-50 px-5 py-5 sm:px-6">
+          <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-2.5 py-1.5 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
+            <svg class="w-4 h-4 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+            </svg>
+            <span class="text-xs font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">戻る</span>
+          </button>
+          <div class="min-w-0">
+            <h2 class="text-lg font-bold text-bluegray-800 sm:text-xl" style="font-family: var(--font-serif);">問い合わせ</h2>
+            <p class="text-xs text-bluegray-400 sm:text-sm">お問い合わせ・請求書提出</p>
           </div>
+        </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
-            <!-- 問い合わせ CTA -->
-            <div class="selection-card flex flex-col items-center text-center">
-              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-mint-500 to-mint-600 flex items-center justify-center mb-6 shadow-lg">
-                <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <div class="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
+          <div class="grid w-full max-w-[min(100%,22rem)] grid-cols-2 gap-3 sm:max-w-md sm:gap-4">
+            <a href="#" class="selection-tile group text-center no-underline">
+              <div class="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-500 to-mint-600 shadow-md">
+                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">問い合わせ</h3>
-              <p class="text-sm text-bluegray-400 leading-relaxed mb-6">ご質問・ご相談はこちらからお気軽にお問い合わせください。担当者が迅速に対応いたします。</p>
-              <a href="#" class="cta-glint w-full flex items-center justify-center gap-2 rounded-xl bg-[linear-gradient(145deg,#145a32_0%,#16a34a_45%,#145a32_100%)] px-6 py-4 text-[15px] font-bold tracking-wider text-white no-underline shadow-[0_10px_20px_rgba(22,163,74,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-white/20 transition-transform hover:-translate-y-1" style="font-family: var(--font-serif);">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
-                </svg>
-                問い合わせする
-              </a>
-            </div>
+              <h3 class="mt-2 px-0.5 text-[11px] font-bold leading-snug text-bluegray-800 sm:text-xs" style="font-family: var(--font-serif);">問い合わせ</h3>
+              <span class="selection-tile-cta selection-tile-cta--solid" style="font-family: var(--font-serif);">問い合わせ</span>
+            </a>
 
-            <!-- 請求書提出 -->
-            <div class="selection-card flex flex-col items-center text-center">
-              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-mint-400 to-mint-500 flex items-center justify-center mb-6 shadow-lg">
-                <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <a href="#" class="selection-tile group text-center no-underline">
+              <div class="mx-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-400 to-mint-500 shadow-md">
+                <svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9.75m3 0H9.75m0 0v3.375m0-3.375h3.375M6.75 19.5h10.5a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">請求書提出</h3>
-              <p class="text-sm text-bluegray-400 leading-relaxed mb-6">報酬に関する請求書の提出はこちらから行ってください。フォーマットのダウンロードも可能です。</p>
-              <a href="#" class="cta-glint w-full flex items-center justify-center gap-2 rounded-xl bg-[linear-gradient(145deg,#15803d_0%,#22c55e_45%,#15803d_100%)] px-6 py-4 text-[15px] font-bold tracking-wider text-white no-underline shadow-[0_10px_20px_rgba(34,197,94,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-white/20 transition-transform hover:-translate-y-1" style="font-family: var(--font-serif);">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
-                </svg>
-                請求書を提出する
-              </a>
-            </div>
+              <h3 class="mt-2 px-0.5 text-[11px] font-bold leading-snug text-bluegray-800 sm:text-xs" style="font-family: var(--font-serif);">請求書提出</h3>
+              <span class="selection-tile-cta selection-tile-cta--solid-alt" style="font-family: var(--font-serif);">請求書</span>
+            </a>
           </div>
         </div>
       </div>
