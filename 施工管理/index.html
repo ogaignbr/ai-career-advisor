@@ -119,20 +119,50 @@
       border-color: #16a34a;
     }
 
-    /* コンパクト選択タイル（2列・ほぼ正方形に近い比率） */
+    /* ハブページ：タイル周りのグレー背景 */
+    .page-hub-scroll {
+      background: linear-gradient(180deg, #ececec 0%, #e2e2e2 55%, #dedede 100%);
+    }
+
+    /* コンパクト選択タイル（立体的な押し出し） */
     .selection-tile {
       display: flex; flex-direction: column; align-items: stretch;
-      background: #fff; border-radius: 14px; padding: 10px 10px 12px;
-      box-shadow: 0 2px 14px rgba(0,0,0,0.06); border: 1px solid #e8e8e8;
-      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      background: linear-gradient(165deg, #ffffff 0%, #f4f4f5 48%, #ececed 100%);
+      border-radius: 14px; padding: 10px 10px 12px;
+      border: 1px solid #d4d4d8;
+      border-top-color: #f5f5f7;
+      border-left-color: #efeff1;
+      border-bottom-color: #c4c4c8;
+      border-right-color: #c9c9cd;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.85),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.04),
+        0 2px 0 rgba(255, 255, 255, 0.35),
+        0 6px 14px rgba(0, 0, 0, 0.1),
+        0 12px 28px rgba(0, 0, 0, 0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
       cursor: pointer; text-decoration: none; color: inherit;
       aspect-ratio: 5 / 4;
       min-height: 0;
     }
     .selection-tile:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 28px rgba(22, 163, 74, 0.14);
-      border-color: #86efac;
+      transform: translateY(-5px);
+      border-top-color: #ecfdf5;
+      border-left-color: #e8fce9;
+      border-bottom-color: #86efac;
+      border-right-color: #7ee787;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.95),
+        inset 0 -1px 0 rgba(22, 163, 74, 0.06),
+        0 3px 0 rgba(255, 255, 255, 0.4),
+        0 10px 22px rgba(22, 163, 74, 0.18),
+        0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+    .selection-tile:active {
+      transform: translateY(-1px) scale(0.99);
+      box-shadow:
+        inset 0 2px 6px rgba(0, 0, 0, 0.08),
+        0 2px 6px rgba(0, 0, 0, 0.08);
     }
     .selection-tile:focus-visible {
       outline: 2px solid #16a34a; outline-offset: 3px;
@@ -401,7 +431,7 @@
           </div>
         </div>
 
-        <div class="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
+        <div class="page-hub-scroll flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
           <div class="mx-auto grid w-full max-w-[min(100%,22rem)] grid-cols-2 gap-3 sm:max-w-md sm:gap-4 lg:max-w-[min(100%,42.5rem)] lg:grid-cols-3">
             <a href="../ca_talk_script.html" class="selection-tile group flex items-center justify-center text-center no-underline text-inherit">
               <h3 class="text-[12px] font-bold leading-snug text-bluegray-800 sm:text-sm" style="font-family: var(--font-serif);">面談トークスクリプト</h3>
@@ -427,7 +457,7 @@
           </div>
         </div>
 
-        <div class="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
+        <div class="page-hub-scroll flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
           <div class="mx-auto grid w-full max-w-[min(100%,22rem)] grid-cols-2 gap-3 sm:max-w-md sm:gap-4">
             <a href="../job-info.html" class="selection-tile group flex items-center justify-center text-center no-underline text-inherit">
               <h3 class="text-[12px] font-bold leading-snug text-bluegray-800 sm:text-sm" style="font-family: var(--font-serif);">求人情報</h3>
@@ -785,7 +815,7 @@
           </div>
         </div>
 
-        <div class="flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
+        <div class="page-hub-scroll flex min-h-0 flex-1 flex-col items-center justify-center overflow-y-auto px-4 py-8 sm:px-8 sm:py-10">
           <div class="mx-auto grid w-full max-w-[min(100%,22rem)] grid-cols-2 gap-3 sm:max-w-md sm:gap-4">
             <a href="#" class="selection-tile group flex flex-col items-center justify-center gap-2 px-3 py-4 text-center no-underline text-inherit">
               <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-mint-500 to-mint-600 shadow-md">
