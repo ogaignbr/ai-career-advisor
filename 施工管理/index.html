@@ -394,13 +394,7 @@
 
       <!-- ===== PAGE: 面談&応募 ===== -->
       <div id="page-mendan" class="page page-hub">
-        <div class="flex shrink-0 flex-wrap items-center gap-3 border-b border-bluegray-50 px-5 py-5 sm:px-6">
-          <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-2.5 py-1.5 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
-            <svg class="w-4 h-4 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-            </svg>
-            <span class="text-xs font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">戻る</span>
-          </button>
+        <div class="shrink-0 border-b border-bluegray-50 px-5 py-5 sm:px-6">
           <div class="min-w-0">
             <h2 class="text-lg font-bold text-bluegray-800 sm:text-xl" style="font-family: var(--font-serif);">面談&応募</h2>
             <p class="text-xs text-bluegray-400 sm:text-sm">面談→書類作成→circus応募</p>
@@ -426,13 +420,7 @@
 
       <!-- ===== PAGE: 求人 ===== -->
       <div id="page-kyujin" class="page page-hub">
-        <div class="flex shrink-0 flex-wrap items-center gap-3 border-b border-bluegray-50 px-5 py-5 sm:px-6">
-          <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-2.5 py-1.5 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
-            <svg class="w-4 h-4 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-            </svg>
-            <span class="text-xs font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">戻る</span>
-          </button>
+        <div class="shrink-0 border-b border-bluegray-50 px-5 py-5 sm:px-6">
           <div class="min-w-0">
             <h2 class="text-lg font-bold text-bluegray-800 sm:text-xl" style="font-family: var(--font-serif);">求人情報</h2>
             <p class="text-xs text-bluegray-400 sm:text-sm">おすすめ求人・転職サポート資料</p>
@@ -455,13 +443,7 @@
       <!-- ===== PAGE: 報酬 ===== -->
       <div id="page-hoshu" class="page">
         <div class="px-6 py-8">
-          <div class="flex items-center gap-3 mb-8 flex-wrap">
-            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
-              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-              </svg>
-              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
-            </button>
+          <div class="mb-8">
             <div class="min-w-0">
               <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">報酬確認</h2>
               <p class="text-sm text-bluegray-400">ログインしてご確認ください</p>
@@ -520,8 +502,7 @@
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
                   ログイン種類の選択に戻る
                 </button>
-                <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">管理者ログイン</h3>
-                <p class="text-sm text-bluegray-400 mb-6">配布の<strong class="text-bluegray-600">管理者番号（英数字4文字）</strong>と<strong class="text-bluegray-600">PIN（数字4桁）</strong>を入力してください。初期値はこのHTMLファイル先頭付近の <span class="font-mono text-xs bg-bluegray-100 px-1 rounded">HOSHU_CONFIG.admins</span> で変更できます。</p>
+                <h3 class="text-lg font-bold text-bluegray-800 mb-4" style="font-family: var(--font-serif);">管理者ログイン</h3>
                 <form id="form-hoshu-admin" class="space-y-4" onsubmit="submitHoshuAdminLogin(event)" autocomplete="off">
                   <div>
                     <label for="hoshu-admin-code" class="block text-xs font-semibold text-bluegray-600 mb-1.5">管理者番号（英数字4文字）</label>
@@ -546,8 +527,7 @@
                   <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
                   ログイン種類の選択に戻る
                 </button>
-                <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">アドバイザーログイン</h3>
-                <p class="text-sm text-bluegray-400 mb-6">お渡しした<strong class="text-bluegray-600">アドバイザー番号（4文字）</strong>と<strong class="text-bluegray-600">PIN（数字4桁）</strong>でログインします。</p>
+                <h3 class="text-lg font-bold text-bluegray-800 mb-4" style="font-family: var(--font-serif);">アドバイザーログイン</h3>
                 <form id="form-hoshu-advisor" class="space-y-4" onsubmit="submitHoshuAdvisorLogin(event)" autocomplete="off">
                   <div>
                     <label for="hoshu-advisor-code" class="block text-xs font-semibold text-bluegray-600 mb-1.5">アドバイザー番号（英数字4文字）</label>
@@ -798,13 +778,7 @@
 
       <!-- ===== PAGE: 問い合わせ ===== -->
       <div id="page-contact" class="page page-hub">
-        <div class="flex shrink-0 flex-wrap items-center gap-3 border-b border-bluegray-50 px-5 py-5 sm:px-6">
-          <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-2.5 py-1.5 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
-            <svg class="w-4 h-4 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
-            </svg>
-            <span class="text-xs font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">戻る</span>
-          </button>
+        <div class="shrink-0 border-b border-bluegray-50 px-5 py-5 sm:px-6">
           <div class="min-w-0">
             <h2 class="text-lg font-bold text-bluegray-800 sm:text-xl" style="font-family: var(--font-serif);">問い合わせ</h2>
             <p class="text-xs text-bluegray-400 sm:text-sm">お問い合わせ・請求書提出</p>
