@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>提案営業という選択肢 — 「売りつけ」じゃない、課題と向き合う仕事</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: '#1a1628',
+            plum: '#2d2640',
+            sky: '#0ea5e9',
+            amber: '#d97706',
+            cream: '#faf8f5',
+            coral: '#ea580c',
+            mint: '#059669',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --color-navy: #1a1628;
+      --color-steel: #2d2640;
+      --color-sky: #0ea5e9;
+      --color-gold: #d97706;
+      --color-cream: #faf8f5;
+      --color-coral: #ea580c;
+      --color-mint: #059669;
+      --font-heading: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+      --font-body: 'Noto Sans JP', sans-serif;
+      --font-accent: 'Playfair Display', serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      color: #1a1a2e;
+      background: var(--color-cream);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 { font-family: var(--font-heading); }
+    .accent-font { font-family: var(--font-accent); }
+
+    .hero-section {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(26, 22, 40, 0.9) 0%,
+        rgba(45, 38, 64, 0.82) 45%,
+        rgba(14, 165, 233, 0.55) 100%
+      );
+      z-index: 1;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 25%;
+      background: linear-gradient(145deg, #2d2640 0%, #1a1628 50%, #0c4a6e 100%);
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .section-divider {
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-gold), var(--color-sky), var(--color-gold));
+      border: none;
+    }
+
+    .card-image {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .card-image:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+    }
+
+    .hook-text {
+      font-family: var(--font-heading);
+      font-weight: 900;
+      line-height: 1.3;
+      letter-spacing: -0.02em;
+    }
+
+    .salary-table {
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .salary-table th {
+      background: var(--color-navy);
+      color: white;
+      padding: 16px 20px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .salary-table td {
+      padding: 14px 20px;
+      border-bottom: 1px solid #e8e4dc;
+      font-size: 0.95rem;
+    }
+
+    .salary-table tr:last-child td { border-bottom: none; }
+
+    .salary-table .highlight-row {
+      background: linear-gradient(90deg, #fff7ed, #fffbeb);
+      font-weight: 700;
+    }
+
+    .salary-table .highlight-row td {
+      color: var(--color-coral);
+      font-size: 1.05rem;
+    }
+
+    .flow-card {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .flow-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .flow-number {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--color-steel), var(--color-sky));
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 1.2rem;
+      font-family: var(--font-accent);
+      flex-shrink: 0;
+    }
+
+    .cta-section {
+      background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-steel) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(217, 119, 6, 0.12), transparent 70%);
+      border-radius: 50%;
+    }
+
+    .cta-button {
+      background: linear-gradient(135deg, var(--color-gold), #f59e0b);
+      color: var(--color-navy);
+      font-weight: 900;
+      font-size: 1.1rem;
+      padding: 18px 48px;
+      border-radius: 60px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(217, 119, 6, 0.35);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 32px rgba(217, 119, 6, 0.45);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .geo-pattern {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0.04;
+      background-image:
+        linear-gradient(30deg, #2d2640 12%, transparent 12.5%, transparent 87%, #2d2640 87.5%, #2d2640),
+        linear-gradient(150deg, #2d2640 12%, transparent 12.5%, transparent 87%, #2d2640 87.5%, #2d2640);
+      background-size: 80px 140px;
+      pointer-events: none;
+    }
+
+    .quote-mark {
+      font-family: var(--font-accent);
+      font-size: 4rem;
+      line-height: 1;
+      color: var(--color-gold);
+      opacity: 0.6;
+    }
+
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+      border-top: 4px solid var(--color-sky);
+    }
+
+    .stat-number {
+      font-family: var(--font-accent);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--color-coral);
+    }
+
+    @media (max-width: 768px) {
+      .hero-section { min-height: 90vh; }
+      .stat-number { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="hero-section">
+    <img src="提案営業画像/提案営業とは.jpg" alt="" class="hero-bg" width="1920" height="1080">
+    <div class="hero-content text-center px-6 max-w-4xl mx-auto">
+      <div class="mb-6">
+        <span class="tag bg-amber/90 text-ink">CAREER GUIDE 2026</span>
+      </div>
+      <h1 class="text-white text-3xl md:text-5xl lg:text-6xl hook-text mb-6 leading-tight">
+        <span class="block text-amber/90 text-lg md:text-2xl accent-font italic mb-4">「営業＝キツい」は、もう古い。</span>
+        未経験からでも、<br class="hidden md:block">
+        <span class="text-amber">課題に向き合う仕事</span>に変われる。
+      </h1>
+      <p class="text-white/80 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-light">
+        提案営業は「押し売り」ではなく、お客様の本当のニーズを聞き、最適な解決策を一緒に探す仕事です。<br>
+        スーツが硬すぎる世界観ではなく、<strong class="text-white/95">ちゃんと研修があり、仲間がいる</strong>現場が増えています。
+      </p>
+      <div class="flex flex-wrap gap-3 justify-center">
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">未経験OK</span>
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">研修・OJT充実</span>
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">成果で評価</span>
+        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">土日休み（業種により）</span>
+      </div>
+      <div class="mt-12">
+        <a href="#intro" class="text-white/60 hover:text-white transition-colors" aria-label="本文へ">
+          <svg class="w-8 h-8 mx-auto animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <section id="intro" class="py-20 md:py-28 relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-sky/10 text-sky mb-4">SECTION 01</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-ink mb-2">
+          「売る」より先に、<span class="text-coral">聞く・整理する・提案する</span>
+        </h2>
+        <p class="text-plum/60 accent-font italic text-lg mb-8">What Proposal Sales Really Is</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="提案営業画像/提案営業とは.jpg" alt="" class="card-image mb-8" width="1200" height="675">
+      </div>
+
+      <div class="fade-in space-y-5 text-base md:text-lg leading-relaxed text-ink/80">
+        <p>
+          <strong class="text-ink">提案営業（ソリューション営業）</strong>は、商品やサービスを「とにかく数を売る」仕事ではありません。
+          お客様の現状の課題や理想の姿をヒアリングし、自社の製品・サービスがどう役立つかを<strong class="text-ink">論理的に説明し、納得してもらう</strong>役割です。
+        </p>
+        <p>
+          だからこそ重視されるのは、滑舌より<strong class="text-coral">傾聴力・整理力・言語化力</strong>。
+          元々コツコツ作業が得意な人、接客で人の話を聞くのが得意な人、事務職で資料まとめをしていた人——そうした経験は、そのまま提案営業の土台になります。
+        </p>
+        <p>
+          服装や現場の雰囲気も多様化しています。<strong class="text-ink">スマートカジュアルで回る会社</strong>も多く、「営業マン＝常に黒スーツで威圧的」というイメージは、必ずしも当てはまりません。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28 bg-white relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-coral/10 text-coral mb-4">SECTION 02</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-ink mb-2">
+          未経験採用が<span class="text-coral">前年比で急増</span>。<br>
+          なぜ今「型」で育てる営業が増えたのか
+        </h2>
+        <p class="text-plum/60 accent-font italic text-lg mb-8">Why Companies Hire Beginners Now</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="提案営業画像/転職の理由.jpg" alt="" class="card-image mb-10" width="1200" height="675">
+      </div>
+
+      <div class="fade-in grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <div class="stat-card">
+          <div class="stat-number" style="font-size: 1.85rem;">厚み</div>
+          <p class="text-ink/70 text-sm mt-2">人手不足を背景に<br>営業職の求人に厚みがある傾向</p>
+        </div>
+        <div class="stat-card" style="border-top-color: var(--color-gold);">
+          <div class="stat-number" style="color: var(--color-gold); font-size: 1.85rem;">未経験OK</div>
+          <p class="text-ink/70 text-sm mt-2">求人票に明記された<br>ポテンシャル採用が増加傾向</p>
+        </div>
+        <div class="stat-card" style="border-top-color: var(--color-mint);">
+          <div class="stat-number" style="color: var(--color-mint); font-size: 1.85rem;">型化</div>
+          <p class="text-ink/70 text-sm mt-2">CRM・商談手順・<br>研修が整う企業が主流に</p>
+        </div>
+      </div>
+
+      <div class="fade-in space-y-6">
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">1</div>
+          <div>
+            <h4 class="font-bold text-ink text-lg">人手不足で「ポテンシャル採用」が一般化</h4>
+            <p class="text-ink/70 mt-1">営業の離職や世代交代を背景に、ゼロから育てる採用が増えています。前職が事務・販売・サービス業でも、志望動機と学習意欲があればチャンスが広がっています。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">2</div>
+          <div>
+            <h4 class="font-bold text-ink text-lg">「型」とツールで、属人化を減らしている</h4>
+            <p class="text-ink/70 mt-1">CRM、商談フロー、社内ナレッジの共有が進み、いきなりフリースタイルで成果を出すのではなく、手順に沿って学べる環境が整いつつあります。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">3</div>
+          <div>
+            <h4 class="font-bold text-ink text-lg">成果インセンティブで、努力が収入に直結しやすい</h4>
+            <p class="text-ink/70 mt-1">歩合・賞与・昇給の設計は会社によりますが、数字や成果が見える仕事なので、成長とともに報酬が伸びやすい職種でもあります。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">4</div>
+          <div>
+            <h4 class="font-bold text-ink text-lg">「信頼される営業」がブランドの武器になる</h4>
+            <p class="text-ink/70 mt-1">押し売りは長期的に損。誠実な提案型の営業こそ、リピートや紹介につながる——という経営視点が定着し、現場の振る舞いも変わってきています。</p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
+          <div class="flow-number">5</div>
+          <div>
+            <h4 class="font-bold text-ink text-lg">スキルは他業界でも通用する「ビジネスの土台」</h4>
+            <p class="text-ink/70 mt-1">ヒアリング、要約、プレゼン、交渉の基礎は、将来マネジメントや企画職に進むときも武器になります。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28 relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-amber/10 text-amber mb-4">SECTION 03</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-ink mb-2">
+          <span class="text-coral">「営業は向いてないかも」</span>が消える瞬間。<br>
+          研修と仲間がいるから、初日から迷子になりにくい
+        </h2>
+        <p class="text-plum/60 accent-font italic text-lg mb-8">Training &amp; Team Support</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="提案営業画像/研修と仲間.jpg" alt="" class="card-image mb-10" width="1200" height="675">
+      </div>
+
+      <div class="fade-in">
+        <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-8">
+          <div class="quote-mark">"</div>
+          <p class="text-lg md:text-xl text-ink/80 leading-relaxed -mt-6 ml-8">
+            最初は名刺交換のタイミングも緊張しました。でも先輩が<strong class="text-ink">同席商談とロープレ</strong>で付いてくれて、
+            3ヶ月くらいで「自分でも一言いえる」ようになったのが正直うれしかったです。
+          </p>
+          <p class="text-plum/50 text-sm mt-4 ml-8">—— 26歳・元倉庫作業 → 提案営業1年目（イメージ）</p>
+        </div>
+      </div>
+
+      <div class="fade-in space-y-5 text-base md:text-lg leading-relaxed text-ink/80">
+        <p>
+          未経験で不安になるのは、<strong class="text-ink">「ひとりで現場に放り出されるのでは」</strong>という恐怖です。
+          近年の提案営業職では、<strong class="text-coral">OJT・ロールプレイ・商談同席・マニュアル化</strong>が当たり前になりつつあります。
+        </p>
+        <p>
+          求める人物像も「ガツガツしたハンター型」だけではありません。
+          <strong class="text-ink">丁寧・誠実・学習意欲</strong>を評価する求人は少なくありません。むしろ長期的な信頼関係を大事にするBtoBでは、そちらのタイプが合うケースも多いです。
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28 bg-white relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-coral/10 text-coral mb-4">SECTION 04</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-ink mb-2">
+          一般職と並べると、<span class="text-coral">年収カーブが違う</span>。<br>
+          （大手IT・外資は一旦置いて比較）
+        </h2>
+        <p class="text-plum/60 accent-font italic text-lg mb-8">Salary in Plain Comparison</p>
+      </div>
+
+      <div class="fade-in">
+        <img src="提案営業画像/給料比較.jpg" alt="" class="card-image mb-10" width="1200" height="675">
+      </div>
+
+      <div class="fade-in">
+        <p class="text-base md:text-lg text-ink/80 leading-relaxed mb-8">
+          会社・業界・地域・歩合の有無で幅はあります。ここでは<strong class="text-ink">一般的な事務・販売・サービス職</strong>と、
+          <strong class="text-ink">未経験から入る提案営業（固定＋歩合の一例）</strong>をざっくり並べたイメージです。
+        </p>
+
+        <div class="overflow-x-auto mb-8">
+          <table class="salary-table w-full text-left">
+            <thead>
+              <tr>
+                <th>職種</th>
+                <th>入社1年目（目安）</th>
+                <th>3年目（目安）</th>
+                <th>5年目（目安）</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="bg-white">
+                <td class="font-medium text-ink">一般事務</td>
+                <td>約250万円</td>
+                <td>約280万円</td>
+                <td>約310万円</td>
+              </tr>
+              <tr class="bg-cream/50">
+                <td class="font-medium text-ink">販売・接客</td>
+                <td>約240万円</td>
+                <td>約270万円</td>
+                <td>約300万円</td>
+              </tr>
+              <tr class="bg-white">
+                <td class="font-medium text-ink">コールセンター</td>
+                <td>約260万円</td>
+                <td>約280万円</td>
+                <td>約300万円</td>
+              </tr>
+              <tr class="bg-cream/50">
+                <td class="font-medium text-ink">飲食・サービス</td>
+                <td>約230万円</td>
+                <td>約260万円</td>
+                <td>約290万円</td>
+              </tr>
+              <tr class="highlight-row">
+                <td>提案営業（固定＋歩合例）</td>
+                <td>約300〜380万円</td>
+                <td>約380〜480万円</td>
+                <td>約450〜600万円</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="bg-gradient-to-r from-coral/5 to-amber/5 rounded-2xl p-6 border-l-4 border-coral">
+          <p class="text-ink font-bold text-lg mb-2">読み解きのポイント</p>
+          <p class="text-ink/70">
+            歩合・インセンティブがあると、<strong class="text-coral">成果が出た月・四半期で一気に伸びる</strong>一方、波があるのも事実です。
+            面談では「固定の下限」「残業の実態」「歩合の計算方法」を必ず確認しましょう。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28 relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-mint/10 text-mint mb-4">SECTION 05</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-ink mb-2">
+          名刺集めだけじゃない。<br>
+          提案営業の<span class="text-coral">リアルな1日</span>（一例）
+        </h2>
+        <p class="text-plum/60 accent-font italic text-lg mb-12">A Day in the Life</p>
+      </div>
+
+      <div class="space-y-16">
+
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-ink to-plum text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">09:00</span>
+            <div>
+              <h3 class="text-xl font-bold">朝礼・訪問準備</h3>
+              <p class="text-white/70 text-sm">顧客リスト・資料・当日のゴール確認</p>
+            </div>
+          </div>
+          <img src="提案営業画像/営業準備.jpg" alt="" class="w-full" width="1200" height="675">
+          <div class="p-6 md:p-8">
+            <p class="text-ink/80 leading-relaxed">
+              チーム朝礼で本日の重点案件を共有し、<strong class="text-ink">CRMに訪問ログや次アクション</strong>を整理します。
+              商談資料はテンプレに沿ってカスタマイズすることが多く、<strong class="text-coral">「誰が・何に困っているか」</strong>を一言で言語化できると強いです。
+            </p>
+          </div>
+        </div>
+
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-ink to-plum text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">11:00</span>
+            <div>
+              <h3 class="text-xl font-bold">訪問・ヒアリング</h3>
+              <p class="text-white/70 text-sm">課題の洗い出しと信頼づくり</p>
+            </div>
+          </div>
+          <img src="提案営業画像/ヒアリング.jpg" alt="" class="w-full" width="1200" height="675">
+          <div class="p-6 md:p-8">
+            <p class="text-ink/80 leading-relaxed">
+              ここが提案営業の中心です。<strong class="text-ink">質問設計・傾聴・要約・次回までの宿題合意</strong>までがセット。
+              うまくいく人は話し上手というより、<strong class="text-coral">「相手の話を整理して返せる人」</strong>が多いです。
+            </p>
+          </div>
+        </div>
+
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-ink to-plum text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">14:00</span>
+            <div>
+              <h3 class="text-xl font-bold">社内連携・提案づくり</h3>
+              <p class="text-white/70 text-sm">エンジニア・事務・上長とすり合わせ</p>
+            </div>
+          </div>
+          <img src="提案営業画像/提案プレゼン.jpg" alt="" class="w-full" width="1200" height="675">
+          <div class="p-6 md:p-8">
+            <p class="text-ink/80 leading-relaxed">
+              顧客の要望を社内に持ち帰り、<strong class="text-ink">見積・スケジュール・導入ステップ</strong>を詰めます。
+              大きな案件ほど「ひとりの営業」では完結せず、チーム戦です。だから<strong class="text-coral">コミュニケーションが苦手でも、報連相ができる人</strong>は伸びやすいです。
+            </p>
+          </div>
+        </div>
+
+        <div class="flow-card fade-in">
+          <div class="flex items-center gap-4 bg-gradient-to-r from-ink to-plum text-white p-5">
+            <span class="text-3xl font-bold accent-font opacity-60">16:30</span>
+            <div>
+              <h3 class="text-xl font-bold">提案・フォローアップ</h3>
+              <p class="text-white/70 text-sm">オンライン商談や再訪、メールフォロー</p>
+            </div>
+          </div>
+          <img src="提案営業画像/フォローアップ.jpg" alt="" class="w-full" width="1200" height="675">
+          <div class="p-6 md:p-8">
+            <p class="text-ink/80 leading-relaxed">
+              プレゼン後は<strong class="text-ink">疑問の解消、稟議スケジュールの確認、次の日程確定</strong>までが仕事です。
+              即決まれない案件ほど、丁寧なフォローが成果に直結します。「しつこい」ではなく<strong class="text-coral">「役に立つリマインド」</strong>を目指すイメージです。
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="py-20 md:py-28 bg-white relative">
+    <div class="geo-pattern"></div>
+    <div class="max-w-4xl mx-auto px-6 relative">
+      <div class="fade-in">
+        <span class="tag bg-sky/10 text-sky mb-4">SECTION 06</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-ink mb-2">
+          直行直帰や在宅併用も。<br>
+          <span class="text-coral">「営業＝終電まで飲み」</span>だけじゃない働き方
+        </h2>
+        <p class="text-plum/60 accent-font italic text-lg mb-12">Flexibility Varies by Company</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+        <div class="fade-in">
+          <img src="提案営業画像/直行直帰.jpg" alt="" class="card-image mb-5" width="800" height="600">
+          <h3 class="text-xl font-bold text-ink mb-3">
+            <span class="text-coral">訪問エリア</span>と<span class="text-coral">直行直帰</span>
+          </h3>
+          <p class="text-ink/70 leading-relaxed">
+            外勤が中心の職種なので、<strong class="text-ink">自宅から顧客へ直行し、帰りもそのまま帰宅</strong>という働き方はよくあります。
+            朝のラッシュを避けられることも。会社によっては出社日と在宅日を分けるハイブリッド型も増えています。
+          </p>
+        </div>
+        <div class="fade-in">
+          <img src="提案営業画像/休日.jpg" alt="" class="card-image mb-5" width="800" height="600">
+          <h3 class="text-xl font-bold text-ink mb-3">
+            休日・プライベートの確保
+          </h3>
+          <p class="text-ink/70 leading-relaxed">
+            完全週休二日・土日祝休みの求人も多い一方、月末月初や繁忙期に寄せられることもあります。
+            <strong class="text-coral">選考時にカレンダーと残業の実態を具体的に聞く</strong>ことが、ミスマッチ防止の近道です。
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section py-20 md:py-28">
+    <div class="max-w-4xl mx-auto px-6 relative z-10">
+      <div class="fade-in text-center mb-10">
+        <span class="tag bg-amber/20 text-amber mb-4">YOUR NEXT STEP</span>
+        <h2 class="text-2xl md:text-4xl hook-text text-white mb-2">
+          「営業は自分には…」と思っていた人が、<br>
+          入社後に<span class="text-amber">イメージを変えた</span>——そんな声が増えている
+        </h2>
+        <p class="text-white/50 accent-font italic text-lg mb-8">Start Without the Stereotype</p>
+      </div>
+
+      <div class="fade-in max-w-xl mx-auto mb-10">
+        <img src="提案営業画像/新しい挑戦.jpg" alt="" class="card-image" width="1200" height="675">
+      </div>
+
+      <div class="fade-in text-center">
+        <p class="text-white/80 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+          必要なのは、いきなりトップセールスになることではありません。<br>
+          <strong class="text-amber">一歩ずつ型を覚え、顧客の課題に向き合う姿勢</strong>があれば、未経験から十分にキャリアは作れます。<br><br>
+          キャリアアドバイザーと一緒に、あなたに合う「提案営業」の現場を探してみませんか。
+        </p>
+
+        <div class="space-y-4">
+          <a href="#" class="cta-button">まずは無料で相談してみる</a>
+          <p class="text-white/40 text-sm mt-4">相談は完全無料・オンライン対応可・服装自由</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="bg-ink py-10 text-center">
+    <p class="text-white/30 text-sm">
+      &copy; 2026 杜の都工房 キャリアアドバイザー事業部
+    </p>
+  </footer>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add('visible');
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>

@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>施工管理という選択肢 — 年収もやりがいも、全部手に入る仕事</title>
+  <title>採用代行サポート — キャリアアドバイザー</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&family=Noto+Sans+JP:wght@300;400;500;700;900&family=Noto+Serif+JP:wght@400;700&family=Zen+Kaku+Gothic+New:wght@400;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
@@ -18,7 +18,8 @@
             warm: '#f5e6d3',
             cream: '#faf7f2',
             coral: '#e8734a',
-            mint: '#2d9a8c',
+            mint: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#86efac', 300: '#4ade80', 400: '#22c55e', 500: '#16a34a', 600: '#15803d' },
+            bluegray: { 50: '#f5f5f5', 100: '#e5e5e5', 200: '#cccccc', 300: '#a3a3a3', 400: '#737373', 500: '#525252', 600: '#404040', 700: '#262626', 800: '#171717', 900: '#0a0a0a' },
           }
         }
       }
@@ -33,776 +34,2009 @@
       --color-warm: #f5e6d3;
       --color-cream: #faf7f2;
       --color-coral: #e8734a;
-      --color-mint: #2d9a8c;
       --font-heading: 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
       --font-body: 'Noto Sans JP', sans-serif;
+      --font-serif: 'Noto Serif JP', 'Georgia', serif;
       --font-accent: 'Playfair Display', serif;
+      --font-hoshu-cute: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
+    }
+
+    .hoshu-yen-cute {
+      font-family: var(--font-hoshu-cute);
+      font-feature-settings: 'tnum' 1;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: var(--font-body); color: #1a1a2e; background: #f0fdf4; overflow-x: hidden; }
+    h1, h2, h3, h4 { font-family: var(--font-heading); }
+    .font-serif { font-family: var(--font-serif); }
+    .accent-font { font-family: var(--font-accent); }
 
-    body {
-      font-family: var(--font-body);
-      color: #1a1a2e;
-      background: var(--color-cream);
-      overflow-x: hidden;
+    /* ===== SPLASH SCREEN ===== */
+    #splash {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #ffffff;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .splash-logo {
+      width: 140px; height: 140px; border-radius: 28px;
+      display: flex; align-items: center; justify-content: center;
+      animation: splash-pulse 1.5s ease-in-out infinite;
+    }
+    .splash-logo img {
+      width: 100%; height: 100%; object-fit: contain;
+    }
+    @keyframes splash-pulse {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 12px 40px rgba(22, 163, 74, 0.15)); }
+      50% { transform: scale(1.04); filter: drop-shadow(0 16px 50px rgba(22, 163, 74, 0.25)); }
+    }
+    .splash-bar-track {
+      width: 200px; height: 4px; background: rgba(22, 163, 74, 0.1);
+      border-radius: 4px; margin-top: 32px; overflow: hidden;
+    }
+    .splash-bar-fill {
+      height: 100%; width: 0; border-radius: 4px;
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+      animation: splash-fill 2.6s ease-in-out forwards;
+    }
+    @keyframes splash-fill { 0% { width: 0; } 100% { width: 100%; } }
+
+    /* ===== CARD NEON EFFECT ===== */
+    @keyframes home-card-neon-blink {
+      0%, 100% { box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.2), 0 0 8px rgba(22, 163, 74, 0.18), 0 2px 8px rgba(0,0,0,0.08); }
+      45% { box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.45), 0 0 16px rgba(22, 163, 74, 0.35), 0 0 24px rgba(21, 128, 61, 0.22), 0 4px 12px rgba(0,0,0,0.1); }
+      50% { box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.08), 0 0 4px rgba(22, 163, 74, 0.08), 0 2px 8px rgba(0,0,0,0.08); }
+    }
+    .home-neon-card { position: relative; animation: home-card-neon-blink 2.1s ease-in-out infinite; }
+
+    /* ===== CTA GLINT ===== */
+    @keyframes glint-sweep {
+      0% { transform: translateX(-130%) skewX(-20deg); opacity: 0; }
+      18% { opacity: 0.85; }
+      30% { transform: translateX(130%) skewX(-20deg); opacity: 0; }
+      100% { transform: translateX(130%) skewX(-20deg); opacity: 0; }
+    }
+    .cta-glint { position: relative; overflow: hidden; }
+    .cta-glint::after {
+      content: ''; position: absolute; inset: -2px; width: 38%;
+      background: linear-gradient(100deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0) 100%);
+      animation: glint-sweep 3.8s ease-in-out infinite; pointer-events: none;
     }
 
-    h1, h2, h3, h4 {
-      font-family: var(--font-heading);
+    /* ===== METALLIC BADGE ===== */
+    .bg-metallic-green { background: linear-gradient(135deg, #145a32 0%, #1e8449 30%, #2ecc71 60%, #1e8449 100%); }
+
+    /* ===== SELECTION CARD ===== */
+    .selection-card {
+      background: white; border-radius: 16px; padding: 40px 32px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.06); border: 1px solid #e5e5e5;
+      transition: all 0.3s ease; cursor: pointer; text-decoration: none; display: block;
+    }
+    .selection-card:hover {
+      transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.12);
+      border-color: #16a34a;
     }
 
-    .accent-font {
-      font-family: var(--font-accent);
+    /* ===== FADE IN ===== */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ===== PAGE TRANSITION ===== */
+    .page { display: none; opacity: 0; transition: opacity 0.3s ease; }
+    .page.active { display: block; opacity: 1; }
+
+    /* ===== REWARDS LOGIN ===== */
+    .hoshu-panel { display: none; }
+    .hoshu-panel.is-visible { display: block; animation: hoshu-fade 0.35s ease forwards; }
+    @keyframes hoshu-fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hoshu-role-card {
+      background: white; border-radius: 16px; padding: 28px 24px;
+      border: 1px solid #e5e5e5; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+      cursor: pointer; text-align: left; width: 100%;
+    }
+    .hoshu-role-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 14px 36px rgba(22, 163, 74, 0.15);
+      border-color: #86efac;
+    }
+    .hoshu-role-card:focus-visible {
+      outline: 2px solid #16a34a; outline-offset: 3px;
+    }
+    .hoshu-input {
+      width: 100%; border-radius: 12px; border: 1px solid #e5e5e5;
+      padding: 12px 14px; font-size: 15px; transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .hoshu-input:focus {
+      outline: none; border-color: #16a34a;
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+    }
+    .hoshu-input-code {
+      font-family: ui-monospace, 'Cascadia Mono', 'Segoe UI Mono', monospace;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      max-width: 9rem;
+      text-align: center;
     }
 
-    .hero-section {
+    /* アコーディオン（報酬明細） */
+    details.hoshu-acc summary {
+      list-style: none;
+    }
+    details.hoshu-acc summary::-webkit-details-marker {
+      display: none;
+    }
+    details.hoshu-acc summary::after {
+      content: '';
+      width: 8px; height: 8px;
+      border-right: 2px solid #737373;
+      border-bottom: 2px solid #737373;
+      transform: rotate(45deg);
+      flex-shrink: 0;
+      margin-left: 8px;
+      transition: transform 0.2s ease;
+    }
+    details.hoshu-acc[open] summary::after {
+      transform: rotate(-135deg);
+      margin-top: 4px;
+    }
+
+    /* アドバイザー報酬サマリー（常に横組み・読みやすさ優先） */
+    .hoshu-advisor-dash-text {
+      writing-mode: horizontal-tb;
+      text-orientation: mixed;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    /* 累計報酬カード（シルバー／スチール調メタリック） */
+    .hoshu-metallic-total-card {
       position: relative;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 0.875rem;
       overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      box-shadow:
+        0 12px 40px rgba(15, 23, 42, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        inset 0 -3px 8px rgba(51, 65, 85, 0.09);
+      background: linear-gradient(
+        158deg,
+        #f8fafc 0%,
+        #e8eef4 16%,
+        #cbd5e1 40%,
+        #94a3b8 49.5%,
+        #cbd5e1 54%,
+        #dce4ee 72%,
+        #f1f5f9 100%
+      );
     }
-
-    .hero-section::before {
+    .hoshu-metallic-total-card::before {
       content: '';
       position: absolute;
       inset: 0;
+      border-radius: inherit;
       background: linear-gradient(
-        135deg,
-        rgba(15, 27, 45, 0.92) 0%,
-        rgba(30, 58, 95, 0.85) 40%,
-        rgba(74, 144, 217, 0.7) 100%
+        118deg,
+        rgba(255, 255, 255, 0.72) 0%,
+        rgba(255, 255, 255, 0.08) 35%,
+        rgba(255, 255, 255, 0) 48%,
+        rgba(255, 255, 255, 0) 58%,
+        rgba(255, 255, 255, 0.45) 72%,
+        rgba(255, 255, 255, 0) 100%
       );
+      pointer-events: none;
+      opacity: 0.85;
+    }
+    .hoshu-metallic-total-inner {
+      position: relative;
       z-index: 1;
     }
-
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center 20%;
+    .hoshu-metallic-total-amount {
+      color: #0f172a;
+      text-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.55),
+        0 -1px 1px rgba(15, 23, 42, 0.06);
     }
 
-    .hero-content {
-      position: relative;
-      z-index: 2;
+    /* 報酬・管理者画面のみシェルを広く */
+    #app.hoshu-shell-wide {
+      max-width: min(1720px, calc(100vw - 16px));
     }
-
-    .section-divider {
-      height: 4px;
-      background: linear-gradient(90deg, var(--color-gold), var(--color-sky), var(--color-gold));
-      border: none;
-    }
-
-    .card-image {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .card-image:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
-    }
-
-    .hook-text {
-      font-family: var(--font-heading);
-      font-weight: 900;
-      line-height: 1.3;
-      letter-spacing: -0.02em;
-    }
-
-    .number-highlight {
-      color: var(--color-coral);
-      font-weight: 900;
-      font-size: 1.2em;
-    }
-
-    .salary-table {
-      border-collapse: separate;
-      border-spacing: 0;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .salary-table th {
-      background: var(--color-navy);
-      color: white;
-      padding: 16px 20px;
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .salary-table td {
-      padding: 14px 20px;
-      border-bottom: 1px solid #e8e0d5;
-      font-size: 0.95rem;
-    }
-
-    .salary-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .salary-table .highlight-row {
-      background: linear-gradient(90deg, #fff3e0, #fff8f0);
-      font-weight: 700;
-    }
-
-    .salary-table .highlight-row td {
-      color: var(--color-coral);
-      font-size: 1.05rem;
-    }
-
-    .flow-card {
-      background: white;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .flow-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-    }
-
-    .flow-number {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, var(--color-steel), var(--color-sky));
-      color: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      font-size: 1.2rem;
-      font-family: var(--font-accent);
-      flex-shrink: 0;
-    }
-
-    .cta-section {
-      background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-steel) 100%);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -20%;
-      width: 500px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(212, 168, 67, 0.15), transparent 70%);
-      border-radius: 50%;
-    }
-
-    .cta-button {
-      background: linear-gradient(135deg, var(--color-gold), #e8b84a);
-      color: var(--color-navy);
-      font-weight: 900;
-      font-size: 1.1rem;
-      padding: 18px 48px;
-      border-radius: 60px;
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(212, 168, 67, 0.4);
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .cta-button:hover {
-      transform: translateY(-3px) scale(1.02);
-      box-shadow: 0 8px 32px rgba(212, 168, 67, 0.5);
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 4px 14px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .geo-pattern {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      opacity: 0.03;
-      background-image:
-        linear-gradient(30deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f),
-        linear-gradient(150deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f),
-        linear-gradient(30deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f),
-        linear-gradient(150deg, #1e3a5f 12%, transparent 12.5%, transparent 87%, #1e3a5f 87.5%, #1e3a5f);
-      background-size: 80px 140px;
-      background-position: 0 0, 0 0, 40px 70px, 40px 70px;
-      pointer-events: none;
-    }
-
-    .quote-mark {
-      font-family: var(--font-accent);
-      font-size: 4rem;
-      line-height: 1;
-      color: var(--color-gold);
-      opacity: 0.6;
-    }
-
-    .stat-card {
-      background: white;
-      border-radius: 16px;
-      padding: 24px;
-      text-align: center;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
-      border-top: 4px solid var(--color-sky);
-    }
-
-    .stat-number {
-      font-family: var(--font-accent);
-      font-size: 2.5rem;
-      font-weight: 700;
-      color: var(--color-coral);
-    }
-
-    @media (max-width: 768px) {
-      .hero-section { min-height: 90vh; }
-      .stat-number { font-size: 2rem; }
+    nav#bottom-tabs.hoshu-shell-wide {
+      width: min(1720px, calc(100% - 24px));
+      max-width: calc(100vw - 16px);
     }
   </style>
 </head>
 <body>
 
-  <!-- ========== HERO SECTION ========== -->
-  <section class="hero-section">
-    <img src="施工管理画像/施工管理とは.jpg" alt="施工管理の仕事をする女性" class="hero-bg">
-    <div class="hero-content text-center px-6 max-w-4xl mx-auto">
-      <div class="mb-6">
-        <span class="tag bg-gold/90 text-navy">CAREER GUIDE 2026</span>
-      </div>
-      <h1 class="text-white text-3xl md:text-5xl lg:text-6xl hook-text mb-6 leading-tight">
-        <span class="block text-gold/90 text-lg md:text-2xl accent-font italic mb-4">"知らなかった"では、もう遅い。</span>
-        年収も、やりがいも、<br class="hidden md:block">
-        <span class="text-gold">全部手に入る仕事</span>がある。
-      </h1>
-      <p class="text-white/80 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed font-light">
-        <br>
-        今、未経験から飛び込む20代・30代の女性が急増しています。<br>
-        その理由を、この記事で全て明かします。
-      </p>
-      <div class="flex flex-wrap gap-3 justify-center">
-        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">未経験OK</span>
-        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">年収400万円〜</span>
-        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">女性活躍中</span>
-        <span class="tag bg-white/15 text-white backdrop-blur-sm border border-white/20">土日休み可</span>
-      </div>
-      <div class="mt-12">
-        <a href="#intro" class="text-white/60 hover:text-white transition-colors">
-          <svg class="w-8 h-8 mx-auto animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-          </svg>
-        </a>
-      </div>
+  <!-- ========== SPLASH SCREEN ========== -->
+  <div id="splash">
+    <div class="splash-logo">
+      <img src="../ETOILEロゴ.png" alt="ETOILE">
     </div>
-  </section>
-
-  <hr class="section-divider">
-
-  <!-- ========== SECTION 1: 施工管理とは ========== -->
-  <section id="intro" class="py-20 md:py-28 relative">
-    <div class="geo-pattern"></div>
-    <div class="max-w-4xl mx-auto px-6 relative">
-      <div class="fade-in">
-        <span class="tag bg-sky/10 text-sky mb-4">SECTION 01</span>
-        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
-          現場の<span class="text-coral">"司令塔"</span>——<br class="md:hidden">建物をゼロから完成させる仕事
-        </h2>
-        <p class="text-steel/60 accent-font italic text-lg mb-8">The Conductor of Construction</p>
-      </div>
-
-      <div class="fade-in">
-        <img src="施工管理画像/施工管理とは.jpg" alt="タブレットを持ち現場を指揮する女性施工管理者" class="card-image mb-8">
-      </div>
-
-      <div class="fade-in space-y-5 text-base md:text-lg leading-relaxed text-navy/80">
-        <p>
-          施工管理とは、建設現場の<strong class="text-navy">「プロジェクトマネージャー」</strong>です。
-          ビルやマンション、商業施設、道路、橋——あらゆる建造物が「設計図通り」「予算内で」「安全に」「期日までに」完成するよう、
-          現場全体をコントロールする仕事です。
-        </p>
-        <p>
-          「ガテン系」「力仕事」というイメージを持つ方も多いですが、実態は大きく異なります。
-          <strong class="text-navy">施工管理者が直接工事をすることはありません。</strong>
-          職人さんたちに指示を出し、スケジュールを調整し、安全を確認し、品質を管理する——いわば<strong class="text-coral">「現場の指揮者」</strong>です。
-        </p>
-        <p>
-          必要なのは腕力ではなく、<strong class="text-navy">段取り力・コミュニケーション力・細やかな気配り</strong>。
-          だからこそ今、業界未経験の方や女性が続々と活躍し始めているのです。
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SECTION 2: なぜ人が殺到しているのか ========== -->
-  <section class="py-20 md:py-28 bg-white relative">
-    <div class="geo-pattern"></div>
-    <div class="max-w-4xl mx-auto px-6 relative">
-      <div class="fade-in">
-        <span class="tag bg-coral/10 text-coral mb-4">SECTION 02</span>
-        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
-          応募者が前年比<span class="text-coral">200%</span>超。<br>
-          この仕事に人が殺到する<span class="text-coral">"5つの理由"</span>
-        </h2>
-        <p class="text-steel/60 accent-font italic text-lg mb-8">Why Everyone Is Rushing In</p>
-      </div>
-
-      <div class="fade-in">
-        <img src="施工管理画像/転職の理由.jpg" alt="施工管理の先輩と後輩が建設現場のオフィスで語り合う" class="card-image mb-10">
-      </div>
-
-      <div class="fade-in grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div class="stat-card">
-          <div class="stat-number">34万人</div>
-          <p class="text-navy/70 text-sm mt-2">2030年に不足する<br>建設技術者の数</p>
-        </div>
-        <div class="stat-card" style="border-top-color: var(--color-gold);">
-          <div class="stat-number" style="color: var(--color-gold);">1.5倍</div>
-          <p class="text-navy/70 text-sm mt-2">一般職種に比べた<br>求人倍率</p>
-        </div>
-        <div class="stat-card" style="border-top-color: var(--color-mint);">
-          <div class="stat-number" style="color: var(--color-mint);">92%</div>
-          <p class="text-navy/70 text-sm mt-2">未経験入社者の<br>1年後定着率</p>
-        </div>
-      </div>
-
-      <div class="fade-in space-y-6">
-        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
-          <div class="flow-number">1</div>
-          <div>
-            <h4 class="font-bold text-navy text-lg">圧倒的な人手不足＝「選ばれる側」になれる</h4>
-            <p class="text-navy/70 mt-1">建設業界は深刻な人手不足。そのため、未経験者でも積極的に採用され、入社後の研修体制も充実しています。「経験がないから…」という不安は不要です。</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
-          <div class="flow-number">2</div>
-          <div>
-            <h4 class="font-bold text-navy text-lg">国が本気で待遇改善に動いている</h4>
-            <p class="text-navy/70 mt-1">2024年の「建設業の働き方改革」により、残業規制が強化。週休二日制の導入も急速に進み、かつての「休めない業界」は過去のものになりつつあります。</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
-          <div class="flow-number">3</div>
-          <div>
-            <h4 class="font-bold text-navy text-lg">資格を取れば、一生食いっぱぐれない</h4>
-            <p class="text-navy/70 mt-1">施工管理技士の国家資格は、取得すれば全国どこでも通用する"一生モノ"のスキル。転職市場での価値が飛躍的に上がります。</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
-          <div class="flow-number">4</div>
-          <div>
-            <h4 class="font-bold text-navy text-lg">「形に残る仕事」という圧倒的なやりがい</h4>
-            <p class="text-navy/70 mt-1">自分が携わった建物が何十年も街に残る。「あの建物、私が担当したんだよ」と言える仕事は、他にほとんどありません。</p>
-          </div>
-        </div>
-        <div class="flex items-start gap-4 bg-cream rounded-xl p-5">
-          <div class="flow-number">5</div>
-          <div>
-            <h4 class="font-bold text-navy text-lg">年功序列ではなく、実力で年収が上がる</h4>
-            <p class="text-navy/70 mt-1">資格手当・現場手当・役職手当など、努力がダイレクトに年収に反映されるのが施工管理の特徴。20代で年収500万円超も珍しくありません。</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SECTION 3: 女性の応募者が殺到 ========== -->
-  <section class="py-20 md:py-28 relative">
-    <div class="geo-pattern"></div>
-    <div class="max-w-4xl mx-auto px-6 relative">
-      <div class="fade-in">
-        <span class="tag bg-gold/10 text-gold mb-4">SECTION 03</span>
-        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
-          <span class="text-coral">"男の仕事"</span>は完全に過去の話。<br>
-          女性応募者が<span class="text-coral">3年で4倍</span>に急増中
-        </h2>
-        <p class="text-steel/60 accent-font italic text-lg mb-8">Women Are Changing the Industry</p>
-      </div>
-
-      <div class="fade-in">
-        <img src="施工管理画像/事務作業.jpg" alt="女性施工管理者3人がオフィスで図面を確認する様子" class="card-image mb-10">
-      </div>
-
-      <div class="fade-in">
-        <div class="bg-white rounded-2xl p-6 md:p-8 shadow-sm mb-8">
-          <div class="quote-mark">"</div>
-          <p class="text-lg md:text-xl text-navy/80 leading-relaxed -mt-6 ml-8">
-            最初は「私に建設業なんて…」と思っていました。でも実際に始めてみたら、
-            <strong class="text-navy">求められるのは力仕事ではなく"気配り"と"調整力"</strong>。
-            前職の接客経験がこんなに活きるとは思いませんでした。
-          </p>
-          <p class="text-steel/50 text-sm mt-4 ml-8">—— 28歳・元アパレル販売員 → 施工管理2年目</p>
-        </div>
-      </div>
-
-      <div class="fade-in space-y-5 text-base md:text-lg leading-relaxed text-navy/80">
-        <p>
-          「建設現場＝男社会」というイメージは、急速に変わりつつあります。国土交通省の推進する
-          <strong class="text-navy">「けんせつ小町」</strong>プロジェクトをはじめ、業界全体で女性の受け入れ体制が整備されました。
-        </p>
-        <p>
-          実は施工管理の業務の<strong class="text-coral">約6割はデスクワーク</strong>です。
-          書類作成、スケジュール調整、関係者との連絡、図面のチェック——これらは体力よりも
-          <strong class="text-navy">正確さ・丁寧さ・コミュニケーション力</strong>が求められる仕事。
-          事務職や接客業で培ったスキルが、そのまま武器になります。
-        </p>
-        <p>
-          さらに、女性専用の更衣室・トイレの設置が義務化され、産休・育休の取得実績も年々増加。
-          「女性が長く働ける環境」が、制度面からも整ってきています。
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SECTION 4: 給料比較 ========== -->
-  <section class="py-20 md:py-28 bg-white relative">
-    <div class="geo-pattern"></div>
-    <div class="max-w-4xl mx-auto px-6 relative">
-      <div class="fade-in">
-        <span class="tag bg-coral/10 text-coral mb-4">SECTION 04</span>
-        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
-          同い年の友達と、年収差<span class="text-coral">120万円</span>。<br>
-          この現実、知っていましたか？
-        </h2>
-        <p class="text-steel/60 accent-font italic text-lg mb-8">The Salary Gap You Didn't Know</p>
-      </div>
-
-      <div class="fade-in">
-        <img src="施工管理画像/給料比較.jpg" alt="カフェでスマホの給与情報を見て驚く女性" class="card-image mb-10">
-      </div>
-
-      <div class="fade-in">
-        <p class="text-base md:text-lg text-navy/80 leading-relaxed mb-8">
-          施工管理の最大の魅力のひとつが<strong class="text-navy">「収入の高さ」</strong>です。
-          大手IT企業や外資系を除いた、一般的な職種と比較してみましょう。
-          同じ年齢・同じ未経験スタートでも、<strong class="text-coral">数年後には大きな差</strong>が生まれます。
-        </p>
-
-        <div class="overflow-x-auto mb-8">
-          <table class="salary-table w-full text-left">
-            <thead>
-              <tr>
-                <th>職種</th>
-                <th>入社1年目</th>
-                <th>入社3年目</th>
-                <th>入社5年目</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="bg-white">
-                <td class="font-medium text-navy">一般事務</td>
-                <td>約250万円</td>
-                <td>約280万円</td>
-                <td>約310万円</td>
-              </tr>
-              <tr class="bg-cream/50">
-                <td class="font-medium text-navy">販売・接客</td>
-                <td>約240万円</td>
-                <td>約270万円</td>
-                <td>約300万円</td>
-              </tr>
-              <tr class="bg-white">
-                <td class="font-medium text-navy">飲食店スタッフ</td>
-                <td>約230万円</td>
-                <td>約260万円</td>
-                <td>約290万円</td>
-              </tr>
-              <tr class="bg-cream/50">
-                <td class="font-medium text-navy">介護職</td>
-                <td>約260万円</td>
-                <td>約290万円</td>
-                <td>約320万円</td>
-              </tr>
-              <tr class="bg-white">
-                <td class="font-medium text-navy">コールセンター</td>
-                <td>約260万円</td>
-                <td>約280万円</td>
-                <td>約300万円</td>
-              </tr>
-              <tr class="bg-cream/50">
-                <td class="font-medium text-navy">提案営業</td>
-                <td>約320万円 <span style="color:var(--color-coral);font-weight:700;font-size:.85em">+α</span></td>
-                <td>約390万円 <span style="color:var(--color-coral);font-weight:700;font-size:.85em">+α</span></td>
-                <td>約470万円 <span style="color:var(--color-coral);font-weight:700;font-size:.85em">+α</span></td>
-              </tr>
-              <tr class="highlight-row">
-                <td>施工管理</td>
-                <td>約350万円</td>
-                <td>約420万円</td>
-                <td>約500万円</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <p style="font-size:.78rem;color:#6b7280;text-align:right;margin:-4px 0 10px">※提案営業の「+α」はインセンティブ（成果報酬）を含みます</p>
-
-        <div class="bg-gradient-to-r from-coral/5 to-gold/5 rounded-2xl p-6 border-l-4 border-coral">
-          <p class="text-navy font-bold text-lg mb-2">注目ポイント</p>
-          <p class="text-navy/70">
-            施工管理は入社1年目から<strong class="text-coral">約350万円</strong>。
-            一般事務と比べると<strong class="text-coral">年間100万円以上</strong>の差があります。
-            提案営業もインセンティブ次第で高収入が狙えますが、
-            施工管理は<strong class="text-coral">安定した基本給</strong>で同等以上の収入が見込めるのが強みです。
-            さらに、施工管理技士の資格を取得すれば資格手当が加算され、
-            5年目には<strong class="text-coral">年収500万円</strong>に到達するケースも珍しくありません。
-            10年目以降は<strong>700万円超</strong>も現実的な数字です。
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SECTION 5: 1日の業務の流れ ========== -->
-  <section class="py-20 md:py-28 relative">
-    <div class="geo-pattern"></div>
-    <div class="max-w-4xl mx-auto px-6 relative">
-      <div class="fade-in">
-        <span class="tag bg-mint/10 text-mint mb-4">SECTION 05</span>
-        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
-          <span class="text-coral">"ガテン系"</span>はイメージだけ。<br>
-          施工管理者の<span class="text-coral">リアルな1日</span>を公開
-        </h2>
-        <p class="text-steel/60 accent-font italic text-lg mb-12">A Day in the Life</p>
-      </div>
-
-      <div class="space-y-16">
-
-        <!-- 業務1: 事務作業 -->
-        <div class="flow-card fade-in">
-          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
-            <span class="text-3xl font-bold accent-font opacity-60">08:00</span>
-            <div>
-              <h3 class="text-xl font-bold">朝礼・事務作業</h3>
-              <p class="text-white/70 text-sm">書類作成・安全書類の確認</p>
-            </div>
-          </div>
-          <img src="施工管理画像/事務作業.jpg" alt="女性施工管理者が事務所でチームと書類を確認する" class="w-full">
-          <div class="p-6 md:p-8">
-            <p class="text-navy/80 leading-relaxed">
-              出勤したらまず<strong class="text-navy">朝礼</strong>で、その日の作業内容と注意事項を全員に共有します。
-              その後はデスクに戻り、<strong class="text-navy">安全書類の作成・確認</strong>、
-              <strong class="text-navy">作業日報の整理</strong>、<strong class="text-navy">写真の整理・記録</strong>を行います。
-              実は施工管理の業務時間の半分以上がこうしたデスクワーク。
-              Excelや専用ソフトを使った作業が中心で、体力よりも<strong class="text-coral">正確さと段取り力</strong>が求められます。
-            </p>
-          </div>
-        </div>
-
-        <!-- 業務2: 図面チェック -->
-        <div class="flow-card fade-in">
-          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
-            <span class="text-3xl font-bold accent-font opacity-60">10:00</span>
-            <div>
-              <h3 class="text-xl font-bold">図面チェック</h3>
-              <p class="text-white/70 text-sm">設計と現場の"橋渡し役"</p>
-            </div>
-          </div>
-          <img src="施工管理画像/図面チェック.jpg" alt="モニターの3Dモデルを確認しながら図面をチェックする女性" class="w-full">
-          <div class="p-6 md:p-8">
-            <p class="text-navy/80 leading-relaxed">
-              設計事務所から届いた図面を確認し、<strong class="text-navy">現場で実際に施工可能かどうか</strong>をチェックします。
-              「この配管の位置だと壁と干渉する」「ここの寸法は現場と合っていない」——
-              こうした<strong class="text-coral">細かな矛盾を見つけ出し、設計者にフィードバック</strong>するのが施工管理の重要な役割です。
-              最近はBIM（3D建築モデル）を使ったデジタル図面も普及しており、
-              PCスキルを活かせる場面がどんどん増えています。
-            </p>
-          </div>
-        </div>
-
-        <!-- 業務3: 工程管理 -->
-        <div class="flow-card fade-in">
-          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
-            <span class="text-3xl font-bold accent-font opacity-60">13:00</span>
-            <div>
-              <h3 class="text-xl font-bold">工程管理</h3>
-              <p class="text-white/70 text-sm">現場全体の"指揮者"になる</p>
-            </div>
-          </div>
-          <img src="施工管理画像/行程管理.jpg" alt="建設現場で図面を広げて打ち合わせする2人の女性" class="w-full">
-          <div class="p-6 md:p-8">
-            <p class="text-navy/80 leading-relaxed">
-              午後は現場に出て、<strong class="text-navy">工事の進捗状況を確認</strong>します。
-              「基礎工事は予定通り進んでいるか」「次の工程に入る準備は整っているか」「天候による遅れはないか」——
-              全体のスケジュールを俯瞰しながら、<strong class="text-coral">各職人チームの作業を調整</strong>するのが工程管理です。
-              まるでオーケストラの指揮者のように、それぞれのパートが噛み合うようコントロールする。
-              この<strong class="text-navy">「段取り力」</strong>こそ、施工管理者の腕の見せどころです。
-            </p>
-          </div>
-        </div>
-
-        <!-- 業務4: 現場確認 -->
-        <div class="flow-card fade-in">
-          <div class="flex items-center gap-4 bg-gradient-to-r from-navy to-steel text-white p-5">
-            <span class="text-3xl font-bold accent-font opacity-60">15:00</span>
-            <div>
-              <h3 class="text-xl font-bold">現場の安全確認</h3>
-              <p class="text-white/70 text-sm">人の命を守る責任と誇り</p>
-            </div>
-          </div>
-          <img src="施工管理画像/現場確認.jpg" alt="建設現場で安全確認を行い指差し確認する女性施工管理者" class="w-full">
-          <div class="p-6 md:p-8">
-            <p class="text-navy/80 leading-relaxed">
-              施工管理の中で最も重要な業務のひとつが<strong class="text-coral">安全管理</strong>です。
-              現場を巡回し、<strong class="text-navy">足場の状態、安全帯の使用状況、危険箇所の確認</strong>を行います。
-              「何事もなく全員が無事に帰宅する」——当たり前のことを当たり前にするために、
-              施工管理者は現場の隅々まで目を配ります。
-              この仕事には<strong class="text-navy">「人の命を預かる」という大きな責任</strong>がありますが、
-              だからこそ感じられるやりがいと誇りは、他の仕事では得られないものです。
-            </p>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SECTION 6: ワークライフバランス ========== -->
-  <section class="py-20 md:py-28 bg-white relative">
-    <div class="geo-pattern"></div>
-    <div class="max-w-4xl mx-auto px-6 relative">
-      <div class="fade-in">
-        <span class="tag bg-sky/10 text-sky mb-4">SECTION 06</span>
-        <h2 class="text-2xl md:text-4xl hook-text text-navy mb-2">
-          稼いで、休めて、<span class="text-coral">自由に帰れる</span>。<br>
-          "建設業"のイメージが<span class="text-coral">180度</span>変わる
-        </h2>
-        <p class="text-steel/60 accent-font italic text-lg mb-12">Work Hard, Live Freely</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-        <!-- 直行直帰 -->
-        <div class="fade-in">
-          <img src="施工管理画像/直行直帰.jpg" alt="仕事終わりにカフェでゆったり過ごす女性たち" class="card-image mb-5">
-          <h3 class="text-xl font-bold text-navy mb-3">
-            <span class="text-coral">直行直帰OK</span>——<br>会社に縛られない働き方
-          </h3>
-          <p class="text-navy/70 leading-relaxed">
-            施工管理者は自宅から直接現場に向かい、現場から直接帰宅する<strong class="text-navy">「直行直帰」</strong>が一般的。
-            わざわざ会社に出勤してから現場に行く必要はありません。
-            現場が自宅の近くなら通勤時間が大幅に短縮されることも。
-            <strong class="text-coral">仕事終わりにカフェに寄ったり、趣味の時間を楽しんだり</strong>——
-            会社に縛られない自由な働き方が実現できます。
-          </p>
-        </div>
-
-        <!-- 休日 -->
-        <div class="fade-in">
-          <img src="施工管理画像/休日.jpg" alt="休日に海辺で楽しむ女性たち" class="card-image mb-5">
-          <h3 class="text-xl font-bold text-navy mb-3">
-            <span class="text-coral">週休二日制</span>が急速に普及中
-          </h3>
-          <p class="text-navy/70 leading-relaxed">
-            「建設業＝休みが少ない」は、もう昔の話。
-            2024年の法改正により、建設業にも<strong class="text-navy">残業の上限規制</strong>が適用され、
-            <strong class="text-coral">週休二日制（4週8休）</strong>を導入する企業が急増しています。
-            しっかり稼いで、しっかり休む。
-            旅行に行ったり、友達と遊んだり——プライベートも充実させながら
-            キャリアを築ける、それが今の施工管理です。
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== SECTION 7: CTA（新しい挑戦） ========== -->
-  <section class="cta-section py-20 md:py-28">
-    <div class="max-w-4xl mx-auto px-6 relative z-10">
-      <div class="fade-in text-center mb-10">
-        <span class="tag bg-gold/20 text-gold mb-4">YOUR NEXT STEP</span>
-        <h2 class="text-2xl md:text-4xl hook-text text-white mb-2">
-          未経験から始めた女性の<span class="text-gold">8割</span>が<br>
-          "転職してよかった"と答えた理由
-        </h2>
-        <p class="text-white/50 accent-font italic text-lg mb-8">Your New Chapter Starts Here</p>
-      </div>
-
-      <div class="fade-in max-w-xl mx-auto mb-10">
-        <img src="施工管理画像/新しい挑戦.jpg" alt="夕日の中、新しい挑戦に向けて背中を押す先輩と後輩" class="card-image">
-      </div>
-
-      <div class="fade-in text-center">
-        <p class="text-white/80 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-8">
-          「自分にできるか不安…」<br>
-          「建設業界なんて考えたこともなかった…」<br><br>
-          大丈夫です。<strong class="text-gold">今活躍している施工管理者の多くが、最初は全くの未経験</strong>でした。<br>
-          元事務員、元販売員、元飲食スタッフ——前職は関係ありません。<br><br>
-          必要なのは、<strong class="text-white">「やってみよう」という気持ちだけ</strong>。<br>
-          あなたの次のキャリアは、想像以上に近くにあるかもしれません。
-        </p>
-
-        <div class="space-y-4">
-          <a href="#" class="cta-button">まずは無料で相談してみる</a>
-          <p class="text-white/40 text-sm mt-4">相談は完全無料・オンライン対応可・服装自由</p>
-        </div>
-
-        <div class="grid grid-cols-3 gap-4 mt-12 max-w-lg mx-auto">
-          <div class="text-center">
-            <div class="text-gold text-2xl md:text-3xl font-bold accent-font">3分</div>
-            <p class="text-white/50 text-xs mt-1">かんたん申込</p>
-          </div>
-          <div class="text-center">
-            <div class="text-gold text-2xl md:text-3xl font-bold accent-font">0円</div>
-            <p class="text-white/50 text-xs mt-1">完全無料</p>
-          </div>
-          <div class="text-center">
-            <div class="text-gold text-2xl md:text-3xl font-bold accent-font">24h</div>
-            <p class="text-white/50 text-xs mt-1">以内に返信</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ========== FOOTER ========== -->
-  <footer class="bg-navy py-10 text-center">
-    <p class="text-white/30 text-sm">
-      &copy; 2026 杜の都工房 キャリアアドバイザー事業部
+    <p class="text-bluegray-800 text-2xl mt-6 tracking-[0.25em] font-bold" style="font-family: var(--font-accent);">
+      ETOILE
     </p>
-  </footer>
+    <p class="text-mint-500 text-xs mt-2 tracking-[0.1em] font-medium" style="font-family: var(--font-serif);">
+      Career Advisor Portal
+    </p>
+    <div class="splash-bar-track">
+      <div class="splash-bar-fill"></div>
+    </div>
+  </div>
 
-  <!-- ========== SCROLL ANIMATION ========== -->
+  <!-- ========== APP SHELL ========== -->
+  <div id="app" class="mx-auto flex min-h-screen w-full max-w-[1200px] flex-col bg-transparent px-3 pt-3 pb-[5.5rem]">
+
+    <!-- WHITE CARD CONTAINER -->
+    <div class="rounded-xl border border-bluegray-100 bg-white shadow-[0_6px_18px_rgba(0,0,0,0.06)] min-h-[calc(100vh-6rem)]">
+
+      <!-- ===== HEADER ===== -->
+      <header class="flex items-center justify-between gap-4 px-6 py-4 border-b border-bluegray-100">
+        <!-- LEFT: Logo -->
+        <a href="#" class="flex items-center gap-3 no-underline" onclick="navigateTo('home'); return false;">
+          <div class="w-[52px] h-[52px] rounded-xl overflow-hidden shadow-md">
+            <img src="../ETOILEロゴ.png" alt="ETOILE" class="w-full h-full object-contain">
+          </div>
+          <div>
+            <p class="text-[13px] font-semibold tracking-wider text-mint-500" style="font-family: var(--font-serif);">ETOILE</p>
+            <p class="text-[15px] font-bold tracking-wide text-bluegray-800" style="font-family: var(--font-serif);">採用代行サポート</p>
+          </div>
+        </a>
+        <!-- RIGHT: Actions -->
+        <div class="flex items-center gap-2">
+          <button class="rounded-lg p-2 text-bluegray-500 hover:bg-bluegray-50 transition" title="通知">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+            </svg>
+          </button>
+          <button class="rounded-lg p-2 text-bluegray-500 hover:bg-bluegray-50 transition" title="設定">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ===== PAGE: HOME ===== -->
+      <div id="page-home" class="page active">
+
+        <!-- Notification Bar -->
+        <div class="mx-6 mt-4 mb-4">
+          <div class="flex items-center gap-3 rounded-lg border border-mint-100 bg-mint-50 px-4 py-3">
+            <span class="inline-flex items-center gap-1.5 rounded-md bg-metallic-green px-2.5 py-1.5 text-[11px] font-bold text-white whitespace-nowrap">
+              <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/>
+              </svg>
+              お知らせ
+            </span>
+            <p class="truncate text-[13px] font-medium tracking-wide text-mint-600" style="font-family: var(--font-serif);">新しい求人情報が追加されました</p>
+            <svg class="w-4 h-4 text-mint-500 flex-shrink-0 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Hero Image -->
+        <div class="mx-6 mb-6">
+          <div class="relative rounded-xl overflow-hidden aspect-[16/7]">
+            <img src="../header.jpg" alt="採用代行サポート" class="w-full h-full object-cover" onerror="this.style.display='none'">
+          </div>
+        </div>
+
+        <!-- 3 Card Grid -->
+        <div class="mx-6 mb-6 grid grid-cols-3 gap-4">
+          <a href="#" onclick="navigateTo('mendan'); return false;" class="home-neon-card rounded-xl border border-bluegray-100 bg-white p-3 text-center no-underline shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <div class="mb-2 aspect-square w-full rounded-lg bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center overflow-hidden">
+              <img src="../card1.jpg?v=4" alt="面談&応募" class="w-full h-full object-cover rounded-lg">
+            </div>
+            <p class="text-[13px] font-bold tracking-wide text-bluegray-800" style="font-family: var(--font-serif);">面談&応募</p>
+            <p class="text-[11px] leading-tight text-bluegray-400 mt-1">トークスクリプト・書類</p>
+          </a>
+          <a href="#" onclick="navigateTo('kyujin'); return false;" class="home-neon-card rounded-xl border border-bluegray-100 bg-white p-3 text-center no-underline shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <div class="mb-2 aspect-square w-full rounded-lg bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center overflow-hidden">
+              <img src="../card2.jpg?v=4" alt="求人" class="w-full h-full object-cover rounded-lg">
+            </div>
+            <p class="text-[13px] font-bold tracking-wide text-bluegray-800" style="font-family: var(--font-serif);">求人</p>
+            <p class="text-[11px] leading-tight text-bluegray-400 mt-1">求人情報・転職サポート</p>
+          </a>
+          <a href="#" onclick="navigateTo('hoshu'); return false;" class="home-neon-card rounded-xl border border-bluegray-100 bg-white p-3 text-center no-underline shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+            <div class="mb-2 aspect-square w-full rounded-lg bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center overflow-hidden">
+              <img src="../card3.jpg?v=4" alt="報酬" class="w-full h-full object-cover rounded-lg">
+            </div>
+            <p class="text-[13px] font-bold tracking-wide text-bluegray-800" style="font-family: var(--font-serif);">報酬</p>
+            <p class="text-[11px] leading-tight text-bluegray-400 mt-1">見込み・確定報酬の確認</p>
+          </a>
+        </div>
+
+        <!-- CTA Button -->
+        <div class="mx-6 mb-6">
+          <a href="#" onclick="navigateTo('mendan'); return false;" class="cta-glint flex items-center justify-center gap-3 rounded-xl bg-[linear-gradient(145deg,#145a32_0%,#16a34a_45%,#145a32_100%)] px-6 py-4 text-[17px] font-bold tracking-[0.1em] text-white no-underline shadow-[0_14px_24px_rgba(22,163,74,0.4),inset_0_1px_0_rgba(255,255,255,0.25),inset_0_-6px_12px_rgba(0,0,0,0.22)] ring-1 ring-white/20 transition-transform hover:-translate-y-1" style="font-family: var(--font-serif);">
+            <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
+            </svg>
+            面談準備を始める
+          </a>
+        </div>
+
+      </div>
+
+      <!-- ===== PAGE: 面談&応募 ===== -->
+      <div id="page-mendan" class="page">
+        <div class="px-6 py-8">
+          <!-- Back + Title -->
+          <div class="flex items-center gap-3 mb-8 flex-wrap">
+            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
+              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+              </svg>
+              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
+            </button>
+            <div class="min-w-0">
+              <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">面談&応募</h2>
+              <p class="text-sm text-bluegray-400">面談準備・書類作成ツール</p>
+            </div>
+          </div>
+
+          <!-- Selection Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+            <a href="../ca_talk_script.html" class="selection-card group">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
+                <svg class="w-8 h-8 text-mint-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">面談トークスクリプト</h3>
+              <p class="text-sm text-bluegray-400 leading-relaxed">面談時に使えるトークスクリプトを確認できます。求職者への効果的なヒアリング方法を学びましょう。</p>
+              <div class="flex items-center gap-1 mt-4 text-mint-500 text-sm font-semibold">
+                <span>スクリプトを見る</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                </svg>
+              </div>
+            </a>
+
+            <a href="../index.html#doc" target="_top" class="selection-card group">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
+                <svg class="w-8 h-8 text-mint-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">書類を作成する</h3>
+              <p class="text-sm text-bluegray-400 leading-relaxed">履歴書・職務経歴書のテンプレートを使って、求職者の応募書類を作成・管理できます。</p>
+              <div class="flex items-center gap-1 mt-4 text-mint-600 text-sm font-semibold">
+                <span>書類作成へ</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                </svg>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 求人 ===== -->
+      <div id="page-kyujin" class="page">
+        <div class="px-6 py-8">
+          <div class="flex items-center gap-3 mb-8 flex-wrap">
+            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
+              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+              </svg>
+              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
+            </button>
+            <div class="min-w-0">
+              <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">求人</h2>
+              <p class="text-sm text-bluegray-400">求人情報・転職サポート</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+            <a href="../job-info.html" class="selection-card group">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
+                <svg class="w-8 h-8 text-mint-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/>
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">求人情報</h3>
+              <p class="text-sm text-bluegray-400 leading-relaxed">最新の求人情報を閲覧できます。勤務地・給与・条件で絞り込んで検索しましょう。</p>
+              <div class="flex items-center gap-1 mt-4 text-mint-500 text-sm font-semibold">
+                <span>求人を見る</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                </svg>
+              </div>
+            </a>
+
+            <a href="../tenshoku-support/index.html" class="selection-card group">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-mint-100 to-mint-50 flex items-center justify-center mb-5 group-hover:from-mint-200 group-hover:to-mint-100 transition">
+                <svg class="w-8 h-8 text-mint-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"/>
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">転職サポート</h3>
+              <p class="text-sm text-bluegray-400 leading-relaxed">転職活動の進め方やキャリアプランの相談、面接対策など、転職に関するサポート情報をまとめています。</p>
+              <div class="flex items-center gap-1 mt-4 text-mint-600 text-sm font-semibold">
+                <span>サポートを見る</span>
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/>
+                </svg>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 報酬 ===== -->
+      <div id="page-hoshu" class="page">
+        <div class="px-6 py-8">
+          <div class="flex items-center gap-3 mb-8 flex-wrap">
+            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
+              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+              </svg>
+              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
+            </button>
+            <div class="min-w-0">
+              <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">報酬</h2>
+              <p class="text-sm text-bluegray-400">ログインしてご確認ください</p>
+            </div>
+          </div>
+
+          <!-- 報酬コンテンツ幅：管理者一覧時は広く、その他は従来どおり -->
+          <div id="hoshu-content-root" class="max-w-lg mx-auto">
+
+            <!-- ハブ: 管理者 / アドバイザー -->
+            <div id="hoshu-hub" class="hoshu-panel is-visible" role="region" aria-label="報酬ログインの種類を選ぶ">
+              <p class="text-sm text-bluegray-500 text-center mb-6 leading-relaxed" style="font-family: var(--font-serif);">
+                ご利用目的に合わせてログイン先をお選びください。
+              </p>
+              <div class="grid gap-4">
+                <button type="button" class="hoshu-role-card group" onclick="openHoshuAdminLogin()">
+                  <div class="flex items-start gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-bluegray-800 to-bluegray-700 flex items-center justify-center flex-shrink-0 shadow-md">
+                      <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+                      </svg>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">管理者ログイン</h3>
+                      <p class="text-sm text-bluegray-400 leading-relaxed">報酬の登録・確定日の更新など、管理用画面へ進みます。</p>
+                      <span class="inline-flex items-center gap-1 mt-3 text-mint-600 text-sm font-semibold">
+                        ログイン画面へ
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                </button>
+
+                <button type="button" class="hoshu-role-card group" onclick="openHoshuAdvisorLogin()">
+                  <div class="flex items-start gap-4">
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-mint-500 to-mint-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                      <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.813-2.882M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+                      </svg>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">アドバイザーログイン</h3>
+                      <p class="text-sm text-bluegray-400 leading-relaxed">ご自身の見込み報酬・確定報酬を確認する画面へ進みます。</p>
+                      <span class="inline-flex items-center gap-1 mt-3 text-mint-600 text-sm font-semibold">
+                        ログイン画面へ
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- 管理者ログインフォーム -->
+            <div id="hoshu-admin-login" class="hoshu-panel" role="region" aria-label="管理者ログイン">
+              <div class="rounded-2xl border border-bluegray-100 bg-bluegray-50/50 p-6 shadow-sm">
+                <button type="button" onclick="openHoshuHub()" class="mb-4 flex items-center gap-2 text-sm font-medium text-mint-600 hover:text-mint-700">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                  ログイン種類の選択に戻る
+                </button>
+                <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">管理者ログイン</h3>
+                <p class="text-sm text-bluegray-400 mb-6">配布の<strong class="text-bluegray-600">管理者番号（英数字4文字）</strong>と<strong class="text-bluegray-600">PIN（数字4桁）</strong>を入力してください。初期値はこのHTMLファイル先頭付近の <span class="font-mono text-xs bg-bluegray-100 px-1 rounded">HOSHU_CONFIG.admins</span> で変更できます。</p>
+                <form id="form-hoshu-admin" class="space-y-4" onsubmit="submitHoshuAdminLogin(event)" autocomplete="off">
+                  <div>
+                    <label for="hoshu-admin-code" class="block text-xs font-semibold text-bluegray-600 mb-1.5">管理者番号（英数字4文字）</label>
+                    <input id="hoshu-admin-code" name="adminCode" type="text" inputmode="text" maxlength="4" required class="hoshu-input hoshu-input-code" placeholder="ADM1" autocapitalize="characters" spellcheck="false">
+                  </div>
+                  <div>
+                    <label for="hoshu-admin-pin" class="block text-xs font-semibold text-bluegray-600 mb-1.5">PIN（数字4桁）</label>
+                    <input id="hoshu-admin-pin" name="adminPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required class="hoshu-input hoshu-input-code" placeholder="●●●●" autocomplete="new-password">
+                  </div>
+                  <p id="hoshu-admin-error" class="text-sm text-red-600 hidden" role="alert"></p>
+                  <button type="submit" class="cta-glint w-full rounded-xl bg-[linear-gradient(145deg,#145a32_0%,#16a34a_45%,#145a32_100%)] px-6 py-3.5 text-[15px] font-bold tracking-wide text-white shadow-[0_8px_18px_rgba(22,163,74,0.35)] ring-1 ring-white/20" style="font-family: var(--font-serif);">
+                    ログイン
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- アドバイザーログインフォーム -->
+            <div id="hoshu-advisor-login" class="hoshu-panel" role="region" aria-label="アドバイザーログイン">
+              <div class="rounded-2xl border border-bluegray-100 bg-white p-6 shadow-sm">
+                <button type="button" onclick="openHoshuHub()" class="mb-4 flex items-center gap-2 text-sm font-medium text-mint-600 hover:text-mint-700">
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                  ログイン種類の選択に戻る
+                </button>
+                <h3 class="text-lg font-bold text-bluegray-800 mb-1" style="font-family: var(--font-serif);">アドバイザーログイン</h3>
+                <p class="text-sm text-bluegray-400 mb-6">お渡しした<strong class="text-bluegray-600">アドバイザー番号（4文字）</strong>と<strong class="text-bluegray-600">PIN（数字4桁）</strong>でログインします。</p>
+                <form id="form-hoshu-advisor" class="space-y-4" onsubmit="submitHoshuAdvisorLogin(event)" autocomplete="off">
+                  <div>
+                    <label for="hoshu-advisor-code" class="block text-xs font-semibold text-bluegray-600 mb-1.5">アドバイザー番号（英数字4文字）</label>
+                    <input id="hoshu-advisor-code" name="advisorCode" type="text" maxlength="4" required class="hoshu-input hoshu-input-code" placeholder="A001" autocapitalize="characters" spellcheck="false">
+                  </div>
+                  <div>
+                    <label for="hoshu-advisor-pin" class="block text-xs font-semibold text-bluegray-600 mb-1.5">PIN（数字4桁）</label>
+                    <input id="hoshu-advisor-pin" name="advisorPin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" required class="hoshu-input hoshu-input-code" placeholder="●●●●" autocomplete="new-password">
+                  </div>
+                  <p id="hoshu-advisor-error" class="text-sm text-red-600 hidden" role="alert"></p>
+                  <button type="submit" class="cta-glint w-full rounded-xl bg-[linear-gradient(145deg,#15803d_0%,#22c55e_45%,#15803d_100%)] px-6 py-3.5 text-[15px] font-bold tracking-wide text-white shadow-[0_8px_18px_rgba(34,197,94,0.35)] ring-1 ring-white/20" style="font-family: var(--font-serif);">
+                    ログイン
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- 管理者ダッシュボード -->
+            <div id="hoshu-admin-dash" class="hoshu-panel" role="region" aria-label="管理者向け報酬管理">
+              <div class="rounded-2xl border border-bluegray-100 bg-white p-6 shadow-sm">
+                <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+                  <div>
+                    <h3 class="text-lg font-bold text-bluegray-800" style="font-family: var(--font-serif);">報酬の管理</h3>
+                    <p class="text-sm text-bluegray-400 mt-1">アドバイザー番号でログイン・案件を紐づけます（データはこのブラウザに保存）。</p>
+                  </div>
+                  <button type="button" onclick="logoutHoshu()" class="rounded-lg border border-bluegray-200 px-4 py-2 text-sm font-semibold text-bluegray-600 hover:bg-bluegray-50">
+                    ログアウト
+                  </button>
+                </div>
+                <p class="text-xs text-bluegray-400 mb-6">ログイン中の管理者番号: <span id="hoshu-admin-code-display" class="font-mono font-semibold text-bluegray-700"></span></p>
+
+                <!-- アドバイザー番号・名前・PIN の登録 -->
+                <section class="rounded-xl border border-mint-100 bg-mint-50/30 p-5 mb-8" aria-labelledby="hoshu-reg-heading">
+                  <h4 id="hoshu-reg-heading" class="text-sm font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">アドバイザー登録（番号・名前・PIN）</h4>
+                  <p class="text-xs text-bluegray-500 mb-4">アドバイザー番号は<strong>英数字4文字</strong>、PINは<strong>数字4桁</strong>で登録します。ここで登録した番号がログインと報酬案件の担当に使われます。</p>
+                  <form id="form-hoshu-advisor-reg" class="space-y-4" onsubmit="submitAdvisorRegistryForm(event)" autocomplete="off">
+                    <input type="hidden" id="hoshu-reg-edit-original" value="">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label for="hoshu-reg-code" class="block text-xs font-semibold text-bluegray-600 mb-1.5">アドバイザー番号（4文字）</label>
+                        <input id="hoshu-reg-code" type="text" maxlength="4" class="hoshu-input hoshu-input-code" placeholder="A001" autocapitalize="characters" spellcheck="false">
+                      </div>
+                      <div>
+                        <label for="hoshu-reg-name" class="block text-xs font-semibold text-bluegray-600 mb-1.5">アドバイザー名</label>
+                        <input id="hoshu-reg-name" type="text" class="hoshu-input" placeholder="山田 太郎">
+                      </div>
+                      <div>
+                        <label for="hoshu-reg-pin" class="block text-xs font-semibold text-bluegray-600 mb-1.5">PIN（数字4桁）</label>
+                        <input id="hoshu-reg-pin" type="password" inputmode="numeric" maxlength="4" pattern="[0-9]{4}" class="hoshu-input hoshu-input-code" placeholder="●●●●" autocomplete="new-password">
+                      </div>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                      <button type="submit" id="hoshu-reg-submit-btn" class="rounded-xl bg-[linear-gradient(145deg,#166534_0%,#22c55e_45%,#166534_100%)] px-6 py-2.5 text-sm font-bold text-white shadow-md" style="font-family: var(--font-serif);">
+                        登録
+                      </button>
+                      <button type="button" id="hoshu-reg-cancel-btn" onclick="cancelAdvisorRegistryEdit()" class="hidden rounded-xl border border-bluegray-200 px-6 py-2.5 text-sm font-semibold text-bluegray-600 hover:bg-white">
+                        キャンセル
+                      </button>
+                    </div>
+                  </form>
+                  <div class="mt-5 overflow-x-auto rounded-lg border border-bluegray-100 bg-white">
+                    <table class="min-w-[520px] w-full text-left text-sm">
+                      <thead class="bg-bluegray-50 text-xs font-semibold text-bluegray-500">
+                        <tr>
+                          <th class="px-3 py-2.5">番号</th>
+                          <th class="px-3 py-2.5">名前</th>
+                          <th class="px-3 py-2.5 text-right">操作</th>
+                        </tr>
+                      </thead>
+                      <tbody id="hoshu-advisor-registry-body" class="text-bluegray-700"></tbody>
+                    </table>
+                  </div>
+                </section>
+
+                <form id="form-hoshu-reward" class="rounded-xl border border-bluegray-100 bg-bluegray-50/40 p-5 mb-8 space-y-4" onsubmit="submitHoshuRewardForm(event)">
+                  <input type="hidden" id="hoshu-reward-edit-id" value="">
+                  <h4 class="text-sm font-bold text-bluegray-800" style="font-family: var(--font-serif);">案件の登録・編集</h4>
+                  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                      <label for="hoshu-reward-advisor-code" class="block text-xs font-semibold text-bluegray-600 mb-1.5">担当アドバイザー（登録済みから選択）</label>
+                      <select id="hoshu-reward-advisor-code" name="advisorCode" required class="hoshu-input bg-white cursor-pointer">
+                        <option value="">選択してください</option>
+                      </select>
+                      <p class="text-[11px] text-bluegray-400 mt-1">先に上のアドバイザー登録を追加してください。</p>
+                    </div>
+                    <div>
+                      <label for="hoshu-reward-company" class="block text-xs font-semibold text-bluegray-600 mb-1.5">企業名</label>
+                      <input id="hoshu-reward-company" name="companyName" type="text" class="hoshu-input" placeholder="株式会社〇〇">
+                    </div>
+                    <div>
+                      <label for="hoshu-reward-candidate" class="block text-xs font-semibold text-bluegray-600 mb-1.5">求職者氏名</label>
+                      <input id="hoshu-reward-candidate" name="candidateName" type="text" class="hoshu-input" placeholder="山田 太郎">
+                    </div>
+                    <div>
+                      <label for="hoshu-reward-join-date" class="block text-xs font-semibold text-bluegray-600 mb-1.5">入社日 <span class="text-red-500">*</span></label>
+                      <input id="hoshu-reward-join-date" name="joinDate" type="date" required class="hoshu-input" autocomplete="off">
+                      <p class="text-[11px] text-bluegray-400 mt-1">見込み／確定は<strong class="font-semibold text-bluegray-600">入社日当日まで見込み</strong>、<strong class="font-semibold text-bluegray-600">翌日以降は確定</strong>です。</p>
+                    </div>
+                    <div>
+                      <span id="hoshu-reward-billable-label" class="block text-xs font-semibold text-bluegray-600 mb-1.5">請求可能日（自動）</span>
+                      <div id="hoshu-reward-billable-display" class="hoshu-input flex items-center min-h-[42px] bg-bluegray-50 text-bluegray-800 font-medium border-dashed cursor-default" tabindex="-1" aria-labelledby="hoshu-reward-billable-label" aria-live="polite">—</div>
+                      <p class="text-[11px] text-bluegray-400 mt-1">入社日から<strong class="font-semibold text-bluegray-600">70日後</strong>を表示します。</p>
+                    </div>
+                    <div class="md:col-span-2">
+                      <label for="hoshu-reward-amount" class="block text-xs font-semibold text-bluegray-600 mb-1.5">金額（円・税込みなど運用に合わせて）</label>
+                      <input id="hoshu-reward-amount" name="amount" type="number" inputmode="numeric" min="0" step="1" required class="hoshu-input" placeholder="例: 100000">
+                    </div>
+                    <div class="md:col-span-2 flex items-start gap-3 rounded-lg border border-bluegray-100 bg-white px-4 py-3">
+                      <input type="checkbox" id="hoshu-reward-paid" name="paid" class="mt-1 h-4 w-4 shrink-0 rounded border-bluegray-300 text-emerald-600 focus:ring-emerald-500" aria-describedby="hoshu-reward-paid-hint">
+                      <div class="min-w-0">
+                        <label for="hoshu-reward-paid" class="text-sm font-semibold text-bluegray-700 cursor-pointer">支払い済みにする</label>
+                        <p id="hoshu-reward-paid-hint" class="text-[11px] text-bluegray-400 mt-0.5 leading-relaxed">
+                          新規案件は未払いが既定です。「支払い済み」にすると、アドバイザー側の<strong class="font-semibold text-bluegray-600">確定報酬</strong>リストからは除外されます。<strong class="font-semibold text-bluegray-600">累計報酬</strong>には引き続き含まれます。
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex flex-wrap gap-3 pt-2">
+                    <button type="submit" id="hoshu-reward-submit-btn" class="rounded-xl bg-[linear-gradient(145deg,#145a32_0%,#16a34a_45%,#145a32_100%)] px-6 py-3 text-sm font-bold text-white shadow-md ring-1 ring-white/20" style="font-family: var(--font-serif);">
+                      登録
+                    </button>
+                    <button type="button" id="hoshu-reward-cancel-btn" onclick="cancelHoshuRewardEdit()" class="hidden rounded-xl border border-bluegray-200 px-6 py-3 text-sm font-semibold text-bluegray-600 hover:bg-white">
+                      キャンセル
+                    </button>
+                  </div>
+                </form>
+
+                <h4 class="text-sm font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">登録一覧</h4>
+                <p class="text-xs text-bluegray-500 mb-3">担当アドバイザーを選ぶと、その方の案件だけが表示されます。「一覧」ですべて表示します。</p>
+                <div id="hoshu-admin-filter-buttons" class="flex flex-wrap gap-2 mb-5" role="group" aria-label="担当アドバイザーで絞り込み"></div>
+
+                <div class="overflow-x-auto rounded-xl border border-bluegray-100 shadow-sm">
+                  <table class="min-w-[980px] w-full text-left text-sm">
+                    <thead class="bg-bluegray-50 text-xs font-semibold text-bluegray-500 uppercase tracking-wide">
+                      <tr>
+                        <th class="px-4 py-3.5">担当（番号／名前）</th>
+                        <th class="px-4 py-3.5 min-w-[140px]">企業名</th>
+                        <th class="px-4 py-3.5 min-w-[120px]">求職者</th>
+                        <th class="px-4 py-3.5 whitespace-nowrap">入社日</th>
+                        <th class="px-4 py-3.5 whitespace-nowrap">請求可能日</th>
+                        <th class="px-4 py-3.5 text-right whitespace-nowrap">金額</th>
+                        <th class="px-4 py-3.5 whitespace-nowrap min-w-[132px]" scope="col">支払い</th>
+                        <th class="px-4 py-3.5 text-right whitespace-nowrap w-[120px]">操作</th>
+                      </tr>
+                    </thead>
+                    <tbody id="hoshu-admin-table-body" class="text-bluegray-700 bg-white"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- アドバイザーダッシュボード -->
+            <div id="hoshu-advisor-dash" class="hoshu-panel hoshu-advisor-dash-text" role="region" aria-label="アドバイザー向け報酬確認">
+              <div class="rounded-2xl border border-bluegray-100 bg-white p-4 sm:p-6 shadow-sm">
+                <div class="flex flex-wrap items-start justify-between gap-3 mb-1">
+                  <div class="min-w-0 flex-1">
+                    <p id="hoshu-advisor-greeting" class="text-lg sm:text-xl font-bold text-bluegray-900 tracking-wide truncate" style="font-family: var(--font-serif);"></p>
+                    <p class="text-xs text-bluegray-400 mt-1.5"><span id="hoshu-advisor-meta-display" class="font-mono text-bluegray-600"></span></p>
+                  </div>
+                  <button type="button" onclick="logoutHoshu()" class="rounded-lg border border-bluegray-200 px-3 py-2 text-xs sm:text-sm font-semibold text-bluegray-600 hover:bg-bluegray-50 flex-shrink-0">
+                    ログアウト
+                  </button>
+                </div>
+                <p class="text-xs sm:text-sm text-bluegray-600 mt-3 leading-relaxed">
+                  担当案件のみ表示。見込み＝入社日<strong class="font-semibold text-bluegray-700">まで</strong>。<strong class="font-semibold text-bluegray-700">確定報酬</strong>には、入社日の翌日以降かつ<strong class="font-semibold text-bluegray-700">管理者が未払い</strong>とした案件のみ表示されます。<strong class="font-semibold text-bluegray-700">支払い済み</strong>にした案件は確定リストから消えますが、<strong class="font-semibold text-bluegray-700">累計報酬</strong>には含まれます。
+                </p>
+
+                <div class="mt-5 sm:mt-6">
+                  <!-- 累計報酬のみ（メタリック調） -->
+                  <section class="hoshu-metallic-total-card hoshu-advisor-dash-text" aria-labelledby="hoshu-heading-total">
+                    <div class="hoshu-metallic-total-inner px-5 py-5 sm:px-7 sm:py-6">
+                      <div class="flex flex-row flex-wrap items-center justify-between gap-x-4 gap-y-4">
+                        <div class="min-w-0 max-w-[min(100%,20rem)]">
+                          <p class="text-[10px] sm:text-[11px] font-bold tracking-widest text-slate-600">報酬サマリー</p>
+                          <h3 id="hoshu-heading-total" class="mt-2 text-[1.35rem] sm:text-2xl font-bold text-slate-900 tracking-tight leading-tight" style="font-family: var(--font-serif); letter-spacing: 0.02em;">
+                            累計報酬
+                          </h3>
+                          <p class="mt-2 text-[11px] sm:text-xs text-slate-600 leading-relaxed">
+                            担当案件のすべての報酬です。支払い済みの案件も<strong class="font-semibold text-slate-700">含みます</strong>。
+                          </p>
+                        </div>
+                        <div class="ml-auto flex flex-col items-end justify-center">
+                          <span class="sr-only">累計金額</span>
+                          <p
+                            class="hoshu-yen-cute hoshu-metallic-total-amount text-[1.85rem] sm:text-[2.35rem] font-extrabold tabular-nums leading-none tracking-tight text-right"
+                            id="hoshu-cumulative-total"
+                          >¥0</p>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+
+                  <!-- 累計と一覧の区切り -->
+                  <div class="flex items-center gap-3 py-5 sm:py-6" role="presentation">
+                    <div class="h-px flex-1 bg-bluegray-200" aria-hidden="true"></div>
+                    <span class="text-xs font-semibold text-bluegray-500 whitespace-nowrap">案件一覧・詳細</span>
+                    <div class="h-px flex-1 bg-bluegray-200" aria-hidden="true"></div>
+                  </div>
+
+                  <div class="space-y-4 sm:space-y-5">
+                  <section class="relative overflow-hidden rounded-xl border border-amber-200 shadow-sm" aria-labelledby="hoshu-heading-prospect">
+                    <div class="absolute inset-0 bg-[linear-gradient(145deg,#fffbeb_0%,#fef9c3_100%)] opacity-95 pointer-events-none" aria-hidden="true"></div>
+                    <div class="relative p-4 sm:p-5">
+                      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div class="min-w-0 flex-1">
+                          <h4 id="hoshu-heading-prospect" class="text-[15px] sm:text-base font-bold text-amber-950 tracking-tight flex flex-wrap items-center gap-2" style="font-family: var(--font-serif);">
+                            <span class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-full bg-amber-500 px-2 text-[10px] font-bold text-white shrink-0" aria-hidden="true">見込</span>
+                            見込み報酬
+                          </h4>
+                          <p class="text-[11px] sm:text-xs text-amber-950/85 mt-2 leading-relaxed">入社日<strong class="font-semibold text-amber-950">当日まで</strong>の案件です。</p>
+                        </div>
+                        <div class="rounded-xl bg-white px-4 py-3 border border-amber-100 sm:min-w-[160px] sm:text-right shrink-0">
+                          <p class="text-[10px] font-semibold text-amber-800 mb-0.5">小計</p>
+                          <p class="hoshu-yen-cute text-2xl sm:text-[1.65rem] font-extrabold text-amber-950 tabular-nums leading-tight" id="hoshu-prospect-total">¥0</p>
+                        </div>
+                      </div>
+                      <div id="hoshu-prospect-list" class="space-y-2 mt-4 pt-4 border-t border-amber-200/70"></div>
+                    </div>
+                  </section>
+
+                  <section class="relative overflow-hidden rounded-xl border border-emerald-200 shadow-sm" aria-labelledby="hoshu-heading-fixed">
+                    <div class="absolute inset-0 bg-[linear-gradient(145deg,#ecfdf5_0%,#d1fae5_100%)] opacity-95 pointer-events-none" aria-hidden="true"></div>
+                    <div class="relative p-4 sm:p-5">
+                      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div class="min-w-0 flex-1">
+                          <h4 id="hoshu-heading-fixed" class="text-[15px] sm:text-base font-bold text-emerald-950 tracking-tight flex flex-wrap items-center gap-2" style="font-family: var(--font-serif);">
+                            <span class="inline-flex h-8 min-w-[2rem] items-center justify-center rounded-full bg-emerald-600 px-2 text-[10px] font-bold text-white shrink-0" aria-hidden="true">確定</span>
+                            確定報酬
+                          </h4>
+                          <p class="text-[11px] sm:text-xs text-emerald-950/88 mt-2 leading-relaxed">入社日の<strong class="font-semibold text-emerald-950">翌日から</strong>かつ<strong class="font-semibold text-emerald-950">未払い</strong>の案件です。管理者が「支払い済み」にした案件は一覧に出ません（累計には残ります）。</p>
+                        </div>
+                        <div class="rounded-xl bg-white px-4 py-3 border border-emerald-100 sm:min-w-[160px] sm:text-right shrink-0">
+                          <p class="text-[10px] font-semibold text-emerald-800 mb-0.5">小計</p>
+                          <p class="hoshu-yen-cute text-2xl sm:text-[1.65rem] font-extrabold text-emerald-950 tabular-nums leading-tight" id="hoshu-confirmed-total">¥0</p>
+                        </div>
+                      </div>
+                      <div id="hoshu-confirmed-list" class="space-y-2 mt-4 pt-4 border-t border-emerald-200/70"></div>
+                    </div>
+                  </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 問い合わせ ===== -->
+      <div id="page-contact" class="page">
+        <div class="px-6 py-8">
+          <div class="flex items-center gap-3 mb-8 flex-wrap">
+            <button type="button" onclick="navigateTo('home')" class="inline-flex items-center gap-2 rounded-lg border border-mint-200 bg-mint-50 px-3 py-2 text-bluegray-700 hover:bg-mint-100 transition" aria-label="ホームへ戻る">
+              <svg class="w-5 h-5 text-mint-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+              </svg>
+              <span class="text-sm font-bold text-mint-700 tracking-wide" style="font-family: var(--font-serif);">ホームへ戻る</span>
+            </button>
+            <div class="min-w-0">
+              <h2 class="text-xl font-bold text-bluegray-800" style="font-family: var(--font-serif);">問い合わせ</h2>
+              <p class="text-sm text-bluegray-400">お問い合わせ・請求書提出</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl">
+            <!-- 問い合わせ CTA -->
+            <div class="selection-card flex flex-col items-center text-center">
+              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-mint-500 to-mint-600 flex items-center justify-center mb-6 shadow-lg">
+                <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">問い合わせ</h3>
+              <p class="text-sm text-bluegray-400 leading-relaxed mb-6">ご質問・ご相談はこちらからお気軽にお問い合わせください。担当者が迅速に対応いたします。</p>
+              <a href="#" class="cta-glint w-full flex items-center justify-center gap-2 rounded-xl bg-[linear-gradient(145deg,#145a32_0%,#16a34a_45%,#145a32_100%)] px-6 py-4 text-[15px] font-bold tracking-wider text-white no-underline shadow-[0_10px_20px_rgba(22,163,74,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-white/20 transition-transform hover:-translate-y-1" style="font-family: var(--font-serif);">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+                </svg>
+                問い合わせする
+              </a>
+            </div>
+
+            <!-- 請求書提出 -->
+            <div class="selection-card flex flex-col items-center text-center">
+              <div class="w-20 h-20 rounded-full bg-gradient-to-br from-mint-400 to-mint-500 flex items-center justify-center mb-6 shadow-lg">
+                <svg class="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m6.75 12H9.75m3 0H9.75m0 0v3.375m0-3.375h3.375M6.75 19.5h10.5a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25z"/>
+                </svg>
+              </div>
+              <h3 class="text-lg font-bold text-bluegray-800 mb-2" style="font-family: var(--font-serif);">請求書提出</h3>
+              <p class="text-sm text-bluegray-400 leading-relaxed mb-6">報酬に関する請求書の提出はこちらから行ってください。フォーマットのダウンロードも可能です。</p>
+              <a href="#" class="cta-glint w-full flex items-center justify-center gap-2 rounded-xl bg-[linear-gradient(145deg,#15803d_0%,#22c55e_45%,#15803d_100%)] px-6 py-4 text-[15px] font-bold tracking-wider text-white no-underline shadow-[0_10px_20px_rgba(34,197,94,0.35),inset_0_1px_0_rgba(255,255,255,0.2)] ring-1 ring-white/20 transition-transform hover:-translate-y-1" style="font-family: var(--font-serif);">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/>
+                </svg>
+                請求書を提出する
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /white card -->
+  </div><!-- /app shell -->
+
+  <!-- ===== BOTTOM TAB BAR ===== -->
+  <nav id="bottom-tabs" class="fixed bottom-0 left-1/2 z-50 flex w-[min(1200px,calc(100%-24px))] -translate-x-1/2 items-center justify-between rounded-t-xl border border-bluegray-100 bg-white px-5 py-4 shadow-[0_-6px_20px_rgba(0,0,0,0.08)]">
+    <button onclick="navigateTo('home')" data-tab="home" class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-lg px-3 py-2 no-underline transition text-mint-500">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/>
+      </svg>
+      <span class="truncate text-[13px] font-semibold tracking-wide" style="font-family: var(--font-serif);">ホーム</span>
+    </button>
+    <button onclick="navigateTo('mendan')" data-tab="mendan" class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-lg px-3 py-2 no-underline transition text-bluegray-400 hover:bg-bluegray-50">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
+      </svg>
+      <span class="truncate text-[13px] font-semibold tracking-wide" style="font-family: var(--font-serif);">面談&応募</span>
+    </button>
+    <button onclick="navigateTo('kyujin')" data-tab="kyujin" class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-lg px-3 py-2 no-underline transition text-bluegray-400 hover:bg-bluegray-50">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z"/>
+      </svg>
+      <span class="truncate text-[13px] font-semibold tracking-wide" style="font-family: var(--font-serif);">求人</span>
+    </button>
+    <button onclick="navigateTo('hoshu')" data-tab="hoshu" class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-lg px-3 py-2 no-underline transition text-bluegray-400 hover:bg-bluegray-50">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+      </svg>
+      <span class="truncate text-[13px] font-semibold tracking-wide" style="font-family: var(--font-serif);">報酬</span>
+    </button>
+    <button onclick="navigateTo('contact')" data-tab="contact" class="tab-btn flex min-w-0 flex-1 flex-col items-center gap-1.5 rounded-lg px-3 py-2 no-underline transition text-bluegray-400 hover:bg-bluegray-50">
+      <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+      </svg>
+      <span class="truncate text-[13px] font-semibold tracking-wide" style="font-family: var(--font-serif);">問い合わせ</span>
+    </button>
+  </nav>
+
+  <!-- ========== SCRIPTS ========== -->
   <script>
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+    /**
+     * 管理者ログイン: 管理者番号4文字 + PIN4桁（下記 admins を変更）
+     * アドバイザーは管理画面「アドバイザー登録」で追加（ブラウザの localStorage）
+     */
+    const HOSHU_CONFIG = {
+      admins: [
+        { code: 'ADM1', pin: '1234' },
+        { code: 'E001', pin: '1234' }
+      ]
+    };
+
+    const HOSHU_SESSION_KEY = 'etoile_cm_hoshu_session_v1';
+    const HOSHU_REWARDS_KEY = 'etoile_cm_hoshu_rewards_v1';
+    const HOSHU_ADVISOR_REGISTRY_KEY = 'etoile_cm_hoshu_advisors_v1';
+    var hoshuRewardEditingId = null;
+    /** 'all' | 正規化済みアドバイザー番号（4文字） */
+    var hoshuAdminListFilter = 'all';
+
+    /** 標準アドバイザー（ページ読み込み時にレジストリへマージ。PIN・名前はここが優先） */
+    const HOSHU_SEED_ADVISORS = [
+      { code: 'A101', displayName: '新妻征英', pin: '4827' },
+      { code: 'A102', displayName: '山田一貴', pin: '9164' },
+      { code: 'A103', displayName: '今村健悟', pin: '3058' },
+      { code: 'A104', displayName: '中山謙人', pin: '7412' },
+      { code: 'A105', displayName: '浜野翔太', pin: '6289' },
+      { code: 'A106', displayName: '望月 悠太郎', pin: '1573' },
+      { code: 'A107', displayName: '長谷川 智笑', pin: '8940' },
+      { code: 'A108', displayName: '工藤 美来', pin: '2365' },
+      { code: 'A109', displayName: '佐々木伸之', pin: '7091' },
+      { code: 'A110', displayName: '城 南月', pin: '5648' },
+      { code: 'A111', displayName: '大竹知帆', pin: '0317' },
+      { code: 'A112', displayName: '今　陽介', pin: '8526' },
+      { code: 'A113', displayName: '武藤 祐也', pin: '4903' },
+      { code: 'A114', displayName: '沢田貴博', pin: '6782' },
+      { code: 'A115', displayName: '堂森大二郎', pin: '1249' },
+      { code: 'A116', displayName: '坂寄 伊代', pin: '9375' },
+      { code: 'A117', displayName: '田中颯人', pin: '6732' }
+    ];
+
+    /**
+     * 管理画面の初期報酬案件（HTML更新時に同期。id が同一の既存行は上書き）
+     * billableDate は支払・請求ベースの日付（入社+70日とは一致しない場合あり）
+     */
+    const HOSHU_SEED_REWARDS = [
+      {
+        id: 'hoshu_seed_rw_ishikawa_20260302',
+        advisorCode: 'A101',
+        companyName: 'CP One Japan合同会社',
+        candidateName: '石川拓',
+        joinDate: '2026-03-02',
+        billableDate: '2026-10-15',
+        amount: 279418
+      },
+      {
+        id: 'hoshu_seed_rw_nojima_20260401',
+        advisorCode: 'A104',
+        companyName: 'スタッフサービス・エンジニアリング',
+        candidateName: '野嶋海人',
+        joinDate: '2026-04-01',
+        billableDate: '2026-06-30',
+        amount: 120582
+      },
+      {
+        id: 'hoshu_seed_rw_akaike_20260402',
+        advisorCode: 'A101',
+        companyName: 'ミラエール',
+        candidateName: '赤池夏澄',
+        joinDate: '2026-04-02',
+        billableDate: '2026-06-15',
+        amount: 118800
+      },
+      {
+        id: 'hoshu_seed_rw_nakamaru_20260413',
+        advisorCode: 'A103',
+        companyName: 'マンパワーグループ',
+        candidateName: '中丸実優',
+        joinDate: '2026-04-13',
+        billableDate: '2026-06-15',
+        amount: 114345
+      },
+      {
+        id: 'hoshu_seed_rw_yoshida_r_20260421',
+        advisorCode: 'A102',
+        companyName: 'リクルートスタッフィング【キャリアウィンク】',
+        candidateName: '吉田玲南',
+        joinDate: '2026-04-21',
+        billableDate: '2026-06-15',
+        amount: 103950
+      },
+      {
+        id: 'hoshu_seed_rw_ogasawara_20260501',
+        advisorCode: 'A117',
+        companyName: 'スタッフサービス・エンジニアリング',
+        candidateName: '小笠原 奈那美',
+        joinDate: '2026-05-01',
+        billableDate: '2026-07-30',
+        amount: 120582
+      },
+      {
+        id: 'hoshu_seed_rw_uchiumi_20260515',
+        advisorCode: 'A108',
+        companyName: 'スタッフサービス・エンジニアリング',
+        candidateName: '内海朝貴',
+        joinDate: '2026-05-15',
+        billableDate: '2026-07-30',
+        amount: 120582
+      },
+      {
+        id: 'hoshu_seed_rw_asano_20260601',
+        advisorCode: 'A103',
+        companyName: '日交ひかり株式会社',
+        candidateName: '淺野 圭祐',
+        joinDate: '2026-06-01',
+        billableDate: '2026-08-15',
+        amount: 124740
+      },
+      {
+        id: 'hoshu_seed_rw_abe_20260601',
+        advisorCode: 'A102',
+        companyName: 'マーキュリー',
+        candidateName: '安倍仁未',
+        joinDate: '2026-06-01',
+        billableDate: '2026-08-15',
+        amount: 103950
+      },
+      {
+        id: 'hoshu_seed_rw_mayama_20260601',
+        advisorCode: 'A104',
+        companyName: 'スタッフサービス・エンジニアリング',
+        candidateName: '眞山敬奨',
+        joinDate: '2026-06-01',
+        billableDate: '2026-08-30',
+        amount: 120582
+      },
+      {
+        id: 'hoshu_seed_rw_yoshida_m_20260601',
+        advisorCode: 'A104',
+        companyName: 'スタッフサービス・エンジニアリング',
+        candidateName: '吉田政之',
+        joinDate: '2026-06-01',
+        billableDate: '2026-08-30',
+        amount: 120582
+      },
+      {
+        id: 'hoshu_seed_rw_suzuki_20260701',
+        advisorCode: 'A104',
+        companyName: 'スタッフサービス・エンジニアリング',
+        candidateName: '鈴木陽斗',
+        joinDate: '2026-07-01',
+        billableDate: '2026-09-30',
+        amount: 120582
+      }
+    ];
+
+    function mergeSeedRewardsIntoStorage() {
+      var data = loadRewardsData();
+      var seedIds = {};
+      HOSHU_SEED_REWARDS.forEach(function (s) {
+        seedIds[s.id] = true;
+      });
+      data.entries = data.entries.filter(function (e) {
+        return !seedIds[e.id];
+      });
+      HOSHU_SEED_REWARDS.forEach(function (s) {
+        data.entries.push({
+          id: s.id,
+          advisorCode: normalizeAdvisorCode(s.advisorCode),
+          companyName: String(s.companyName || '').trim(),
+          candidateName: String(s.candidateName || '').trim(),
+          joinDate: s.joinDate,
+          billableDate: s.billableDate,
+          amount: Number(s.amount) || 0,
+          paid: false
+        });
+      });
+      saveRewardsData(data);
+    }
+
+    function normalizeAdvisorCode(str) {
+      return String(str || '')
+        .trim()
+        .toUpperCase()
+        .replace(/[^A-Z0-9]/g, '')
+        .slice(0, 4);
+    }
+
+    function normalizePinDigits(str) {
+      return String(str || '')
+        .replace(/\D/g, '')
+        .slice(0, 4);
+    }
+
+    function loadAdvisorRegistry() {
+      try {
+        var raw = localStorage.getItem(HOSHU_ADVISOR_REGISTRY_KEY);
+        if (!raw) return { advisors: [] };
+        var d = JSON.parse(raw);
+        if (!d || !Array.isArray(d.advisors)) return { advisors: [] };
+        return { advisors: d.advisors };
+      } catch (err) {
+        return { advisors: [] };
+      }
+    }
+
+    function saveAdvisorRegistry(data) {
+      localStorage.setItem(HOSHU_ADVISOR_REGISTRY_KEY, JSON.stringify(data));
+    }
+
+    /** 既存レジストリを維持しつつ、標準登録分を上書きマージ（番号ごとに名前・PINを同期） */
+    function mergeSeedAdvisorsIntoRegistry() {
+      var reg = loadAdvisorRegistry();
+      var map = {};
+      reg.advisors.forEach(function (a) {
+        var c = normalizeAdvisorCode(a.code);
+        if (c.length !== 4) return;
+        map[c] = {
+          code: c,
+          displayName: String(a.displayName || '').trim(),
+          pin: normalizePinDigits(a.pin)
+        };
+      });
+      HOSHU_SEED_ADVISORS.forEach(function (s) {
+        var c = normalizeAdvisorCode(s.code);
+        if (c.length !== 4) return;
+        var pin = normalizePinDigits(s.pin);
+        if (pin.length !== 4) return;
+        map[c] = {
+          code: c,
+          displayName: String(s.displayName || '').trim(),
+          pin: pin
+        };
+      });
+      reg.advisors = Object.keys(map)
+        .sort()
+        .map(function (k) {
+          return map[k];
+        });
+      saveAdvisorRegistry(reg);
+    }
+
+    function advisorDisplayLabel(code) {
+      var c = normalizeAdvisorCode(code);
+      if (c.length !== 4) return '';
+      var hit = loadAdvisorRegistry().advisors.find(function (a) {
+        return normalizeAdvisorCode(a.code) === c;
+      });
+      return hit ? String(hit.displayName || '').trim() : '';
+    }
+
+    function advisorExistsInRegistry(code) {
+      var c = normalizeAdvisorCode(code);
+      if (c.length !== 4) return false;
+      return loadAdvisorRegistry().advisors.some(function (a) {
+        return normalizeAdvisorCode(a.code) === c;
+      });
+    }
+
+    function getEntryAdvisorCode(entry) {
+      var c = normalizeAdvisorCode(entry.advisorCode);
+      return c.length === 4 ? c : '';
+    }
+
+    function legacyEntryAdvisorEmail(entry) {
+      return entry.advisorEmail ? String(entry.advisorEmail).trim() : '';
+    }
+
+    function formatEntryAdvisorColumn(e) {
+      var c = getEntryAdvisorCode(e);
+      if (c.length === 4) {
+        var lb = advisorDisplayLabel(c);
+        return escapeHtml(c) + (lb ? ' <span class="text-bluegray-400">/</span> ' + escapeHtml(lb) : '');
+      }
+      var legacy = legacyEntryAdvisorEmail(e);
+      if (legacy) {
+        return (
+          '<span class="text-amber-800">' +
+          escapeHtml(legacy) +
+          '</span><span class="block text-[10px] text-amber-600 mt-0.5">\u756a\u53f7\u672a\u8a2d\u5b9a\u30fb\u7de8\u96c6\u3057\u3066\u304f\u3060\u3055\u3044</span>'
+        );
+      }
+      return '\u2014';
+    }
+
+    function populateAdvisorRewardSelect(preserveValue) {
+      var sel = document.getElementById('hoshu-reward-advisor-code');
+      if (!sel) return;
+      var prev = preserveValue != null ? preserveValue : sel.value;
+      var reg = loadAdvisorRegistry();
+      sel.innerHTML = '<option value="">\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044</option>';
+      reg.advisors.forEach(function (a) {
+        var c = normalizeAdvisorCode(a.code);
+        if (c.length !== 4) return;
+        var opt = document.createElement('option');
+        opt.value = c;
+        var nm = String(a.displayName || '').trim();
+        opt.textContent = nm ? c + ' · ' + nm : c;
+        sel.appendChild(opt);
+      });
+      if (prev && [...sel.options].some(function (o) { return o.value === prev; })) sel.value = prev;
+    }
+
+    function renderAdvisorRegistryTable() {
+      var tbody = document.getElementById('hoshu-advisor-registry-body');
+      if (!tbody) return;
+      var reg = loadAdvisorRegistry();
+      if (reg.advisors.length === 0) {
+        tbody.innerHTML =
+          '<tr><td colspan="3" class="px-3 py-6 text-center text-sm text-bluegray-400">\u307e\u3060\u767b\u9332\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u4e0a\u306e\u30d5\u30a9\u30fc\u30e0\u304b\u3089\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002</td></tr>';
+        return;
+      }
+      tbody.innerHTML = reg.advisors
+        .map(function (a) {
+          var c = normalizeAdvisorCode(a.code);
+          var nm = escapeHtml(String(a.displayName || '').trim() || '\u2014');
+          var safeC = escapeHtml(c);
+          return (
+            '<tr class="border-t border-bluegray-100">' +
+            '<td class="px-3 py-2.5 font-mono font-semibold">' +
+            safeC +
+            '</td>' +
+            '<td class="px-3 py-2.5">' +
+            nm +
+            '</td>' +
+            '<td class="px-3 py-2.5 text-right whitespace-nowrap">' +
+            '<button type="button" class="text-mint-600 text-xs font-semibold mr-2 hover:underline" data-hoshu-reg-edit="' +
+            safeC +
+            '">\u7de8\u96c6</button>' +
+            '<button type="button" class="text-red-600 text-xs font-semibold hover:underline" data-hoshu-reg-del="' +
+            safeC +
+            '">\u524a\u9664</button>' +
+            '</td></tr>'
+          );
+        })
+        .join('');
+      tbody.querySelectorAll('[data-hoshu-reg-edit]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          editAdvisorRegistryEntry(btn.getAttribute('data-hoshu-reg-edit'));
+        });
+      });
+      tbody.querySelectorAll('[data-hoshu-reg-del]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          deleteAdvisorRegistryEntry(btn.getAttribute('data-hoshu-reg-del'));
+        });
+      });
+    }
+
+    function cancelAdvisorRegistryEdit() {
+      document.getElementById('hoshu-reg-edit-original').value = '';
+      document.getElementById('hoshu-reg-code').value = '';
+      document.getElementById('hoshu-reg-code').removeAttribute('readonly');
+      document.getElementById('hoshu-reg-name').value = '';
+      document.getElementById('hoshu-reg-pin').value = '';
+      document.getElementById('hoshu-reg-cancel-btn').classList.add('hidden');
+      document.getElementById('hoshu-reg-submit-btn').textContent = '\u767b\u9332';
+    }
+
+    function editAdvisorRegistryEntry(code) {
+      var c = normalizeAdvisorCode(code);
+      var reg = loadAdvisorRegistry();
+      var hit = reg.advisors.find(function (a) {
+        return normalizeAdvisorCode(a.code) === c;
+      });
+      if (!hit) return;
+      document.getElementById('hoshu-reg-edit-original').value = c;
+      document.getElementById('hoshu-reg-code').value = c;
+      document.getElementById('hoshu-reg-code').setAttribute('readonly', 'readonly');
+      document.getElementById('hoshu-reg-name').value = hit.displayName || '';
+      document.getElementById('hoshu-reg-pin').value = hit.pin || '';
+      document.getElementById('hoshu-reg-cancel-btn').classList.remove('hidden');
+      document.getElementById('hoshu-reg-submit-btn').textContent = '\u66f4\u65b0';
+      document.getElementById('form-hoshu-advisor-reg').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function deleteAdvisorRegistryEntry(code) {
+      var c = normalizeAdvisorCode(code);
+      var data = loadRewardsData();
+      var used = data.entries.some(function (e) {
+        return getEntryAdvisorCode(e) === c;
+      });
+      if (used) {
+        window.alert(
+          '\u3053\u306e\u756a\u53f7\u306f\u5831\u916c\u6848\u4ef6\u3067\u4f7f\u7528\u4e2d\u306e\u305f\u3081\u524a\u9664\u3067\u304d\u307e\u305b\u3093\u3002'
+        );
+        return;
+      }
+      if (!window.confirm('\u756a\u53f7 ' + c + ' \u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f')) return;
+      var reg = loadAdvisorRegistry();
+      reg.advisors = reg.advisors.filter(function (a) {
+        return normalizeAdvisorCode(a.code) !== c;
+      });
+      saveAdvisorRegistry(reg);
+      cancelAdvisorRegistryEdit();
+      renderAdvisorRegistryTable();
+      populateAdvisorRewardSelect('');
+      renderAdminFilterButtons();
+      renderAdminRewardsTable();
+      var sess = getHoshuSession();
+      if (sess && sess.role === 'advisor' && normalizeAdvisorCode(sess.advisorCode) === c) {
+        clearHoshuSession();
+        openHoshuHub();
+      }
+    }
+
+    function submitAdvisorRegistryForm(ev) {
+      ev.preventDefault();
+      var editOrig = document.getElementById('hoshu-reg-edit-original').value;
+      var codeRaw = document.getElementById('hoshu-reg-code').value;
+      var name = document.getElementById('hoshu-reg-name').value.trim();
+      var pin = normalizePinDigits(document.getElementById('hoshu-reg-pin').value);
+      var code = normalizeAdvisorCode(codeRaw);
+      if (code.length !== 4) {
+        window.alert('\u30a2\u30c9\u30d0\u30a4\u30b6\u30fc\u756a\u53f7\u306f\u82f1\u6570\u5b574\u6587\u5b57\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
+        return;
+      }
+      if (pin.length !== 4) {
+        window.alert('PIN\u306f\u6570\u5b574\u6841\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
+        return;
+      }
+      if (!name) {
+        window.alert('\u30a2\u30c9\u30d0\u30a4\u30b6\u30fc\u540d\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
+        return;
+      }
+      var reg = loadAdvisorRegistry();
+      if (editOrig) {
+        var oc = normalizeAdvisorCode(editOrig);
+        var ix = reg.advisors.findIndex(function (a) {
+          return normalizeAdvisorCode(a.code) === oc;
+        });
+        if (ix < 0) return;
+        reg.advisors[ix] = { code: oc, displayName: name, pin: pin };
+      } else {
+        if (
+          reg.advisors.some(function (a) {
+            return normalizeAdvisorCode(a.code) === code;
+          })
+        ) {
+          window.alert('\u305d\u306e\u756a\u53f7\u306f\u3059\u3067\u306b\u767b\u9332\u3055\u308c\u3066\u3044\u307e\u3059\u3002');
+          return;
+        }
+        reg.advisors.push({ code: code, displayName: name, pin: pin });
+      }
+      saveAdvisorRegistry(reg);
+      cancelAdvisorRegistryEdit();
+      renderAdvisorRegistryTable();
+      populateAdvisorRewardSelect();
+      renderAdminFilterButtons();
+      renderAdminRewardsTable();
+    }
+
+    function getTodayYmd() {
+      var d = new Date();
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      var day = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + day;
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? '' : str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatYen(amount) {
+      var n = Number(amount);
+      if (isNaN(n)) n = 0;
+      return '\u00a5' + n.toLocaleString('ja-JP');
+    }
+
+    function formatDateJp(ymd) {
+      if (!ymd || !/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return '\u2014';
+      var p = ymd.split('-');
+      return Number(p[0]) + '\u5e74' + Number(p[1]) + '\u6708' + Number(p[2]) + '\u65e5';
+    }
+
+    /** ローカル暦で YYYY-MM-DD に日数を加算 */
+    function addDaysYmd(ymd, deltaDays) {
+      if (!ymd || !/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return '';
+      var p = ymd.split('-').map(Number);
+      var d = new Date(p[0], p[1] - 1, p[2]);
+      d.setDate(d.getDate() + deltaDays);
+      var y = d.getFullYear();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      var day = String(d.getDate()).padStart(2, '0');
+      return y + '-' + m + '-' + day;
+    }
+
+    /** 案件が支払い済みか。未設定は未払い扱い */
+    function rewardEntryIsPaid(entry) {
+      return !!(entry && entry.paid === true);
+    }
+
+    function getBillableDateForEntry(e) {
+      if (e && e.billableDate && /^\d{4}-\d{2}-\d{2}$/.test(e.billableDate)) return e.billableDate;
+      if (e && e.joinDate && /^\d{4}-\d{2}-\d{2}$/.test(e.joinDate)) return addDaysYmd(e.joinDate, 70);
+      return '';
+    }
+
+    function updateHoshuBillablePreview() {
+      var inp = document.getElementById('hoshu-reward-join-date');
+      var out = document.getElementById('hoshu-reward-billable-display');
+      if (!out) return;
+      var ymd = inp && inp.value ? inp.value : '';
+      if (!ymd || !/^\d{4}-\d{2}-\d{2}$/.test(ymd)) {
+        out.textContent = '\u2014';
+        return;
+      }
+      out.textContent = formatDateJp(addDaysYmd(ymd, 70));
+    }
+
+    /** 見込み: 入社日が今日以降（当日含む）／ 確定: 入社日が昨日以前（翌日から確定扱い） */
+    function classifyRewardByJoinDate(joinDateYmd, todayYmd) {
+      if (!joinDateYmd || !/^\d{4}-\d{2}-\d{2}$/.test(joinDateYmd)) return null;
+      if (joinDateYmd >= todayYmd) return 'prospect';
+      return 'confirmed';
+    }
+
+    function loadRewardsData() {
+      try {
+        var raw = localStorage.getItem(HOSHU_REWARDS_KEY);
+        if (!raw) return { entries: [] };
+        var data = JSON.parse(raw);
+        if (!data || !Array.isArray(data.entries)) return { entries: [] };
+        return data;
+      } catch (err) {
+        return { entries: [] };
+      }
+    }
+
+    function saveRewardsData(data) {
+      localStorage.setItem(HOSHU_REWARDS_KEY, JSON.stringify(data));
+    }
+
+    function newRewardEntryId() {
+      return 'rw_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 9);
+    }
+
+    function filterButtonLabelForCode(code) {
+      var c = normalizeAdvisorCode(code);
+      var lb = advisorDisplayLabel(c);
+      return lb ? c + ' · ' + lb : c;
+    }
+
+    function renderAdminFilterButtons() {
+      var wrap = document.getElementById('hoshu-admin-filter-buttons');
+      if (!wrap) return;
+      var data = loadRewardsData();
+      var codesSeen = {};
+      loadAdvisorRegistry().advisors.forEach(function (a) {
+        var c = normalizeAdvisorCode(a.code);
+        if (c.length === 4) codesSeen[c] = true;
+      });
+      data.entries.forEach(function (e) {
+        var c = getEntryAdvisorCode(e);
+        if (c.length === 4) codesSeen[c] = true;
+      });
+      var keys = Object.keys(codesSeen).sort();
+      function mkBtn(label, filterKey, isAll) {
+        var active = isAll
+          ? hoshuAdminListFilter === 'all'
+          : hoshuAdminListFilter === filterKey;
+        var base =
+          'rounded-full border px-4 py-2.5 text-xs font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-mint-500 ';
+        var style = active
+          ? 'border-mint-500 bg-mint-50 text-mint-900 shadow-sm'
+          : 'border-bluegray-200 bg-white text-bluegray-600 hover:border-mint-300 hover:bg-mint-50/50';
+        var fk = isAll ? 'all' : filterKey;
+        return (
+          '<button type="button" class="' + base + style + '" data-hoshu-list-filter="' + escapeHtml(fk) + '">' +
+          escapeHtml(label) +
+          '</button>'
+        );
+      }
+      var parts = [mkBtn('\u4e00\u89a7', 'all', true)];
+      keys.forEach(function (c) {
+        parts.push(mkBtn(filterButtonLabelForCode(c), c, false));
+      });
+      wrap.innerHTML = parts.join('');
+      wrap.querySelectorAll('[data-hoshu-list-filter]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var key = btn.getAttribute('data-hoshu-list-filter');
+          hoshuAdminListFilter = key === 'all' ? 'all' : normalizeAdvisorCode(key);
+          renderAdminFilterButtons();
+          renderAdminRewardsTable();
+        });
+      });
+    }
+
+    function applyHoshuShellWide(enabled) {
+      var appEl = document.getElementById('app');
+      var tabsEl = document.getElementById('bottom-tabs');
+      if (appEl) {
+        if (enabled) appEl.classList.add('hoshu-shell-wide');
+        else appEl.classList.remove('hoshu-shell-wide');
+      }
+      if (tabsEl) {
+        if (enabled) tabsEl.classList.add('hoshu-shell-wide');
+        else tabsEl.classList.remove('hoshu-shell-wide');
+      }
+    }
+
+    function setHoshuContentRoot(mode) {
+      var root = document.getElementById('hoshu-content-root');
+      if (!root) return;
+      if (mode === 'wide') root.className = 'w-full max-w-none mx-auto';
+      else root.className = 'max-w-lg mx-auto';
+    }
+
+    function cancelHoshuRewardEdit() {
+      hoshuRewardEditingId = null;
+      var form = document.getElementById('form-hoshu-reward');
+      if (form) form.reset();
+      var hid = document.getElementById('hoshu-reward-edit-id');
+      if (hid) hid.value = '';
+      var cancelBtn = document.getElementById('hoshu-reward-cancel-btn');
+      if (cancelBtn) cancelBtn.classList.add('hidden');
+      var submitBtn = document.getElementById('hoshu-reward-submit-btn');
+      if (submitBtn) submitBtn.textContent = '\u767b\u9332';
+      populateAdvisorRewardSelect('');
+      updateHoshuBillablePreview();
+    }
+
+    function submitHoshuRewardForm(ev) {
+      ev.preventDefault();
+      var advisorCode = normalizeAdvisorCode(document.getElementById('hoshu-reward-advisor-code').value);
+      var companyName = document.getElementById('hoshu-reward-company').value.trim();
+      var candidateName = document.getElementById('hoshu-reward-candidate').value.trim();
+      var joinDate = document.getElementById('hoshu-reward-join-date').value;
+      var amount = parseInt(document.getElementById('hoshu-reward-amount').value, 10);
+      if (advisorCode.length !== 4) {
+        window.alert('\u62c5\u5f53\u30a2\u30c9\u30d0\u30a4\u30b6\u30fc\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
+        return;
+      }
+      if (!advisorExistsInRegistry(advisorCode)) {
+        window.alert('\u767b\u9332\u6e08\u307f\u30a2\u30c9\u30d0\u30a4\u30b6\u30fc\u304b\u3089\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
+        return;
+      }
+      if (!joinDate) {
+        window.alert('\u5165\u793e\u65e5\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\uff08\u898b\u8fbc\u307f\uff0f\u78ba\u5b9a\u306e\u632f\u308a\u5206\u3051\u306b\u4f7f\u7528\u3057\u307e\u3059\uff09\u3002');
+        return;
+      }
+      if (isNaN(amount) || amount < 0) {
+        window.alert('\u91d1\u984d\u306f0\u4ee5\u4e0a\u306e\u6574\u6570\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002');
+        return;
+      }
+      var data = loadRewardsData();
+      var editId = document.getElementById('hoshu-reward-edit-id').value;
+      var billableDate = addDaysYmd(joinDate, 70);
+      var paidChecked = !!(document.getElementById('hoshu-reward-paid') || {}).checked;
+      var payload = {
+        id: editId || newRewardEntryId(),
+        advisorCode: advisorCode,
+        companyName: companyName,
+        candidateName: candidateName,
+        joinDate: joinDate,
+        billableDate: billableDate,
+        amount: amount,
+        paid: paidChecked
+      };
+      if (editId) {
+        var ix = data.entries.findIndex(function (e) { return e.id === editId; });
+        if (ix >= 0) {
+          var next = Object.assign({}, data.entries[ix], payload);
+          delete next.advisorEmail;
+          delete next.offerDate;
+          data.entries[ix] = next;
+        }
+      } else {
+        data.entries.push(payload);
+      }
+      saveRewardsData(data);
+      cancelHoshuRewardEdit();
+      renderAdminFilterButtons();
+      renderAdminRewardsTable();
+      var sess = getHoshuSession();
+      if (sess && sess.role === 'advisor') renderAdvisorRewardsDashboard();
+    }
+
+    function editHoshuRewardEntry(id) {
+      var data = loadRewardsData();
+      var e = data.entries.find(function (x) { return x.id === id; });
+      if (!e) return;
+      hoshuRewardEditingId = id;
+      populateAdvisorRewardSelect(getEntryAdvisorCode(e));
+      document.getElementById('hoshu-reward-edit-id').value = id;
+      document.getElementById('hoshu-reward-advisor-code').value = getEntryAdvisorCode(e);
+      document.getElementById('hoshu-reward-company').value = e.companyName || '';
+      document.getElementById('hoshu-reward-candidate').value = e.candidateName || '';
+      document.getElementById('hoshu-reward-join-date').value = e.joinDate || '';
+      document.getElementById('hoshu-reward-amount').value = String(e.amount != null ? e.amount : '');
+      var paidCk = document.getElementById('hoshu-reward-paid');
+      if (paidCk) paidCk.checked = rewardEntryIsPaid(e);
+      updateHoshuBillablePreview();
+      document.getElementById('hoshu-reward-cancel-btn').classList.remove('hidden');
+      document.getElementById('hoshu-reward-submit-btn').textContent = '\u66f4\u65b0';
+      var formEl = document.getElementById('form-hoshu-reward');
+      if (formEl) formEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function deleteHoshuRewardEntry(id) {
+      if (!window.confirm('\u3053\u306e\u884c\u3092\u524a\u9664\u3057\u307e\u3059\u304b\uff1f')) return;
+      var data = loadRewardsData();
+      data.entries = data.entries.filter(function (e) { return e.id !== id; });
+      saveRewardsData(data);
+      if (hoshuRewardEditingId === id) cancelHoshuRewardEdit();
+      renderAdminFilterButtons();
+      renderAdminRewardsTable();
+      var sess = getHoshuSession();
+      if (sess && sess.role === 'advisor') renderAdvisorRewardsDashboard();
+    }
+
+    function setRewardEntryPaid(entryId, isPaid) {
+      var rawId = entryId ? String(entryId) : '';
+      if (!rawId) return;
+      var data = loadRewardsData();
+      var ix = data.entries.findIndex(function (e) {
+        return e.id === rawId;
+      });
+      if (ix < 0) return;
+      data.entries[ix] = Object.assign({}, data.entries[ix], {
+        paid: !!isPaid
+      });
+      saveRewardsData(data);
+      renderAdminRewardsTable();
+      var sess = getHoshuSession();
+      if (sess && sess.role === 'advisor') renderAdvisorRewardsDashboard();
+    }
+
+    function renderAdminRewardsTable() {
+      var tbody = document.getElementById('hoshu-admin-table-body');
+      if (!tbody) return;
+      var data = loadRewardsData();
+      var filtered = data.entries;
+      if (hoshuAdminListFilter !== 'all') {
+        filtered = data.entries.filter(function (e) {
+          return getEntryAdvisorCode(e) === hoshuAdminListFilter;
+        });
+      }
+      if (data.entries.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-10 text-center text-sm text-bluegray-400">\u307e\u3060\u767b\u9332\u304c\u3042\u308a\u307e\u305b\u3093\u3002\u4e0b\u306e\u30d5\u30a9\u30fc\u30e0\u304b\u3089\u8ffd\u52a0\u3057\u3066\u304f\u3060\u3055\u3044\u3002</td></tr>';
+        return;
+      }
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-10 text-center text-sm text-bluegray-400">\u3053\u306e\u62c5\u5f53\u30a2\u30c9\u30d0\u30a4\u30b6\u30fc\u306e\u6848\u4ef6\u306f\u3042\u308a\u307e\u305b\u3093\u3002\u300c\u4e00\u89a7\u300d\u304b\u3089\u5168\u4ef6\u3092\u8868\u793a\u3059\u308b\u304b\u3001\u5225\u306e\u62c5\u5f53\u3092\u9078\u629e\u3057\u3066\u304f\u3060\u3055\u3044\u3002</td></tr>';
+        return;
+      }
+      tbody.innerHTML = filtered.map(function (e) {
+        var safeId = escapeHtml(e.id);
+        var paidSel =
+          '<select data-hoshu-pay="' +
+          escapeHtml(String(e.id)) +
+          '" class="hoshu-input text-xs py-2 min-w-[7.25rem] max-w-[10rem]" aria-label="' +
+          escapeHtml((e.candidateName || '') + '\u306e\u652f\u6255\u3044\u72b6\u614b') +
+          '">' +
+          '<option value="unpaid"' +
+          (!rewardEntryIsPaid(e) ? ' selected' : '') +
+          '>\u672a\u6255\u3044</option>' +
+          '<option value="paid"' +
+          (rewardEntryIsPaid(e) ? ' selected' : '') +
+          '>\u652f\u6255\u3044\u6e08\u307f</option>' +
+          '</select>';
+        return (
+          '<tr class="border-t border-bluegray-100 hover:bg-bluegray-50/80">' +
+          '<td class="px-4 py-3 text-xs text-bluegray-700 leading-snug max-w-[220px]">' + formatEntryAdvisorColumn(e) + '</td>' +
+          '<td class="px-4 py-3 text-sm leading-snug">' + escapeHtml(e.companyName || '\u2014') + '</td>' +
+          '<td class="px-4 py-3 text-sm">' + escapeHtml(e.candidateName || '\u2014') + '</td>' +
+          '<td class="px-4 py-3 text-sm whitespace-nowrap">' + escapeHtml(formatDateJp(e.joinDate)) + '</td>' +
+          '<td class="px-4 py-3 text-sm whitespace-nowrap">' + escapeHtml(formatDateJp(getBillableDateForEntry(e))) + '</td>' +
+          '<td class="px-4 py-3 text-sm font-semibold text-right whitespace-nowrap tabular-nums">' + escapeHtml(formatYen(e.amount)) + '</td>' +
+          '<td class="px-4 py-3">' +
+          paidSel +
+          '</td>' +
+          '<td class="px-4 py-3 text-right whitespace-nowrap">' +
+          '<button type="button" class="text-mint-600 text-xs font-semibold mr-2 hover:underline" data-hoshu-edit="' + safeId + '">\u7de8\u96c6</button>' +
+          '<button type="button" class="text-red-600 text-xs font-semibold hover:underline" data-hoshu-del="' + safeId + '">\u524a\u9664</button>' +
+          '</td></tr>'
+        );
+      }).join('');
+      tbody.querySelectorAll('[data-hoshu-edit]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          editHoshuRewardEntry(btn.getAttribute('data-hoshu-edit'));
+        });
+      });
+      tbody.querySelectorAll('[data-hoshu-del]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          deleteHoshuRewardEntry(btn.getAttribute('data-hoshu-del'));
+        });
+      });
+      tbody.querySelectorAll('[data-hoshu-pay]').forEach(function (sel) {
+        sel.addEventListener('change', function () {
+          var id = sel.getAttribute('data-hoshu-pay');
+          setRewardEntryPaid(id, sel.value === 'paid');
+        });
+      });
+    }
+
+    function renderAdvisorRewardsDashboard() {
+      var sess = getHoshuSession();
+      if (!sess || sess.role !== 'advisor') return;
+      var acode = normalizeAdvisorCode(sess.advisorCode);
+      var todayYmd = getTodayYmd();
+      var data = loadRewardsData();
+      var prospect = [];
+      var confirmed = [];
+      var prospectSum = 0;
+      var confirmedSum = 0;
+      var cumulativeSum = 0;
+      data.entries.forEach(function (e) {
+        if (getEntryAdvisorCode(e) !== acode) return;
+        var amt = Number(e.amount) || 0;
+        cumulativeSum += amt;
+        var cat = classifyRewardByJoinDate(e.joinDate, todayYmd);
+        if (cat === 'prospect') {
+          prospect.push(e);
+          prospectSum += amt;
+        } else if (cat === 'confirmed' && !rewardEntryIsPaid(e)) {
+          confirmed.push(e);
+          confirmedSum += amt;
         }
       });
-    }, {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    });
+      var pt = document.getElementById('hoshu-prospect-total');
+      var ct = document.getElementById('hoshu-confirmed-total');
+      var cum = document.getElementById('hoshu-cumulative-total');
+      if (pt) pt.textContent = formatYen(prospectSum);
+      if (ct) ct.textContent = formatYen(confirmedSum);
+      if (cum) cum.textContent = formatYen(cumulativeSum);
+      renderAdvisorRewardList('hoshu-prospect-list', prospect, 'prospect');
+      renderAdvisorRewardList('hoshu-confirmed-list', confirmed, 'confirmed');
+    }
 
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    function renderAdvisorRewardList(containerId, entries, variant) {
+      var el = document.getElementById(containerId);
+      if (!el) return;
+      var v = variant === 'confirmed' ? 'confirmed' : 'prospect';
+      if (entries.length === 0) {
+        el.innerHTML =
+          '<p class="text-sm text-bluegray-500 py-3 px-1 rounded-lg bg-white/50 border border-dashed border-bluegray-200/80">' +
+          '\u8a72\u5f53\u3059\u308b\u6848\u4ef6\u306f\u3042\u308a\u307e\u305b\u3093\u3002</p>';
+        return;
+      }
+      var cardBorder = v === 'confirmed' ? 'border-emerald-200/90' : 'border-amber-200/90';
+      var sumTint = v === 'confirmed' ? 'bg-emerald-50/55' : 'bg-amber-50/55';
+      el.innerHTML = entries.map(function (e) {
+        var sumLabel = escapeHtml((e.companyName || '\u4f01\u696d\u540d\u672a\u8a2d\u5b9a') + ' \u00b7 ' + (e.candidateName || '\u6c0f\u540d\u672a\u8a2d\u5b9a'));
+        var bill = getBillableDateForEntry(e);
+        return (
+          '<details class="hoshu-acc rounded-xl border-2 ' +
+          cardBorder +
+          ' bg-white shadow-md hover:shadow-lg transition-shadow">' +
+          '<summary class="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3.5 text-sm font-semibold text-bluegray-800 ' +
+          sumTint +
+          ' [&::-webkit-details-marker]:hidden">' +
+          '<span class="min-w-0 truncate text-left">' +
+          sumLabel +
+          '</span>' +
+          '<span class="hoshu-yen-cute flex-shrink-0 text-lg font-extrabold text-bluegray-900 tabular-nums tracking-tight">' +
+          escapeHtml(formatYen(e.amount)) +
+          '</span>' +
+          '</summary>' +
+          '<div class="border-t border-bluegray-100/90 px-4 py-3 text-sm text-bluegray-600 space-y-2.5 bg-white/90">' +
+          '<div><span class="text-xs font-semibold text-bluegray-400">\u4f01\u696d\u540d</span><br>' +
+          escapeHtml(e.companyName || '\u2014') +
+          '</div>' +
+          '<div><span class="text-xs font-semibold text-bluegray-400">\u6c42\u8077\u8005\u6c0f\u540d</span><br>' +
+          escapeHtml(e.candidateName || '\u2014') +
+          '</div>' +
+          '<div><span class="text-xs font-semibold text-bluegray-400">\u5165\u793e\u65e5</span><br>' +
+          escapeHtml(formatDateJp(e.joinDate)) +
+          '</div>' +
+          '<div><span class="text-xs font-semibold text-bluegray-400">\u8acb\u6c42\u53ef\u80fd\u65e5</span><br>' +
+          escapeHtml(formatDateJp(bill)) +
+          '</div>' +
+          '<div><span class="text-xs font-semibold text-bluegray-400">\u91d1\u984d</span><br>' +
+          '<span class="hoshu-yen-cute text-xl font-extrabold text-bluegray-900 tabular-nums">' +
+          escapeHtml(formatYen(e.amount)) +
+          '</span></div>' +
+          '</div></details>'
+        );
+      }).join('');
+    }
+
+    function getHoshuSession() {
+      try {
+        const raw = sessionStorage.getItem(HOSHU_SESSION_KEY);
+        if (!raw) return null;
+        const s = JSON.parse(raw);
+        if (!s || !s.role) return null;
+        if (s.role === 'admin') {
+          if (normalizeAdvisorCode(s.adminCode).length !== 4) return null;
+        } else if (s.role === 'advisor') {
+          if (normalizeAdvisorCode(s.advisorCode).length !== 4) return null;
+        } else return null;
+        return s;
+      } catch {
+        return null;
+      }
+    }
+
+    function setHoshuSession(payload) {
+      sessionStorage.setItem(HOSHU_SESSION_KEY, JSON.stringify(payload));
+    }
+
+    function clearHoshuSession() {
+      sessionStorage.removeItem(HOSHU_SESSION_KEY);
+    }
+
+    function showHoshuPanel(panelId) {
+      document.querySelectorAll('.hoshu-panel').forEach(function (el) {
+        el.classList.toggle('is-visible', el.id === panelId);
+      });
+    }
+
+    function syncHoshuViewFromSession() {
+      var s = getHoshuSession();
+      if (!s) {
+        applyHoshuShellWide(false);
+        setHoshuContentRoot('narrow');
+        showHoshuPanel('hoshu-hub');
+        return;
+      }
+      if (s.role === 'admin') {
+        var adm = document.getElementById('hoshu-admin-code-display');
+        if (adm) adm.textContent = normalizeAdvisorCode(s.adminCode);
+        applyHoshuShellWide(true);
+        setHoshuContentRoot('wide');
+        showHoshuPanel('hoshu-admin-dash');
+        renderAdvisorRegistryTable();
+        populateAdvisorRewardSelect('');
+        renderAdminFilterButtons();
+        renderAdminRewardsTable();
+      } else {
+        var meta = document.getElementById('hoshu-advisor-meta-display');
+        var greet = document.getElementById('hoshu-advisor-greeting');
+        var honor = (s.displayName || '').trim() || 'アドバイザー';
+        var codeDisp = normalizeAdvisorCode(s.advisorCode);
+        if (greet) greet.textContent = honor + '様';
+        if (meta)
+          meta.textContent =
+            '\u30a2\u30c9\u30d0\u30a4\u30b6\u30fc\u756a\u53f7 ' + codeDisp;
+        applyHoshuShellWide(false);
+        setHoshuContentRoot('narrow');
+        showHoshuPanel('hoshu-advisor-dash');
+        renderAdvisorRewardsDashboard();
+      }
+    }
+
+    function openHoshuHub() {
+      applyHoshuShellWide(false);
+      setHoshuContentRoot('narrow');
+      setHoshuFormError('admin', '');
+      setHoshuFormError('advisor', '');
+      showHoshuPanel('hoshu-hub');
+    }
+
+    function openHoshuAdminLogin() {
+      applyHoshuShellWide(false);
+      setHoshuContentRoot('narrow');
+      setHoshuFormError('admin', '');
+      var f = document.getElementById('form-hoshu-admin');
+      if (f) f.reset();
+      showHoshuPanel('hoshu-admin-login');
+    }
+
+    function openHoshuAdvisorLogin() {
+      applyHoshuShellWide(false);
+      setHoshuContentRoot('narrow');
+      setHoshuFormError('advisor', '');
+      var f = document.getElementById('form-hoshu-advisor');
+      if (f) f.reset();
+      showHoshuPanel('hoshu-advisor-login');
+    }
+
+    function setHoshuFormError(which, message) {
+      var id = which === 'admin' ? 'hoshu-admin-error' : 'hoshu-advisor-error';
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (!message) {
+        el.textContent = '';
+        el.classList.add('hidden');
+      } else {
+        el.textContent = message;
+        el.classList.remove('hidden');
+      }
+    }
+
+    function submitHoshuAdminLogin(ev) {
+      ev.preventDefault();
+      var code = normalizeAdvisorCode(document.getElementById('hoshu-admin-code').value);
+      var pin = normalizePinDigits(document.getElementById('hoshu-admin-pin').value);
+      if (code.length !== 4 || pin.length !== 4) {
+        setHoshuFormError(
+          'admin',
+          '\u7ba1\u7406\u8005\u756a\u53f7\u306f\u82f1\u6570\u5b574\u6587\u5b57\u3001PIN\u306f\u6570\u5b574\u6841\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002'
+        );
+        return;
+      }
+      var list = Array.isArray(HOSHU_CONFIG.admins) ? HOSHU_CONFIG.admins : [];
+      var ok = list.some(function (a) {
+        return (
+          code === normalizeAdvisorCode(a.code) &&
+          pin === normalizePinDigits(a.pin)
+        );
+      });
+      if (ok) {
+        setHoshuFormError('admin', '');
+        setHoshuSession({ role: 'admin', adminCode: code, ts: Date.now() });
+        syncHoshuViewFromSession();
+      } else {
+        setHoshuFormError(
+          'admin',
+          '\u7ba1\u7406\u8005\u756a\u53f7\u307e\u305f\u306fPIN\u304c\u6b63\u3057\u304f\u3042\u308a\u307e\u305b\u3093\u30024\u6587\u5b57\u3068\u6570\u5b574\u6841\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002'
+        );
+      }
+    }
+
+    function submitHoshuAdvisorLogin(ev) {
+      ev.preventDefault();
+      var code = normalizeAdvisorCode(document.getElementById('hoshu-advisor-code').value);
+      var pin = normalizePinDigits(document.getElementById('hoshu-advisor-pin').value);
+      if (code.length !== 4 || pin.length !== 4) {
+        setHoshuFormError(
+          'advisor',
+          '\u756a\u53f7\u306f\u82f1\u6570\u5b574\u6587\u5b57\u3001PIN\u306f\u6570\u5b574\u6841\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002'
+        );
+        return;
+      }
+      var reg = loadAdvisorRegistry();
+      var hit = reg.advisors.find(function (a) {
+        return normalizeAdvisorCode(a.code) === code && normalizePinDigits(a.pin) === pin;
+      });
+      if (hit) {
+        setHoshuFormError('advisor', '');
+        setHoshuSession({
+          role: 'advisor',
+          advisorCode: code,
+          displayName: String(hit.displayName || '').trim(),
+          ts: Date.now()
+        });
+        syncHoshuViewFromSession();
+      } else {
+        setHoshuFormError(
+          'advisor',
+          '\u756a\u53f7\u307e\u305f\u306fPIN\u304c\u6b63\u3057\u304f\u3042\u308a\u307e\u305b\u3093\u3002'
+        );
+      }
+    }
+
+    function logoutHoshu() {
+      hoshuAdminListFilter = 'all';
+      clearHoshuSession();
+      cancelHoshuRewardEdit();
+      cancelAdvisorRegistryEdit();
+      var af = document.getElementById('form-hoshu-admin');
+      var bf = document.getElementById('form-hoshu-advisor');
+      if (af) af.reset();
+      if (bf) bf.reset();
+      openHoshuHub();
+    }
+
+    mergeSeedAdvisorsIntoRegistry();
+    mergeSeedRewardsIntoStorage();
+
+    (function initHoshuRewardBillablePreview() {
+      var jd = document.getElementById('hoshu-reward-join-date');
+      if (jd) {
+        jd.addEventListener('input', updateHoshuBillablePreview);
+        jd.addEventListener('change', updateHoshuBillablePreview);
+      }
+      updateHoshuBillablePreview();
+    })();
+
+    // Splash screen - 3 seconds
+    setTimeout(() => {
+      document.getElementById('splash').classList.add('hidden');
+    }, 3000);
+
+    // Page navigation
+    function navigateTo(pageId) {
+      // Hide all pages
+      document.querySelectorAll('.page').forEach(p => {
+        p.classList.remove('active');
+      });
+      // Show target page
+      const target = document.getElementById('page-' + pageId);
+      if (target) {
+        target.classList.add('active');
+        // Trigger fade-in animations
+        setTimeout(() => {
+          target.querySelectorAll('.fade-in').forEach(el => el.classList.add('visible'));
+        }, 100);
+      }
+      if (pageId === 'hoshu') {
+        syncHoshuViewFromSession();
+      } else {
+        applyHoshuShellWide(false);
+        setHoshuContentRoot('narrow');
+      }
+      // Update tab highlight
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.dataset.tab === pageId) {
+          btn.className = btn.className.replace(/text-bluegray-400/, '').replace(/hover:bg-bluegray-50/, '');
+          btn.classList.add('text-mint-500');
+        } else {
+          btn.classList.remove('text-mint-500');
+          if (!btn.className.includes('text-bluegray-400')) {
+            btn.classList.add('text-bluegray-400');
+          }
+          if (!btn.className.includes('hover:bg-bluegray-50')) {
+            btn.classList.add('hover:bg-bluegray-50');
+          }
+        }
+      });
+      // Scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initial fade-in for home page
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelectorAll('#page-home .fade-in').forEach(el => el.classList.add('visible'));
+      }, 3200);
+    });
   </script>
 
 </body>

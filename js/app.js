@@ -658,12 +658,12 @@ function renderResume(data, photoDataUrl) {
         <tbody>
           <tr>
             <td></td><td></td>
-            <td class="text-center font-semibold text-sm" style="background:#f5f3ff;color:#5b21b6;">学歴</td>
+            <td class="text-center font-semibold text-sm" style="background:#ecfdf5;color:#14532d;">学歴</td>
           </tr>
           ${educationRows || '<tr><td></td><td></td><td></td></tr>'}
           <tr>
             <td></td><td></td>
-            <td class="text-center font-semibold text-sm" style="background:#f5f3ff;color:#5b21b6;">職歴</td>
+            <td class="text-center font-semibold text-sm" style="background:#ecfdf5;color:#14532d;">職歴</td>
           </tr>
           ${careerRows || '<tr><td></td><td></td><td></td></tr>'}
           <tr>
@@ -715,7 +715,7 @@ function renderWorkHistory(data) {
       : '';
 
     return `
-      <div class="mb-4 p-3 rounded border-l-4" style="background:#f5f3ff;border-left-color:#8b5cf6;">
+      <div class="mb-4 p-3 rounded border-l-4" style="background:#ecfdf5;border-left-color:#16a34a;">
         <div class="font-bold text-base text-gray-800 mb-1">
           【${i + 1}】${escHtml(exp.company_name)}
           ${period ? `<span class="font-normal text-sm text-gray-500 ml-2">(${period})</span>` : ''}
@@ -858,7 +858,7 @@ function showToast(message, type = 'info') {
   const toast = document.createElement('div');
   toast.id = 'toast-notification';
 
-  const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-purple-600';
+  const bgColor = type === 'success' ? 'bg-green-600' : type === 'error' ? 'bg-red-600' : 'bg-emerald-700';
   const icon = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
 
   toast.className = `fixed top-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-lg text-white text-sm font-medium shadow-xl ${bgColor}`;

@@ -75,6 +75,7 @@ strong { font-weight: 700; }
   position: sticky; top: 0; z-index: 200;
   box-shadow: var(--shadow-tab);
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap;
 }
 .header-left h1 {
   font-size: 17px; font-weight: 800; letter-spacing: .02em;
@@ -86,6 +87,23 @@ strong { font-weight: 700; }
   background: var(--c-accent); border-radius: 2px; flex-shrink: 0;
 }
 .header-sub { font-size: 11px; opacity: .75; margin-top: 3px; }
+.header-home-link {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.12);
+  transition: background .15s, border-color .15s;
+  white-space: nowrap;
+}
+.header-home-link:hover {
+  background: rgba(255,255,255,.22);
+  border-color: rgba(255,255,255,.55);
+}
 .header-overall {
   display: flex; flex-direction: column; align-items: flex-end; gap: 4px;
   flex-shrink: 0;
@@ -440,6 +458,7 @@ strong { font-weight: 700; }
 @media (max-width: 600px) {
   .app-header { padding: 12px 14px 10px; }
   .header-left h1 { font-size: 15px; }
+  .header-home-link { font-size: 11px; padding: 6px 10px; }
   .overall-bar-wrap { width: 70px; }
   .page-content { padding: 14px 12px 0; }
   .ci { padding: 10px 12px; gap: 10px; }
@@ -611,6 +630,7 @@ strong { font-weight: 700; }
     <h1>CA 面談トークスクリプト</h1>
     <div class="header-sub">AI企業〇〇 正社員採用　|　一次面談＋二次面談　|　人材事業部（CAチーム）</div>
   </div>
+  <a href="施工管理/index.html" target="_top" class="header-home-link">ホームへ戻る</a>
   <div class="header-overall">
     <div class="overall-pct" id="overallPct">0%</div>
     <div class="overall-bar-wrap"><div class="overall-bar-fill" id="overallFill" style="width:0%"></div></div>
