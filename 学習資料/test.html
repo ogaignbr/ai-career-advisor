@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>理解度テスト｜2040年の就業構造推計 | CAサポートAPP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#fffef5;--surface:#fff;--pri:#92400e;--pri2:#b45309;--acc:#eab308;
+      --txt:#0f172a;--muted:#64748b;--bdr:#fef08a;--r:14px;
+      --fd:'Plus Jakarta Sans','Noto Sans JP',sans-serif;
+      --fb:'Noto Sans JP',sans-serif;
+      --correct:#16a34a;--wrong:#dc2626;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;min-height:100vh;font-family:var(--fb);background:radial-gradient(ellipse at 10% 90%,rgba(234,179,8,.10) 0%,transparent 50%),radial-gradient(ellipse at 90% 10%,rgba(202,138,4,.08) 0%,transparent 45%),var(--bg);color:var(--txt)}
+    .w{max-width:740px;margin:0 auto;padding:1.25rem 1rem 2.5rem}
+    .hd{text-align:center;margin-bottom:1.25rem}
+    .hd h1{font-family:var(--fd);font-size:1.1rem;font-weight:800;color:var(--pri);margin:0 0 .3rem}
+    .hd p{margin:0;font-size:.78rem;color:var(--muted)}
+
+    .q-card{
+      background:var(--surface);border:1.5px solid #e5e7eb;border-radius:var(--r);
+      padding:1rem 1.1rem;margin-bottom:.75rem;
+      box-shadow:0 1px 4px rgba(0,0,0,.04);
+      transition:border-color .2s,box-shadow .2s;
+    }
+    .q-card.answered-correct{border-color:var(--correct);background:#f0fdf4;box-shadow:0 2px 8px rgba(22,163,74,.1)}
+    .q-card.answered-wrong{border-color:var(--wrong);background:#fef2f2;box-shadow:0 2px 8px rgba(220,38,38,.1)}
+    .q-num{font-family:var(--fd);font-size:.7rem;font-weight:800;color:var(--pri2);letter-spacing:.04em;margin-bottom:.4rem}
+    .q-text{font-size:.85rem;line-height:1.65;color:var(--txt);margin-bottom:.7rem}
+    .q-btns{display:flex;gap:.5rem}
+    .q-btn{
+      font-family:var(--fd);font-size:.78rem;font-weight:700;
+      padding:.45rem 1.2rem;border-radius:8px;border:1.5px solid #d1d5db;
+      background:#fff;color:var(--txt);cursor:pointer;
+      transition:background .15s,border-color .15s,transform .1s;
+      flex:1;text-align:center;
+    }
+    .q-btn:hover:not(:disabled){background:#fefce8;border-color:var(--acc)}
+    .q-btn:active:not(:disabled){transform:translateY(1px)}
+    .q-btn:disabled{cursor:default;opacity:.7}
+    .q-btn.sel-correct{background:#dcfce7;border-color:var(--correct);color:var(--correct)}
+    .q-btn.sel-wrong{background:#fee2e2;border-color:var(--wrong);color:var(--wrong)}
+    .q-btn.show-answer{background:#ecfdf5;border-color:var(--correct);color:var(--correct)}
+    .q-explain{
+      font-size:.78rem;line-height:1.6;color:#374151;
+      margin-top:.6rem;padding:.6rem .8rem;border-radius:8px;
+      background:#fefce8;border:1px solid #fef08a;display:none;
+    }
+    .q-card.answered-correct .q-explain,
+    .q-card.answered-wrong .q-explain{display:block}
+
+    .result-panel{
+      display:none;background:var(--surface);border:2px solid var(--acc);
+      border-radius:var(--r);padding:1.5rem;text-align:center;margin-bottom:1.5rem;
+      box-shadow:0 4px 16px rgba(234,179,8,.15);
+    }
+    .result-panel.visible{display:block}
+    .result-score{font-family:var(--fd);font-size:2rem;font-weight:800;color:var(--pri)}
+    .result-label{font-size:.85rem;color:var(--muted);margin-top:.25rem}
+    .result-detail{font-size:.82rem;color:var(--txt);margin-top:.5rem}
+    .result-msg{font-size:.88rem;font-weight:600;color:var(--pri);margin-top:.75rem}
+
+    .btn{font-family:var(--fd);font-size:.75rem;font-weight:700;padding:.5rem .9rem;border-radius:10px;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:.4rem;transition:opacity .15s,transform .1s}
+    .btn:active{transform:translateY(1px)}
+    .btn-back{background:#fff;color:var(--pri2);border:1.5px solid var(--bdr);font-size:.78rem;padding:.45rem .95rem}
+    .btn-back:hover{background:#fefce8}
+    .btn-submit{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;font-size:.85rem;padding:.6rem 1.5rem;margin-top:1rem}
+    .btn-submit:hover{opacity:.92}
+    .btn-submit:disabled{opacity:.5;cursor:not-allowed}
+    .btn-retry{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;font-size:.82rem;padding:.55rem 1.3rem;margin-top:.75rem}
+    .btn-retry:hover{opacity:.92}
+
+    .progress-bar{width:100%;height:6px;background:#e5e7eb;border-radius:6px;margin-bottom:1rem;overflow:hidden}
+    .progress-fill{height:100%;background:linear-gradient(90deg,var(--acc),var(--pri2));border-radius:6px;transition:width .3s ease}
+  </style>
+</head>
+<body>
+<div class="w">
+  <p style="margin:0 0 12px;text-align:right">
+    <a href="index.html" class="btn btn-back">学習資料へ戻る</a>
+  </p>
+
+  <header class="hd">
+    <h1>理解度テスト：2040年の就業構造推計</h1>
+    <p>全25問（100点満点）｜各問4点 ｜ 丸（○）かバツ（×）で答えてください</p>
+  </header>
+
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+
+  <div class="result-panel" id="resultPanel">
+    <div class="result-score" id="resultScore"></div>
+    <div class="result-label">/ 100点</div>
+    <div class="result-detail" id="resultDetail"></div>
+    <div class="result-msg" id="resultMsg"></div>
+    <button class="btn btn-retry" onclick="retryTest()">もう一度テストを受ける</button>
+  </div>
+
+  <div id="quizArea"></div>
+
+  <div style="text-align:center;margin-top:1rem" id="submitArea">
+    <button class="btn btn-submit" id="submitBtn" disabled onclick="showResult()">採点する</button>
+    <p style="font-size:.7rem;color:var(--muted);margin-top:.5rem">すべての問題に回答すると採点できます</p>
+  </div>
+</div>
+
+<script>
+const Q = [
+  {
+    q: "2040年の日本の就業者数は、2022年の約6,706万人から約6,303万人へ減少する見込みである。",
+    a: true,
+    ex: "就業者数は約403万人減少する見込みですが、AI・ロボット等の利活用や労働の質の向上により、全体では大きな不足は生じないとされています。"
+  },
+  {
+    q: "2040年に向けた就業構造の最大の問題は「全体的な人手不足」である。",
+    a: false,
+    ex: "最大の問題は全体の人手不足ではなく、職種・学歴・地域の「構造的ミスマッチ」です。余剰と不足が同時に発生します。"
+  },
+  {
+    q: "事務職は2040年に約437万人の余剰が見込まれる。",
+    a: true,
+    ex: "生成AIや業務自動化により定型的な事務タスクが縮小し、供給が需要を約437万人上回る可能性があります。"
+  },
+  {
+    q: "AI・ロボット等利活用人材は2040年に約339万人不足する見込みである。",
+    a: true,
+    ex: "2022年の236万人から2040年需要782万人へ大きく拡大する一方、供給は443万人にとどまり、約339万人不足します。"
+  },
+  {
+    q: "AI・ロボット等利活用人材とは、AIの研究者やプログラマーだけを指す。",
+    a: false,
+    ex: "AI研究者だけでなく、企業現場でAI・ロボット・データ・システムを使いこなす人材全般を含みます。機械技術者や情報処理通信技術者等も含む職種群です。"
+  },
+  {
+    q: "大卒・院卒理系人材は2040年に約124万人不足する見込みである。",
+    a: true,
+    ex: "大卒理系が約96万人、院卒理系が約27万人の不足で、合計約124万人不足とされています。"
+  },
+  {
+    q: "大卒・院卒文系人材は2040年に約76万人余剰となる見込みである。",
+    a: true,
+    ex: "特に事務職では大卒文系+163万人の余剰が示されていますが、文系人材が不要になるわけではなく、需要領域への転換が鍵です。"
+  },
+  {
+    q: "現場人材（製造・建設・物流等）は、AIに代替されるため2040年には不要になる。",
+    a: false,
+    ex: "現場人材は約260万人不足する見込みです。設備・ロボット・データを使いこなす現場人材がむしろ重要になります。"
+  },
+  {
+    q: "生産工程従事者は2040年に約206万人不足する見込みである。",
+    a: true,
+    ex: "製造業が高付加価値化に対応できる技術・現場人材を求めるため、生産工程従事者の不足が大きくなります。"
+  },
+  {
+    q: "高卒工業科の人材は2040年に約91万人不足するとされている。",
+    a: true,
+    ex: "製造業X、インフラ、設備保全、地域の大型投資案件において実装力を持つ人材が不足することが背景です。"
+  },
+  {
+    q: "東京圏（一都三県）では2040年に全体として人材が不足する見込みである。",
+    a: false,
+    ex: "東京圏では全体として約193万人の余剰が発生し、その多くを事務職が占めます。ただし理系・専門・AI利活用人材は不足します。"
+  },
+  {
+    q: "北海道・東北・九州などの地方では、専門職や現場人材の不足が大きくなる見込みである。",
+    a: true,
+    ex: "人口減少により供給が減る一方、医療・福祉、製造、建設、物流、観光などの需要が残るためです。"
+  },
+  {
+    q: "製造業では、専門職・AI利活用人材・現場人材・生産工程従事者の不足が同時に発生する。",
+    a: true,
+    ex: "製造業は「人を減らす産業」ではなく、高付加価値化に対応できる技術・現場人材を求める産業へ変化します。"
+  },
+  {
+    q: "情報通信業では、すべての職種で人材が不足する見込みである。",
+    a: false,
+    ex: "情報通信業では供給超過（余剰）が示されています。ただし職種定義や地域偏在に注意が必要です。"
+  },
+  {
+    q: "事務職経験者の支援方針は、「余剰人材」として扱い転職を急がせることが適切である。",
+    a: false,
+    ex: "事務職経験者を「余剰人材」と見るのではなく、業務改善・DX推進・カスタマーサクセス等への転換を支援するのが適切です。"
+  },
+  {
+    q: "文系人材がDX推進やカスタマーサクセスなどの需要領域に転換することは不可能である。",
+    a: false,
+    ex: "文系人材の強み（顧客理解・言語化・調整力・制度理解等）を活かし、業務改善、DX推進、AI活用型リサーチ等への接続が可能です。"
+  },
+  {
+    q: "生成AIの影響を説明する際には、「AIを使って価値を出すタスクを増やす」視点が重要である。",
+    a: true,
+    ex: "「AIに仕事を奪われるかどうか」ではなく「AIに代替されるタスクを減らし、AIを使って価値を出すタスクを増やす」ことが重要です。"
+  },
+  {
+    q: "生成AIの進展が加速した場合、事務従事者の労働需要は約680万人まで低下する可能性がある。",
+    a: true,
+    ex: "生成AI等の導入なしでは1,530万人、全国版推計では1,040万人、進展加速の場合は680万人まで低下するとされています。"
+  },
+  {
+    q: "キャリアアドバイザーは「事務職はなくなります」と相談者に説明するのが適切である。",
+    a: false,
+    ex: "定型的な事務処理の需要は減りますが、業務を設計・改善しAIやシステムを使って組織を動かす仕事は残ります。断定的表現は不適切です。"
+  },
+  {
+    q: "キャリアアドバイザーは「理系なら安泰です」と相談者に説明してよい。",
+    a: false,
+    ex: "理系人材の需要は高まりますが、専門知識を事業や現場の課題に接続できることが重要で、技術だけでなく実装力・説明力も必要です。"
+  },
+  {
+    q: "2040年型キャリア面談の5ステップの最初は「現職のタスク分解」である。",
+    a: true,
+    ex: "職種名ではなく日々のタスクを「定型処理」「判断」「対人」「改善」「技術利用」に分けることが第一歩です。"
+  },
+  {
+    q: "本推計は「十分な国内投資や産業構造転換が実現する場合」を前提としたシナリオである。",
+    a: true,
+    ex: "国内投資拡大、産業構造転換、AI・ロボット活用、リスキリングが一定程度進むことを前提としています。"
+  },
+  {
+    q: "産業構造転換の3つの柱には「製造業X」「情報通信業・専門サービス業」「アドバンスト・エッセンシャルサービス業」がある。",
+    a: true,
+    ex: "製造業はGX・DXで高付加価値化、情報通信・専門サービスは新需要開拓、エッセンシャルサービスは省力化設備を使いこなす方向です。"
+  },
+  {
+    q: "キャリアアドバイザーは「地方は仕事がないです」と説明するのが適切である。",
+    a: false,
+    ex: "地方では人口減少により供給不足が起きやすく、専門職や現場人材の需要があります。産業構造や賃金を確認して選ぶ必要があります。"
+  },
+  {
+    q: "2040年のキャリア支援では、「職種紹介」から「需要領域への移動設計」へ役割が変化する。",
+    a: true,
+    ex: "安定職種を紹介するのではなく、成長領域に移動できるスキル設計・学び直し設計・地域選択支援を行うことが求められます。"
+  }
+];
+
+let answers = {};
+let submitted = false;
+
+function renderQuiz() {
+  const area = document.getElementById('quizArea');
+  area.innerHTML = '';
+  Q.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'q-card';
+    div.id = 'q' + i;
+    div.innerHTML =
+      '<div class="q-num">Q' + (i + 1) + ' / 25</div>' +
+      '<div class="q-text">' + esc(item.q) + '</div>' +
+      '<div class="q-btns">' +
+        '<button class="q-btn" data-q="' + i + '" data-v="true" onclick="selectAnswer(' + i + ',true,this)">○（正しい）</button>' +
+        '<button class="q-btn" data-q="' + i + '" data-v="false" onclick="selectAnswer(' + i + ',false,this)">×（誤り）</button>' +
+      '</div>' +
+      '<div class="q-explain">' + esc(item.ex) + '</div>';
+    area.appendChild(div);
+  });
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function selectAnswer(qi, val, btn) {
+  if (submitted) return;
+  answers[qi] = val;
+
+  const card = document.getElementById('q' + qi);
+  card.querySelectorAll('.q-btn').forEach(b => {
+    b.classList.remove('sel-correct', 'sel-wrong');
+    b.style.borderColor = '';
+    b.style.background = '';
+  });
+  btn.style.borderColor = '#eab308';
+  btn.style.background = '#fefce8';
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const count = Object.keys(answers).length;
+  const pct = (count / Q.length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('submitBtn').disabled = count < Q.length;
+}
+
+function showResult() {
+  submitted = true;
+  let correct = 0;
+  Q.forEach((item, i) => {
+    const card = document.getElementById('q' + i);
+    const isCorrect = answers[i] === item.a;
+    if (isCorrect) correct++;
+
+    card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+    card.querySelectorAll('.q-btn').forEach(b => {
+      b.disabled = true;
+      b.style.borderColor = '';
+      b.style.background = '';
+      const bVal = b.getAttribute('data-v') === 'true';
+      if (bVal === item.a) {
+        b.classList.add('show-answer');
+      }
+      if (bVal === answers[i] && !isCorrect) {
+        b.classList.add('sel-wrong');
+      }
+      if (bVal === answers[i] && isCorrect) {
+        b.classList.add('sel-correct');
+      }
+    });
+  });
+
+  const score = correct * 4;
+  const panel = document.getElementById('resultPanel');
+  document.getElementById('resultScore').textContent = score + '点';
+  document.getElementById('resultDetail').textContent = '正解：' + correct + ' / 25問';
+
+  let msg = '';
+  if (score >= 90) msg = '素晴らしい成績です！資料の内容を十分に理解しています。';
+  else if (score >= 70) msg = '良い成績です。間違えた箇所を復習しましょう。';
+  else if (score >= 50) msg = 'もう少し学習が必要です。資料を再読して再チャレンジしましょう。';
+  else msg = '資料をもう一度しっかり読み直してから再チャレンジしましょう。';
+  document.getElementById('resultMsg').textContent = msg;
+
+  panel.classList.add('visible');
+  document.getElementById('submitArea').style.display = 'none';
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retryTest() {
+  answers = {};
+  submitted = false;
+  document.getElementById('resultPanel').classList.remove('visible');
+  document.getElementById('submitArea').style.display = 'block';
+  document.getElementById('progressFill').style.width = '0%';
+  document.getElementById('submitBtn').disabled = true;
+  renderQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+renderQuiz();
+</script>
+</body>
+</html>

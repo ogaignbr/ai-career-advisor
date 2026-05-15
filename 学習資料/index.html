@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>学習資料 | CAサポートAPP</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fffef5;
+      --surface: #fff;
+      --pri: #92400e;
+      --pri2: #b45309;
+      --acc: #eab308;
+      --txt: #0f172a;
+      --muted: #64748b;
+      --bdr: #fef08a;
+      --r: 14px;
+      --fd: 'Plus Jakarta Sans','Noto Sans JP',sans-serif;
+      --fb: 'Noto Sans JP',sans-serif;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; font-family: var(--fb);
+      background: radial-gradient(ellipse at 10% 90%, rgba(234,179,8,.10) 0%, transparent 50%),
+                  radial-gradient(ellipse at 90% 10%, rgba(202,138,4,.08) 0%, transparent 45%),
+                  var(--bg);
+      color: var(--txt);
+    }
+    .w { max-width: 740px; margin: 0 auto; padding: 1.25rem 1rem 2.5rem; }
+    .hd { text-align: center; margin-bottom: 1.5rem; }
+    .hd h1 {
+      font-family: var(--fd); font-size: 1.15rem; font-weight: 800;
+      color: var(--pri); margin: 0 0 .35rem;
+    }
+    .hd p { margin: 0; font-size: .8rem; color: var(--muted); }
+
+    .material-card {
+      background: var(--surface);
+      border: 1.5px solid var(--bdr);
+      border-radius: var(--r);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,.04);
+      transition: box-shadow .2s;
+    }
+    .material-card:hover {
+      box-shadow: 0 4px 16px rgba(234,179,8,.15);
+    }
+    .material-header {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: .75rem; flex-wrap: wrap;
+    }
+    .material-title {
+      font-family: var(--fd); font-size: .92rem; font-weight: 700;
+      color: var(--pri); flex: 1; min-width: 0;
+    }
+    .material-source {
+      font-size: .72rem; color: var(--muted); margin-top: .15rem;
+    }
+    .btn {
+      font-family: var(--fd); font-size: .75rem; font-weight: 700;
+      padding: .5rem .9rem; border-radius: 10px; border: none;
+      cursor: pointer; text-decoration: none; display: inline-flex;
+      align-items: center; gap: .4rem; transition: opacity .15s, transform .1s;
+      white-space: nowrap;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-test {
+      background: linear-gradient(135deg, var(--pri), var(--pri2));
+      color: #fff;
+    }
+    .btn-test:hover { opacity: .92; }
+    .btn-pdf {
+      background: #fff; color: var(--pri2);
+      border: 1.5px solid var(--bdr);
+    }
+    .btn-pdf:hover { background: #fefce8; }
+    .btn-back {
+      background: #fff; color: var(--pri2);
+      border: 1.5px solid var(--bdr);
+      font-size: .78rem; padding: .45rem .95rem;
+    }
+    .btn-back:hover { background: #fefce8; }
+
+    .actions { display: flex; gap: .5rem; margin-top: .75rem; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+<div class="w">
+  <p style="margin:0 0 12px;text-align:right">
+    <a href="../施工管理/index.html" target="_top" class="btn btn-back">ホームへ戻る</a>
+  </p>
+
+  <header class="hd">
+    <h1>学習資料</h1>
+    <p>キャリアアドバイザー研修用 学習資料一覧</p>
+  </header>
+
+  <div class="material-card">
+    <div class="material-header">
+      <div style="min-width:0;flex:1">
+        <div class="material-title">2040年の就業構造推計について（経済産業省）</div>
+        <div class="material-source">出典：経済産業省 経済産業政策局（2026年3月）</div>
+      </div>
+    </div>
+    <div class="actions">
+      <a href="../2040年の就業構造推計（改訂版）について.pdf" target="_blank" rel="noopener noreferrer" class="btn btn-pdf" aria-label="PDFを開く">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        PDFを見る
+      </a>
+      <a href="test.html" class="btn btn-test" aria-label="テストを受ける">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+        テスト
+      </a>
+    </div>
+  </div>
+
+  <p style="font-size:.7rem;color:var(--muted);text-align:center;margin-top:1.5rem;line-height:1.5;">
+    学習資料は随時追加されます。テストは各資料の理解度を確認するためのものです。
+  </p>
+</div>
+</body>
+</html>
